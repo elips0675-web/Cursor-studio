@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -84,33 +85,33 @@ export default function ActivityPage() {
         </div>
 
         <Tabs defaultValue="all" className="w-full mb-8" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm rounded-full h-12 p-1.5 shadow-md border border-border/40">
+          <TabsList className="grid w-full grid-cols-3 bg-white border border-border/60 rounded-full h-14 p-1 shadow-sm">
             <TabsTrigger 
               value="all" 
-              className="rounded-full text-[11px] font-black uppercase tracking-tight data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               Все
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="rounded-full text-[11px] font-black uppercase tracking-tight data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               Лайки
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="rounded-full text-[11px] font-black uppercase tracking-tight data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
-              Просмотры
+              Визиты
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value={activeTab} className="mt-6 space-y-4 outline-none">
-            {/* Ad Button (Compact) */}
+            {/* Ad Button */}
             <Button 
               variant="outline" 
               onClick={() => setShowAd(true)}
-              className="w-full h-11 rounded-2xl border-dashed border-primary/30 text-primary font-bold text-[11px] uppercase tracking-wide gap-2 bg-white/50 hover:bg-primary/5 transition-all shadow-sm mb-2"
+              className="w-full h-12 rounded-2xl border-dashed border-primary/40 text-primary font-black text-[11px] uppercase tracking-widest gap-2 bg-white hover:bg-primary/5 transition-all shadow-sm mb-2"
             >
               <Play size={14} fill="currentColor" /> Посмотреть рекламу
             </Button>
@@ -131,20 +132,20 @@ export default function ActivityPage() {
         {/* Premium Banner */}
         <div 
           onClick={() => setShowPremium(true)}
-          className="gradient-bg rounded-[2.5rem] p-6 text-white mb-12 relative overflow-hidden app-shadow cursor-pointer group active:scale-[0.98] transition-all"
+          className="gradient-bg rounded-[2.5rem] p-8 text-white mb-12 relative overflow-hidden app-shadow cursor-pointer group active:scale-[0.98] transition-all"
         >
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500">
-            <Sparkles size={100} />
+            <Sparkles size={120} />
           </div>
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="bg-white/20 p-1.5 rounded-lg backdrop-blur-md">
-                <Star size={16} className="text-yellow-300" fill="currentColor" />
+            <div className="flex items-center gap-2 mb-3">
+              <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                <Star size={18} className="text-yellow-300" fill="currentColor" />
               </div>
-              <h4 className="font-black text-lg tracking-tight">SwiftMatch Premium</h4>
+              <h4 className="font-black text-xl tracking-tight">SwiftMatch Premium</h4>
             </div>
-            <p className="text-xs text-white/90 mb-5 max-w-[200px] leading-snug">Узнай, кто тебя лайкнул и получи безлимит возможностей</p>
-            <button className="bg-white text-primary text-[10px] font-black uppercase tracking-widest py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all">
+            <p className="text-sm text-white/90 mb-6 max-w-[240px] leading-relaxed">Узнай, кто тебя лайкнул и получи безлимит возможностей</p>
+            <button className="bg-white text-primary text-[10px] font-black uppercase tracking-[0.2em] py-4 px-10 rounded-full shadow-xl hover:shadow-2xl transition-all">
               Попробовать сейчас
             </button>
           </div>
@@ -154,11 +155,11 @@ export default function ActivityPage() {
       {/* Premium Tariffs Dialog */}
       <Dialog open={showPremium} onOpenChange={setShowPremium}>
         <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
-          <div className="relative h-40 gradient-bg flex flex-col items-center justify-center text-white p-6">
+          <div className="relative h-44 gradient-bg flex flex-col items-center justify-center text-white p-6">
              <div className="absolute inset-0 bg-black/5"></div>
-             <Star className="text-yellow-300 mb-2 animate-pulse relative z-10" size={40} fill="currentColor" />
+             <Star className="text-yellow-300 mb-3 animate-pulse relative z-10" size={48} fill="currentColor" />
              <DialogTitle className="text-2xl font-black uppercase tracking-tighter relative z-10">Premium</DialogTitle>
-             <p className="text-[10px] text-white/80 font-bold uppercase tracking-[0.2em] relative z-10">Выберите ваш тариф</p>
+             <p className="text-[10px] text-white/80 font-bold uppercase tracking-[0.2em] relative z-10 mt-1">Выберите ваш тариф</p>
           </div>
 
           <div className="p-8 space-y-4">
@@ -174,10 +175,10 @@ export default function ActivityPage() {
                 )}
               >
                 {plan.popular && (
-                  <Badge className="absolute -top-3 left-6 bg-primary text-white text-[8px] uppercase font-black border-2 border-white shadow-sm">Популярно</Badge>
+                  <Badge className="absolute -top-3 left-6 bg-primary text-white text-[8px] uppercase font-black border-2 border-white shadow-sm px-3">Популярно</Badge>
                 )}
                 {plan.discount && (
-                  <Badge className="absolute -top-3 right-6 bg-[#2ecc71] text-white text-[8px] uppercase font-black border-2 border-white shadow-sm">{plan.discount}</Badge>
+                  <Badge className="absolute -top-3 right-6 bg-[#2ecc71] text-white text-[8px] uppercase font-black border-2 border-white shadow-sm px-3">{plan.discount}</Badge>
                 )}
                 
                 <div>
@@ -189,15 +190,15 @@ export default function ActivityPage() {
                 </div>
 
                 <div className={cn(
-                  "w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all",
+                  "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all",
                   selectedPlan === plan.id ? "border-primary bg-primary text-white scale-110 shadow-sm" : "border-muted"
                 )}>
-                  {selectedPlan === plan.id && <Check size={16} strokeWidth={4} />}
+                  {selectedPlan === plan.id && <Check size={18} strokeWidth={4} />}
                 </div>
               </div>
             ))}
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-muted">
+            <div className="grid grid-cols-2 gap-4 pt-6 border-t border-muted">
                <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-black uppercase tracking-tighter">
                  <Zap size={14} className="text-primary" /> Безлимит
                </div>
@@ -214,7 +215,7 @@ export default function ActivityPage() {
           </div>
 
           <DialogFooter className="p-8 pt-0">
-            <Button className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all">
+            <Button className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 active:scale-95 transition-all">
               Подключить
             </Button>
           </DialogFooter>
@@ -237,11 +238,11 @@ export default function ActivityPage() {
             <Button 
               onClick={handleWatchAd}
               disabled={isAdLoading}
-              className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-lg shadow-primary/20"
+              className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-lg shadow-primary/20"
             >
               {isAdLoading ? "Загрузка..." : "Смотреть"}
             </Button>
-            <Button variant="ghost" onClick={() => setShowAd(false)} className="rounded-full text-muted-foreground text-xs font-bold uppercase tracking-widest h-10">
+            <Button variant="ghost" onClick={() => setShowAd(false)} className="rounded-full text-muted-foreground text-xs font-bold uppercase tracking-widest h-12">
               Не сейчас
             </Button>
           </div>
@@ -283,22 +284,22 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-4 p-5 rounded-[2rem] transition-all cursor-pointer group relative overflow-hidden",
-      item.seen ? "bg-white/40 opacity-70" : "bg-white app-shadow hover:translate-y-[-2px]"
+      "flex items-center gap-4 p-5 rounded-[2.5rem] transition-all cursor-pointer group relative overflow-hidden",
+      item.seen ? "bg-white/50 opacity-80" : "bg-white app-shadow hover:translate-y-[-4px]"
     )}>
       {!item.seen && (
-        <div className="absolute top-0 left-0 w-1.5 h-full gradient-bg opacity-40"></div>
+        <div className="absolute top-0 left-0 w-1.5 h-full gradient-bg opacity-60"></div>
       )}
       
       <div className="relative flex-shrink-0">
         <div className={cn(
-          "w-16 h-16 rounded-3xl overflow-hidden relative border-2 border-white shadow-md transition-all",
-          item.blurred && "blur-[8px] grayscale"
+          "w-16 h-16 rounded-[1.75rem] overflow-hidden relative border-2 border-white shadow-md transition-all",
+          item.blurred && "blur-[8px] grayscale opacity-70"
         )}>
           <Image src={item.img} alt={item.user} fill className="object-cover" />
         </div>
         <div className={cn(
-          "absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-2xl flex items-center justify-center border-2 border-white shadow-md z-10",
+          "absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center border-2 border-white shadow-md z-10",
           getBgColor()
         )}>
           {getIcon()}
@@ -323,12 +324,12 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
             </div>
           )}
         </div>
-        <p className="text-[10px] text-muted-foreground font-bold tracking-tight uppercase opacity-60 mt-0.5">{item.time}</p>
+        <p className="text-[10px] text-muted-foreground font-bold tracking-tight uppercase opacity-60 mt-1">{item.time}</p>
         
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
-            className="text-[10px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-3 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-colors uppercase tracking-tight shadow-sm"
+            className="text-[10px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-4 py-2 rounded-full w-fit hover:bg-primary/10 transition-colors uppercase tracking-widest shadow-sm"
           >
             <Sparkles size={11} /> Узнать кто
           </button>
