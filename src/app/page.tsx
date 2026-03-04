@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -211,7 +211,7 @@ export default function Home() {
           )}
 
           {showResults && (
-            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h5 className="font-black text-xl font-headline">🚀 Результаты автопоиска</h5>
@@ -230,7 +230,7 @@ export default function Home() {
               {searchResults.length > 0 ? (
                 <div className="grid grid-cols-2 gap-4">
                   {searchResults.map((u) => (
-                    <ProfilePreviewCard key={u.id} user={u} />
+                    <ProfilePreviewCard key={u.id} user={u} showActions />
                   ))}
                 </div>
               ) : (
@@ -401,10 +401,10 @@ function FeaturedCard({ user }: { user: any }) {
   );
 }
 
-function ProfilePreviewCard({ user }: { user: any }) {
+function ProfilePreviewCard({ user, showActions = false }: { user: any; showActions?: boolean }) {
   return (
-    <Link href={`/search`} className="bg-white rounded-[2rem] overflow-hidden app-shadow group active:scale-[0.98] transition-all border border-transparent hover:border-primary/10">
-      <div className="relative aspect-square bg-muted">
+    <div className="bg-white rounded-[2rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all">
+      <Link href={`/search`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
         <Image 
           src={user.img} 
           alt={user.name} 
@@ -417,16 +417,53 @@ function ProfilePreviewCard({ user }: { user: any }) {
             <span className="text-white text-[8px] font-bold uppercase tracking-tight">Онлайн</span>
           </div>
         )}
-      </div>
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-1">
-          <span className="font-bold text-sm">{user.name}, {user.age}</span>
-          <Heart size={14} className="text-muted-foreground/30 group-hover:text-primary transition-colors" />
+      </Link>
+      <div className="p-4 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <span className="font-bold text-sm">{user.name}, {user.age}</span>
+            {showActions ? (
+               <Badge variant="secondary" className="bg-primary/10 text-primary text-[8px] border-0 h-5 px-1.5 font-black uppercase">
+                 {user.match}%
+               </Badge>
+            ) : (
+              <Heart size={14} className="text-muted-foreground/30 group-hover:text-primary transition-colors" />
+            )}
+          </div>
+          <div className="text-muted-foreground text-[10px] flex items-center gap-1.5 font-medium mb-3">
+            <MapPin size={10} className="text-primary/60" /> {user.distance} км от вас
+          </div>
         </div>
-        <div className="text-muted-foreground text-[10px] flex items-center gap-1.5 font-medium">
-          <MapPin size={10} className="text-primary/60" /> {user.distance} км от вас
-        </div>
+
+        {showActions && (
+          <div className="grid grid-cols-2 gap-2 mt-auto">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-9 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
+              onClick={(e) => {
+                e.preventDefault();
+                toast({
+                  title: "Лайк!",
+                  description: `Вы лайкнули ${user.name}`,
+                });
+              }}
+            >
+              <Heart size={14} className="group-hover/heart:fill-current" />
+            </Button>
+            <Button 
+              asChild
+              variant="outline" 
+              size="sm" 
+              className="h-9 rounded-xl border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
+            >
+              <Link href={`/chats?matchId=${user.id}`}>
+                <MessageCircle size={14} />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
-    </Link>
+    </div>
   );
 }
