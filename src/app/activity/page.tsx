@@ -85,22 +85,22 @@ export default function ActivityPage() {
         </div>
 
         <Tabs defaultValue="all" className="w-full mb-8" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-white border border-border/60 rounded-full h-14 p-1 shadow-sm">
+          <TabsList className="grid w-full grid-cols-3 bg-transparent h-auto p-0 gap-2.5 border-0 shadow-none">
             <TabsTrigger 
               value="all" 
-              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              className="h-12 rounded-2xl bg-white border border-border/50 text-[11px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:border-0 data-[state=active]:shadow-lg transition-all duration-300"
             >
               Все
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              className="h-12 rounded-2xl bg-white border border-border/50 text-[11px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:border-0 data-[state=active]:shadow-lg transition-all duration-300"
             >
               Лайки
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="rounded-full text-[12px] font-bold uppercase tracking-wider text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              className="h-12 rounded-2xl bg-white border border-border/50 text-[11px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:border-0 data-[state=active]:shadow-lg transition-all duration-300"
             >
               Визиты
             </TabsTrigger>
@@ -117,15 +117,17 @@ export default function ActivityPage() {
             </Button>
 
             {/* List */}
-            {filteredActivity.length > 0 ? (
-              filteredActivity.map((item) => (
-                <ActivityItem key={item.id} item={item} onUnlock={() => setShowAd(true)} />
-              ))
-            ) : (
-              <div className="text-center py-20 opacity-40">
-                <p className="text-sm font-bold">Здесь пока пусто</p>
-              </div>
-            )}
+            <div className="space-y-4">
+              {filteredActivity.length > 0 ? (
+                filteredActivity.map((item) => (
+                  <ActivityItem key={item.id} item={item} onUnlock={() => setShowAd(true)} />
+                ))
+              ) : (
+                <div className="text-center py-20 opacity-40">
+                  <p className="text-sm font-bold">Здесь пока пусто</p>
+                </div>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
 
