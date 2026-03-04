@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Flame, Search, Heart, MapPin } from "lucide-react";
@@ -57,7 +56,7 @@ export default function Home() {
             <Link href="/search" className="text-xs font-bold text-primary hover:underline">Все</Link>
           </div>
           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-5 px-5">
-            {ALL_DEMO_USERS.slice(0, 4).map((u) => (
+            {ALL_DEMO_USERS.slice(0, 3).map((u) => (
               <FeaturedCard key={u.id} user={u} />
             ))}
           </div>
@@ -70,7 +69,7 @@ export default function Home() {
             <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground border-muted">Рядом</Badge>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {ALL_DEMO_USERS.slice(4).map((u) => (
+            {ALL_DEMO_USERS.slice(3).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
           </div>
