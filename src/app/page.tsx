@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -9,41 +9,78 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 
 // Консистентный список из 10 демо-пользователей
 const ALL_DEMO_USERS = [
-  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'] },
-  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, match: 92, city: 'Питер', zodiac: 'Овен', interests: ['Спорт', 'IT'] },
-  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3, match: 81, city: 'Москва', zodiac: 'Рыбы', interests: ['Искусство', 'Книги'] },
-  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, online: false, distance: 12, match: 75, city: 'Казань', zodiac: 'Телец', interests: ['Бизнес', 'Авто'] },
-  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7, match: 88, city: 'Москва', zodiac: 'Дева', interests: ['Музыка', 'Гитара'] },
-  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, online: true, distance: 4, match: 69, city: 'Питер', zodiac: 'Близнецы', interests: ['Игры', 'Аниме'] },
-  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1, match: 94, city: 'Москва', zodiac: 'Скорпион', interests: ['Йога', 'Природа'] },
-  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, online: false, distance: 15, match: 72, city: 'Сочи', zodiac: 'Стрелец', interests: ['Горы', 'Фотография'] },
-  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, online: true, distance: 6, match: 83, city: 'Москва', zodiac: 'Козерог', interests: ['Мода', 'Дизайн'] },
-  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9, match: 77, city: 'Питер', zodiac: 'Водолей', interests: ['Наука', 'История'] }
+  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
+  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, match: 92, city: 'Питер', zodiac: 'Овен', interests: ['Спорт', 'IT'], bio: 'Ищу компанию для пробежек и обсуждения технологий.' },
+  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3, match: 81, city: 'Москва', zodiac: 'Рыбы', interests: ['Искусство', 'Книги'], bio: 'Ищу кого-то, кто любит музеи и долгие прогулки.' },
+  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, online: false, distance: 12, match: 75, city: 'Казань', zodiac: 'Телец', interests: ['Бизнес', 'Авто'], bio: 'Ценю время и качественный отдых.' },
+  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7, match: 88, city: 'Москва', zodiac: 'Дева', interests: ['Музыка', 'Гитара'], bio: 'Мечтаю собрать свою группу и объехать мир.' },
+  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, online: true, distance: 4, match: 69, city: 'Питер', zodiac: 'Близнецы', interests: ['Игры', 'Аниме'], bio: 'Давай поиграем вместе или посмотрим сериал.' },
+  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1, match: 94, city: 'Москва', zodiac: 'Скорпион', interests: ['Йога', 'Природа'], bio: 'Люблю готовить полезную еду и ходить в походы.' },
+  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, online: false, distance: 15, match: 72, city: 'Сочи', zodiac: 'Стрелец', interests: ['Горы', 'Фотография'], bio: 'Пейзажный фотограф в поисках приключений.' },
+  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, online: true, distance: 6, match: 83, city: 'Москва', zodiac: 'Козерог', interests: ['Мода', 'Дизайн'], bio: 'Жизнь слишком коротка, чтобы носить скучную одежду.' },
+  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9, match: 77, city: 'Питер', zodiac: 'Водолей', interests: ['Наука', 'История'], bio: 'Люблю узнавать что-то новое каждый день.' }
 ];
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
 const ZODIAC_SIGNS = ["Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"];
 
+// Компонент "Салют из сердец"
+function HeartConfetti() {
+  const hearts = Array.from({ length: 20 });
+  return (
+    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+      {hearts.map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 1, scale: 0, x: "50%", y: "50%" }}
+          animate={{ 
+            opacity: 0, 
+            scale: [0, 1.5, 1], 
+            x: `${Math.random() * 100}%`, 
+            y: `${Math.random() * 100}%`,
+            rotate: Math.random() * 360
+          }}
+          transition={{ duration: 1.5, ease: "easeOut", delay: Math.random() * 0.2 }}
+          className="absolute"
+        >
+          <Heart size={Math.random() * 20 + 10} fill={i % 2 === 0 ? "#fe3c72" : "#ff8e53"} className="text-transparent" />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
+  const router = useRouter();
   const [isAutoSearching, setIsAutoSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   
+  // Match States
+  const [matchUser, setMatchUser] = useState<any>(null);
+  const [compatibility, setCompatibility] = useState("");
+  const [loadingAi, setLoadingAi] = useState(false);
+
   // Filter States
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [ageRange, setAgeRange] = useState([18, 40]);
@@ -51,6 +88,44 @@ export default function Home() {
   const [selectedZodiac, setSelectedZodiac] = useState("Все");
 
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  const getAiInsight = async (targetUser: any) => {
+    setLoadingAi(true);
+    try {
+      const res = await generateMatchCompatibilityInsight({
+        currentUser: {
+          name: "Вы",
+          age: 25,
+          interests: ["Спорт", "Кино", "Кофе"],
+          bio: "Активный пользователь SwiftMatch, люблю общение и новые открытия."
+        },
+        matchUser: {
+          name: targetUser.name,
+          age: targetUser.age,
+          interests: targetUser.interests,
+          bio: targetUser.bio || ""
+        }
+      });
+      setCompatibility(res.explanation);
+    } catch (e) {
+      setCompatibility("Вы отлично подходите друг другу! Общие интересы в области " + (targetUser.interests[0] || "жизни") + " станут отличным началом разговора.");
+    } finally {
+      setLoadingAi(false);
+    }
+  };
+
+  const handleLikeUser = useCallback(async (user: any) => {
+    toast({
+      title: "Лайк!",
+      description: `Вы лайкнули ${user.name}`,
+    });
+
+    // 30% шанс совпадения
+    if (Math.random() > 0.7) {
+      setMatchUser(user);
+      getAiInsight(user);
+    }
+  }, []);
 
   const handleAutoSearch = () => {
     setIsAutoSearching(true);
@@ -61,9 +136,7 @@ export default function Home() {
       description: "Применяем ваши фильтры для поиска идеальных анкет...",
     });
     
-    // Имитация процесса поиска
     setTimeout(() => {
-      // Фильтрация
       const filtered = ALL_DEMO_USERS.filter(user => {
         const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
         const matchesInterests = selectedInterests.length === 0 || 
@@ -78,7 +151,6 @@ export default function Home() {
       setIsAutoSearching(false);
       setShowResults(true);
       
-      // Скролл к результатам
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
@@ -135,7 +207,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {ALL_DEMO_USERS.slice(0, 4).map((u) => (
-              <FeaturedCard key={u.id} user={u} />
+              <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} />
             ))}
           </div>
         </section>
@@ -148,7 +220,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             {ALL_DEMO_USERS.slice(4, 8).map((u) => (
-              <ProfilePreviewCard key={u.id} user={u} showActions />
+              <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
             ))}
           </div>
         </section>
@@ -182,7 +254,7 @@ export default function Home() {
               {searchResults.length > 0 ? (
                 <div className="grid grid-cols-2 gap-4">
                   {searchResults.map((u) => (
-                    <ProfilePreviewCard key={u.id} user={u} showActions />
+                    <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
                   ))}
                 </div>
               ) : (
@@ -201,6 +273,67 @@ export default function Home() {
           )}
         </div>
       </main>
+
+      {/* Match Dialog */}
+      <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
+        <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden app-shadow">
+          <HeartConfetti />
+          
+          <div className="relative h-32 gradient-bg flex items-center justify-center">
+             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+             <div className="relative z-10 bg-white p-3 rounded-full shadow-2xl">
+               <Heart className="text-primary animate-pulse" size={32} fill="currentColor" />
+             </div>
+          </div>
+
+          <div className="px-6 py-8 text-center -mt-12 bg-white rounded-t-[2.5rem] relative">
+            <div className="flex items-center justify-center gap-0 mb-6 relative">
+               <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-4 bg-muted">
+                  <Image src={PlaceHolderImages[10].imageUrl} alt="Вы" fill className="object-cover" />
+               </div>
+               <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
+                  <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />
+               </div>
+               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-lg z-20">
+                  <Heart size={16} className="text-primary" fill="currentColor" />
+               </div>
+            </div>
+
+            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">Это совпадение!</DialogTitle>
+            <DialogDescription className="text-muted-foreground text-sm mb-6 px-4 leading-relaxed">
+              Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу. Не заставляйте ждать!
+            </DialogDescription>
+            
+            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
+              <div className="absolute top-0 right-0 p-2 text-primary/20 group-hover:text-primary/40 transition-colors">
+                <Sparkles size={32} />
+              </div>
+              <h4 className="text-[10px] font-bold text-primary mb-2 flex items-center gap-1 uppercase tracking-widest">
+                <Sparkles size={12} /> AI Инсайт
+              </h4>
+              {loadingAi ? (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
+                  <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  Анализируем ваши общие интересы...
+                </div>
+              ) : (
+                <p className="text-xs leading-relaxed text-foreground/80 italic relative z-10">
+                  {compatibility}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3 w-full">
+              <Button onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} className="w-full h-14 rounded-full gradient-bg text-white font-bold app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0">
+                Написать первым
+              </Button>
+              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-12 text-muted-foreground font-semibold hover:bg-muted shadow-sm">
+                Продолжить
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Filter Dialog */}
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
@@ -327,16 +460,7 @@ export default function Home() {
   );
 }
 
-function FeaturedCard({ user }: { user: any }) {
-  const handleLike = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toast({
-      title: "Лайк!",
-      description: `Вы лайкнули ${user.name}`,
-    });
-  };
-
+function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
   return (
     <div className="bg-white rounded-[2rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/search`} className="relative aspect-[3/4] bg-muted block overflow-hidden cursor-pointer">
@@ -361,7 +485,7 @@ function FeaturedCard({ user }: { user: any }) {
             variant="outline" 
             size="sm" 
             className="h-9 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
-            onClick={handleLike}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
           >
             <Heart size={14} className="group-hover/heart:fill-current" />
           </Button>
@@ -381,16 +505,7 @@ function FeaturedCard({ user }: { user: any }) {
   );
 }
 
-function ProfilePreviewCard({ user, showActions = false }: { user: any; showActions?: boolean }) {
-  const handleLike = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toast({
-      title: "Лайк!",
-      description: `Вы лайкнули ${user.name}`,
-    });
-  };
-
+function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) {
   return (
     <div className="bg-white rounded-[2rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/search`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
@@ -426,7 +541,7 @@ function ProfilePreviewCard({ user, showActions = false }: { user: any; showActi
               variant="outline" 
               size="sm" 
               className="h-9 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
-              onClick={handleLike}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
             >
               <Heart size={14} className="group-hover/heart:fill-current" />
             </Button>
