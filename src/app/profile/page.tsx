@@ -143,10 +143,11 @@ export default function ProfilePage() {
                 className="object-cover" 
                 priority
               />
-              <Badge className="absolute top-2 left-2 bg-primary text-white border-0 font-black text-[7px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest">
-                PRO 💎
-              </Badge>
             </div>
+            {/* Badge PRO moved to not cover the face */}
+            <Badge className="absolute -bottom-1 -right-1 bg-primary text-white border-2 border-white font-black text-[8px] h-6 px-2 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest">
+              PRO 💎
+            </Badge>
           </div>
 
           <div className="mb-8">
