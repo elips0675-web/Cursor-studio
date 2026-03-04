@@ -205,8 +205,8 @@ export default function Home() {
                <Link href="/search">Все</Link>
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {ALL_DEMO_USERS.slice(0, 6).map((u) => (
+          <div className="grid grid-cols-2 gap-4">
+            {ALL_DEMO_USERS.slice(0, 4).map((u) => (
               <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} />
             ))}
           </div>
@@ -218,8 +218,8 @@ export default function Home() {
             <h5 className="font-black text-lg font-headline">✨ Рекомендуем</h5>
             <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {ALL_DEMO_USERS.slice(6, 12).map((u) => (
+          <div className="grid grid-cols-2 gap-4">
+            {ALL_DEMO_USERS.slice(6, 10).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
             ))}
           </div>
@@ -252,7 +252,7 @@ export default function Home() {
               </div>
               
               {searchResults.length > 0 ? (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   {searchResults.map((u) => (
                     <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
                   ))}
@@ -470,33 +470,33 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
           fill 
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-1.5 right-1.5">
-             <Badge className="bg-primary text-white text-[7px] border-0 px-1 py-0.5 font-black uppercase shadow-lg">
+        <div className="absolute top-2 right-2">
+             <Badge className="bg-primary text-white text-[9px] border-0 px-2 py-0.5 font-black uppercase shadow-lg">
                {user.match}%
              </Badge>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-black/80 to-transparent">
-          <p className="text-white font-bold text-[10px] leading-tight truncate">{user.name}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+          <p className="text-white font-bold text-sm leading-tight truncate">{user.name}, {user.age}</p>
         </div>
       </Link>
-      <div className="p-1.5 mt-auto">
-        <div className="grid grid-cols-2 gap-1">
+      <div className="p-3 mt-auto">
+        <div className="grid grid-cols-2 gap-2">
           <Button 
             variant="outline" 
             size="sm" 
-            className="h-7 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm p-0"
+            className="h-10 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
           >
-            <Heart size={12} className="group-hover/heart:fill-current" />
+            <Heart size={16} className="group-hover/heart:fill-current" />
           </Button>
           <Button 
             asChild
             variant="outline" 
             size="sm" 
-            className="h-7 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm p-0"
+            className="h-10 rounded-xl border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
           >
             <Link href={`/chats?matchId=${user.id}`}>
-              <MessageCircle size={12} />
+              <MessageCircle size={16} />
             </Link>
           </Button>
         </div>
@@ -516,40 +516,40 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {user.online && (
-          <div className="absolute top-1.5 left-1.5">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
+          <div className="absolute top-2 left-2">
+            <span className="flex h-2 w-2 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
           </div>
         )}
       </Link>
-      <div className="p-2 flex-1 flex flex-col justify-between">
+      <div className="p-3 flex-1 flex flex-col justify-between">
         <div className="mb-2">
           <div className="flex justify-between items-center mb-0.5">
-            <span className="font-bold text-[10px] truncate pr-1">{user.name}</span>
-            <span className="text-primary text-[8px] font-black">{user.match}%</span>
+            <span className="font-bold text-sm truncate pr-1">{user.name}</span>
+            <span className="text-primary text-[10px] font-black">{user.match}%</span>
           </div>
-          <div className="text-muted-foreground text-[8px] flex items-center gap-1 font-medium truncate">
-            <MapPin size={8} /> {user.distance}км
+          <div className="text-muted-foreground text-[10px] flex items-center gap-1 font-medium truncate">
+            <MapPin size={10} /> {user.distance}км
           </div>
         </div>
 
         {showActions && (
-          <div className="grid grid-cols-2 gap-1 mt-auto">
+          <div className="grid grid-cols-2 gap-2 mt-auto">
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-7 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm p-0"
+              className="h-10 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
             >
-              <Heart size={12} className="group-hover/heart:fill-current" />
+              <Heart size={16} className="group-hover/heart:fill-current" />
             </Button>
             <Button 
               asChild
               variant="outline" 
               size="sm" 
-              className="h-7 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm p-0"
+              className="h-10 rounded-xl border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
             >
               <Link href={`/chats?matchId=${user.id}`}>
-                <MessageCircle size={12} />
+                <MessageCircle size={16} />
               </Link>
             </Button>
           </div>
