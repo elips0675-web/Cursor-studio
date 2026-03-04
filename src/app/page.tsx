@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Flame, Search } from "lucide-react";
@@ -9,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-// Полный список из 10 демо-пользователей (5 женщин, 5 мужчин)
+// Полный список из 10 демо-пользователей (5 женщин, 5 мужчин) с уникальными фото
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, gender: 'female' },
   { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, gender: 'male' },
