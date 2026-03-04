@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
@@ -42,7 +41,7 @@ const INTEREST_OPTIONS = ["Фотография", "Путешествия", "К�
 
 // Компонент "Салют из сердец"
 function HeartConfetti() {
-  const hearts = Array.from({ length: 20 });
+  const hearts = Array.from({ length: 25 });
   return (
     <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
       {hearts.map((_, i) => (
@@ -56,21 +55,21 @@ function HeartConfetti() {
           }}
           animate={{ 
             opacity: 0, 
-            scale: [0, 1.5, 1], 
-            x: `${Math.random() * 100}%`, 
-            y: `${Math.random() * 100}%`,
-            rotate: Math.random() * 360
+            scale: [0, 1.8, 1], 
+            x: `${Math.random() * 120 - 10}%`, 
+            y: `${Math.random() * 120 - 10}%`,
+            rotate: Math.random() * 720
           }}
           transition={{ 
-            duration: 2.5, 
+            duration: 3, 
             ease: "easeOut",
-            delay: Math.random() * 0.5
+            delay: Math.random() * 0.7
           }}
           className="absolute"
           style={{ left: "-5%", top: "-5%" }}
         >
           <Heart 
-            size={Math.random() * 20 + 10} 
+            size={Math.random() * 24 + 12} 
             fill={i % 2 === 0 ? "#fe3c72" : "#ff8e53"} 
             className="text-transparent" 
           />
@@ -177,7 +176,7 @@ export default function SearchPage() {
       <main className="flex-1 overflow-hidden px-5 pt-4 pb-24 flex flex-col items-center relative">
         {/* Top bar */}
         <div className="flex items-center justify-between w-full max-w-sm mb-6 z-10">
-          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl flex items-center gap-2 text-[11px] text-primary font-bold border border-primary/5 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl flex items-center gap-2 text-[11px] text-primary font-bold border border-primary/5 shadow-md">
             <Sparkles size={14} />
             <span>{filteredUsers.length} анкет рядом</span>
           </div>
@@ -185,7 +184,7 @@ export default function SearchPage() {
             variant="outline" 
             size="icon" 
             onClick={() => setIsFilterOpen(true)}
-            className="rounded-2xl h-10 w-10 bg-white border-primary/10 shadow-sm hover:bg-primary/5 transition-colors"
+            className="rounded-2xl h-10 w-10 bg-white border-primary/10 shadow-md hover:bg-primary/5 transition-colors"
           >
             <SlidersHorizontal size={18} className="text-primary" />
           </Button>
@@ -208,7 +207,7 @@ export default function SearchPage() {
                   }
                 }}
                 whileDrag={{ scale: 1.05 }}
-                className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col cursor-grab active:cursor-grabbing"
+                className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col cursor-grab active:cursor-grabbing border-4 border-white"
               >
                 <div className="relative flex-[1.6] pointer-events-none select-none">
                   <Image 
@@ -238,7 +237,7 @@ export default function SearchPage() {
                   
                   <div className="flex flex-wrap justify-center gap-2 mb-4">
                     {user.interests.map(i => (
-                      <span key={i} className="px-3 py-1 bg-muted text-[9px] rounded-full font-bold text-foreground/70 uppercase tracking-tight">{i}</span>
+                      <span key={i} className="px-3 py-1 bg-muted text-[9px] rounded-full font-bold text-foreground/70 uppercase tracking-tight shadow-sm">{i}</span>
                     ))}
                   </div>
                   
@@ -248,13 +247,13 @@ export default function SearchPage() {
                 </div>
               </motion.div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted">
+              <div className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted shadow-inner">
                 <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                   <X size={32} className="text-muted-foreground" />
                 </div>
                 <h4 className="text-lg font-bold mb-2">Никого не нашли</h4>
                 <p className="text-sm text-muted-foreground mb-6">Попробуйте изменить параметры фильтров</p>
-                <Button variant="outline" className="rounded-full px-8" onClick={() => {
+                <Button variant="outline" className="rounded-full px-8 shadow-sm" onClick={() => {
                   setAgeRange([18, 40]);
                   setMaxDistance([50]);
                   setSelectedInterests([]);
@@ -271,19 +270,19 @@ export default function SearchPage() {
         <div className="flex items-center justify-center gap-6 z-10">
           <button 
             onClick={() => setIndex(prev => prev + 1)}
-            className="w-14 h-14 rounded-full bg-white text-muted-foreground flex items-center justify-center hover:bg-muted active:scale-90 transition-all shadow-lg"
+            className="w-14 h-14 rounded-full bg-white text-muted-foreground flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow"
           >
             <X size={24} />
           </button>
           <button 
             disabled={filteredUsers.length === 0}
             onClick={handleLike}
-            className="w-20 h-20 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-20 h-20 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center hover:scale-110 active:scale-95 transition-all app-shadow disabled:opacity-50 disabled:cursor-not-allowed group"
           >
             <Heart size={36} fill="currentColor" className="group-hover:animate-pulse" />
           </button>
           <button 
-            className="w-14 h-14 rounded-full bg-white text-yellow-500 flex items-center justify-center hover:bg-muted active:scale-90 transition-all shadow-lg"
+            className="w-14 h-14 rounded-full bg-white text-yellow-500 flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow"
           >
             <Sparkles size={24} />
           </button>
@@ -292,7 +291,7 @@ export default function SearchPage() {
 
       {/* Filters Dialog */}
       <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-        <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white shadow-2xl">
+        <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
           <DialogHeader className="p-6 bg-muted/30">
             <DialogTitle className="text-xl font-bold font-headline">Фильтры поиска</DialogTitle>
             <DialogDescription>Настройте параметры для идеального мэтча</DialogDescription>
@@ -311,7 +310,7 @@ export default function SearchPage() {
                     key={g.id}
                     variant={selectedGender === g.id ? 'default' : 'outline'}
                     className={cn(
-                      "flex-1 rounded-xl text-[10px] font-bold h-11",
+                      "flex-1 rounded-xl text-[10px] font-bold h-11 shadow-sm",
                       selectedGender === g.id ? "gradient-bg text-white border-0" : "border-muted text-muted-foreground"
                     )}
                     onClick={() => setSelectedGender(g.id)}
@@ -358,7 +357,7 @@ export default function SearchPage() {
                     key={interest}
                     variant={selectedInterests.includes(interest) ? "default" : "secondary"}
                     className={cn(
-                      "cursor-pointer px-4 py-2 rounded-full transition-all border-0 font-bold text-[9px] uppercase tracking-tight",
+                      "cursor-pointer px-4 py-2 rounded-full transition-all border-0 font-bold text-[9px] uppercase tracking-tight shadow-sm",
                       selectedInterests.includes(interest) 
                         ? "gradient-bg text-white shadow-sm" 
                         : "bg-muted text-muted-foreground hover:bg-border"
@@ -373,7 +372,7 @@ export default function SearchPage() {
           </div>
 
           <DialogFooter className="p-6 pt-0">
-            <Button className="w-full h-12 rounded-full gradient-bg text-white font-bold shadow-lg shadow-primary/20" onClick={() => setIsFilterOpen(false)}>
+            <Button className="w-full h-12 rounded-full gradient-bg text-white font-bold app-shadow border-0" onClick={() => setIsFilterOpen(false)}>
               Применить
             </Button>
           </DialogFooter>
@@ -382,12 +381,12 @@ export default function SearchPage() {
 
       {/* Match Dialog */}
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
-        <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden shadow-2xl">
+        <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden app-shadow">
           <HeartConfetti />
           
           <div className="relative h-32 gradient-bg flex items-center justify-center">
              <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-             <div className="relative z-10 bg-white p-3 rounded-full shadow-xl">
+             <div className="relative z-10 bg-white p-3 rounded-full shadow-2xl">
                <Heart className="text-primary animate-pulse" size={32} fill="currentColor" />
              </div>
           </div>
@@ -400,7 +399,7 @@ export default function SearchPage() {
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
                   <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />
                </div>
-               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-md z-20">
+               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-lg z-20">
                   <Heart size={16} className="text-primary" fill="currentColor" />
                </div>
             </div>
@@ -410,7 +409,7 @@ export default function SearchPage() {
               Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу. Не заставляйте ждать!
             </DialogDescription>
             
-            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group">
+            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
               <div className="absolute top-0 right-0 p-2 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <Sparkles size={32} />
               </div>
@@ -430,10 +429,10 @@ export default function SearchPage() {
             </div>
 
             <div className="flex flex-col gap-3 w-full">
-              <Button onClick={handleStartChat} className="w-full h-14 rounded-full gradient-bg text-white font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+              <Button onClick={handleStartChat} className="w-full h-14 rounded-full gradient-bg text-white font-bold app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0">
                 Написать первым
               </Button>
-              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-12 text-muted-foreground font-semibold hover:bg-muted">
+              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-12 text-muted-foreground font-semibold hover:bg-muted shadow-sm">
                 Продолжить поиск
               </Button>
             </div>

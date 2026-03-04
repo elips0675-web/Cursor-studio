@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -85,7 +84,7 @@ export default function ProfilePage() {
           <div className="absolute top-8 left-8 text-white text-2xl font-black uppercase tracking-tighter">SwiftMatch</div>
           <Link 
             href="/settings"
-            className="absolute top-8 right-8 text-white/90 p-2.5 bg-black/10 rounded-full hover:bg-black/20 transition-colors backdrop-blur-sm"
+            className="absolute top-8 right-8 text-white/90 p-2.5 bg-black/10 rounded-full hover:bg-black/20 transition-colors backdrop-blur-sm shadow-sm"
           >
             <Settings size={22} />
           </Link>
@@ -94,7 +93,7 @@ export default function ProfilePage() {
         {/* Profile Info */}
         <div className="px-6 -mt-20 text-center">
           <div className="relative inline-block mb-4">
-            <div className="w-36 h-36 rounded-[2.5rem] border-4 border-white shadow-2xl overflow-hidden relative bg-muted transform -rotate-3">
+            <div className="w-36 h-36 rounded-[2.5rem] border-4 border-white app-shadow overflow-hidden relative bg-muted transform -rotate-3">
               <Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt="My Profile" fill className="object-cover" />
             </div>
             <Badge className="absolute -bottom-2 -right-2 bg-yellow-400 text-black border-4 border-white font-black text-sm h-10 w-10 flex items-center justify-center p-0 rounded-2xl shadow-xl transform rotate-12">
@@ -112,7 +111,7 @@ export default function ProfilePage() {
           <div className="flex justify-center gap-3 mb-10">
             <Button 
               asChild
-              className="rounded-2xl gradient-bg text-white h-12 px-8 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all"
+              className="rounded-2xl gradient-bg text-white h-12 px-8 font-black uppercase text-[10px] tracking-widest app-shadow active:scale-95 transition-all border-0"
             >
               <Link href="/profile/edit">
                 <Edit2 size={14} className="mr-2" /> Редактировать
@@ -121,14 +120,14 @@ export default function ProfilePage() {
             <Button 
               asChild
               variant="outline" 
-              className="rounded-2xl h-12 px-6 font-black uppercase text-[10px] tracking-widest border-border text-muted-foreground bg-white shadow-sm"
+              className="rounded-2xl h-12 px-6 font-black uppercase text-[10px] tracking-widest border-border text-muted-foreground bg-white shadow-md active:scale-95 transition-all"
             >
               <Link href="/settings">Настройки</Link>
             </Button>
           </div>
 
           {/* Stats */}
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-border/40 mb-8">
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-8">
             <div className="grid grid-cols-2">
               <div className="text-center">
                 <div className="text-2xl font-black text-primary">128</div>
@@ -142,7 +141,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Photos Section */}
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-border/40 mb-8 text-left">
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-8 text-left">
             <div className="flex justify-between items-center mb-5">
               <h4 className="font-black text-sm uppercase tracking-widest">Мои фото</h4>
               <button 
@@ -154,7 +153,7 @@ export default function ProfilePage() {
             </div>
             <div className="grid grid-cols-3 gap-3">
               {photos.map((url, idx) => (
-                <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-sm border border-border/20">
+                <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-md border border-border/20">
                   <Image src={url} alt={`Photo ${idx}`} fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button 
@@ -169,7 +168,7 @@ export default function ProfilePage() {
               {photos.length < 6 && (
                 <button 
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/30 hover:border-primary/30 transition-all group"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/30 hover:border-primary/30 transition-all group shadow-sm"
                 >
                   <Plus size={24} className="group-hover:text-primary transition-colors" />
                   <span className="text-[8px] font-black mt-1 uppercase tracking-tighter">Новое фото</span>
@@ -179,11 +178,11 @@ export default function ProfilePage() {
           </div>
 
           {/* Interests */}
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-border/40 mb-8 text-left">
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-8 text-left">
             <h4 className="font-black text-sm uppercase tracking-widest mb-5">Мои интересы</h4>
             <div className="flex flex-wrap gap-2.5">
               {interestMap.filter(i => profile.interests.includes(i.label)).map((item) => (
-                <Badge key={item.label} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-xl hover:bg-muted transition-colors">
+                <Badge key={item.label} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-xl hover:bg-muted transition-colors shadow-sm">
                   <item.icon size={16} className="text-primary" /> {item.label}
                 </Badge>
               ))}
@@ -191,7 +190,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Bio Section */}
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-border/40 mb-8 text-left">
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-8 text-left">
             <h4 className="font-black text-sm uppercase tracking-widest mb-3">О себе</h4>
             <p className="text-sm text-muted-foreground leading-relaxed font-medium">
               {profile.bio}
@@ -199,13 +198,13 @@ export default function ProfilePage() {
           </div>
 
           {/* Premium Banner */}
-          <div className="gradient-bg rounded-[2.5rem] p-8 text-white text-center shadow-2xl shadow-primary/20 mb-10 relative overflow-hidden group">
+          <div className="gradient-bg rounded-[2.5rem] p-8 text-white text-center app-shadow mb-10 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
               <Star size={80} fill="currentColor" />
             </div>
             <h5 className="font-black text-xl mb-2 relative z-10">SwiftMatch Premium</h5>
             <p className="text-xs text-white/80 mb-6 max-w-[200px] mx-auto relative z-10 leading-relaxed">Узнайте, кто вами интересуется, и получите безлимит свайпов</p>
-            <Button variant="secondary" className="w-full rounded-2xl h-12 bg-white text-primary font-black uppercase text-[10px] tracking-widest hover:bg-white/90 shadow-lg relative z-10 active:scale-95 transition-all">
+            <Button variant="secondary" className="w-full rounded-2xl h-12 bg-white text-primary font-black uppercase text-[10px] tracking-widest hover:bg-white/90 shadow-xl relative z-10 active:scale-95 transition-all border-0">
               Стать Premium
             </Button>
           </div>

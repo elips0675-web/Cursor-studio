@@ -42,18 +42,18 @@ export default function Home() {
 
         {/* Action Button */}
         <div className="mb-10">
-          <Button asChild className="w-full h-14 rounded-full gradient-bg text-white font-bold text-lg shadow-xl shadow-primary/25 hover:scale-[1.02] active:scale-95 transition-all">
+          <Button asChild className="w-full h-14 rounded-full gradient-bg text-white font-bold text-lg app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0">
             <Link href="/search">
               <Search size={20} className="mr-2 stroke-[3px]" /> Найти половинку
             </Link>
           </Button>
         </div>
 
-        {/* Featured Users - Grid instead of scroll */}
+        {/* Featured Users - 4 Profiles Grid */}
         <section className="mb-10">
           <div className="flex justify-between items-center mb-4">
             <h5 className="font-black text-xl font-headline">🔥 Топ недели</h5>
-            <Button asChild variant="ghost" size="sm" className="text-primary font-bold hover:bg-primary/5 text-xs h-8 px-3 rounded-full">
+            <Button asChild className="gradient-bg text-white font-black uppercase tracking-widest text-[10px] h-9 px-6 rounded-full app-shadow border-0">
                <Link href="/search">Все</Link>
             </Button>
           </div>
@@ -85,7 +85,7 @@ export default function Home() {
 function FeaturedCard({ user }: { user: any }) {
   return (
     <Link href={`/search`} className="w-full group active:scale-[0.98] transition-all">
-      <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg border-2 border-white group-hover:border-primary/20 transition-colors bg-muted">
+      <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden app-shadow border-2 border-white group-hover:border-primary/20 transition-colors bg-muted">
         <Image 
           src={user.img} 
           alt={user.name} 

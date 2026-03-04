@@ -80,11 +80,11 @@ export default function ActivityPage() {
             <h2 className="text-2xl font-black font-headline tracking-tight">Активность</h2>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Твои новые события</p>
           </div>
-          <Badge className="gradient-bg text-white rounded-full px-3 border-0">5 новых</Badge>
+          <Badge className="gradient-bg text-white rounded-full px-3 border-0 shadow-sm">5 новых</Badge>
         </div>
 
         <Tabs defaultValue="all" className="w-full mb-8" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm rounded-full h-12 p-1.5 shadow-sm border border-border/40">
+          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm rounded-full h-12 p-1.5 shadow-md border border-border/40">
             <TabsTrigger 
               value="all" 
               className="rounded-full text-[11px] font-black uppercase tracking-tight data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
@@ -131,7 +131,7 @@ export default function ActivityPage() {
         {/* Premium Banner */}
         <div 
           onClick={() => setShowPremium(true)}
-          className="gradient-bg rounded-[2.5rem] p-6 text-white mb-12 relative overflow-hidden shadow-2xl shadow-primary/20 cursor-pointer group active:scale-[0.98] transition-all"
+          className="gradient-bg rounded-[2.5rem] p-6 text-white mb-12 relative overflow-hidden app-shadow cursor-pointer group active:scale-[0.98] transition-all"
         >
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500">
             <Sparkles size={100} />
@@ -153,7 +153,7 @@ export default function ActivityPage() {
 
       {/* Premium Tariffs Dialog */}
       <Dialog open={showPremium} onOpenChange={setShowPremium}>
-        <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white shadow-2xl">
+        <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
           <div className="relative h-40 gradient-bg flex flex-col items-center justify-center text-white p-6">
              <div className="absolute inset-0 bg-black/5"></div>
              <Star className="text-yellow-300 mb-2 animate-pulse relative z-10" size={40} fill="currentColor" />
@@ -223,7 +223,7 @@ export default function ActivityPage() {
 
       {/* Watch Ad Dialog */}
       <Dialog open={showAd} onOpenChange={setShowAd}>
-        <DialogContent className="max-w-[340px] rounded-[2.5rem] p-10 text-center bg-white shadow-2xl border-0">
+        <DialogContent className="max-w-[340px] rounded-[2.5rem] p-10 text-center bg-white app-shadow border-0">
           <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 relative">
             <div className="absolute inset-0 rounded-full bg-primary/5 animate-ping"></div>
             <Play size={40} className="text-primary ml-1.5 relative z-10" fill="currentColor" />
@@ -284,7 +284,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
   return (
     <div className={cn(
       "flex items-center gap-4 p-5 rounded-[2rem] transition-all cursor-pointer group relative overflow-hidden",
-      item.seen ? "bg-white/40 opacity-70" : "bg-white shadow-md shadow-black/5 hover:shadow-lg hover:translate-y-[-2px]"
+      item.seen ? "bg-white/40 opacity-70" : "bg-white app-shadow hover:translate-y-[-2px]"
     )}>
       {!item.seen && (
         <div className="absolute top-0 left-0 w-1.5 h-full gradient-bg opacity-40"></div>
@@ -328,7 +328,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
-            className="text-[10px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-3 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-colors uppercase tracking-tight"
+            className="text-[10px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-3 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-colors uppercase tracking-tight shadow-sm"
           >
             <Sparkles size={11} /> Узнать кто
           </button>
