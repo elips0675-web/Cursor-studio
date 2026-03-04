@@ -19,7 +19,8 @@ import {
   Bell,
   EyeOff,
   ShieldCheck,
-  User
+  User,
+  Search
 } from "lucide-react";
 import Image from "next/image";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -269,7 +270,7 @@ export default function ProfilePage() {
                     key={interest.label}
                     onClick={() => {
                       const newInterests = profile.interests.includes(interest.label)
-                        ? profile.interests.filter(i => i !== interest.label)
+                        ? profile.interests.filter(interestToRemove => interestToRemove !== interest.label)
                         : [...profile.interests, interest.label];
                       setProfile({...profile, interests: newInterests});
                     }}
