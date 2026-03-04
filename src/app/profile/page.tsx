@@ -18,7 +18,9 @@ import {
   Film,
   Flower2,
   Briefcase,
-  Gamepad2
+  Gamepad2,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,6 +29,13 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function ProfilePage() {
   // Profile State
@@ -56,6 +65,14 @@ export default function ProfilePage() {
   };
 
   const handleDeletePhoto = (index: number) => {
+    if (photos.length <= 1) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "В профиле должно быть хотя бы одно фото.",
+      });
+      return;
+    }
     setPhotos(prev => prev.filter((_, i) => i !== index));
     toast({
       title: "Фото удалено",
@@ -91,12 +108,37 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Info */}
-        <div className="px-6 -mt-16 text-center">
-          <div className="relative inline-block mb-4">
-            <div className="w-36 h-36 rounded-[2.5rem] border-4 border-white app-shadow overflow-hidden relative bg-muted transform -rotate-3">
-              <Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt="My Profile" fill className="object-cover" />
+        <div className="px-6 -mt-20 text-center">
+          <div className="relative inline-block mb-6">
+            <div className="w-56 h-72 rounded-[2.5rem] border-4 border-white app-shadow overflow-hidden relative bg-muted transform -rotate-2">
+              <Carousel className="w-full h-full group">
+                <CarouselContent className="h-full ml-0">
+                  {photos.length > 0 ? (
+                    photos.map((url, idx) => (
+                      <CarouselItem key={idx} className="pl-0 h-full relative">
+                        <Image src={url} alt={`Profile ${idx}`} fill className="object-cover" />
+                      </CarouselItem>
+                    ))
+                  ) : (
+                    <CarouselItem className="pl-0 h-full relative">
+                      <Image src={PlaceHolderImages[0].imageUrl} alt="My Profile" fill className="object-cover" />
+                    </CarouselItem>
+                  )}
+                </CarouselContent>
+                {photos.length > 1 && (
+                  <>
+                    <CarouselPrevious className="left-2 bg-white/20 border-0 text-white hover:bg-white/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <CarouselNext className="right-2 bg-white/20 border-0 text-white hover:bg-white/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+                      {photos.map((_, i) => (
+                        <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/50" />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </Carousel>
             </div>
-            <Badge className="absolute -bottom-2 -right-2 bg-yellow-400 text-black border-4 border-white font-black text-sm h-10 w-10 flex items-center justify-center p-0 rounded-2xl shadow-xl transform rotate-12">
+            <Badge className="absolute -bottom-2 -right-2 bg-yellow-400 text-black border-4 border-white font-black text-sm h-10 w-10 flex items-center justify-center p-0 rounded-2xl shadow-xl transform rotate-12 z-20">
               💎
             </Badge>
           </div>
