@@ -23,37 +23,19 @@ import { Label } from "@/components/ui/label";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 
 const ALL_USERS = [
-  { 
-    id: 1, name: 'Анна', age: 24, 
-    img: PlaceHolderImages[0].imageUrl, 
-    interests: ['Фотография', 'Путешествия', 'Кофе'], 
-    bio: 'Люблю закаты, хороший кофе и интересные разговоры.',
-    distance: 2, match: 87 
-  },
-  { 
-    id: 2, name: 'Елена', age: 26, 
-    img: PlaceHolderImages[2].imageUrl, 
-    interests: ['Искусство', 'Книги', 'Вино'], 
-    bio: 'Ищу кого-то, кто любит музеи и долгие прогулки.',
-    distance: 5, match: 92 
-  },
-  { 
-    id: 3, name: 'Мария', age: 23, 
-    img: PlaceHolderImages[3].imageUrl, 
-    interests: ['Танцы', 'Театр', 'Пицца'], 
-    bio: 'Жизнь - это танец, давай танцевать вместе!',
-    distance: 1, match: 78 
-  },
-  { 
-    id: 4, name: 'София', age: 30, 
-    img: PlaceHolderImages[5].imageUrl, 
-    interests: ['Спорт', 'Музыка', 'Кофе'], 
-    bio: 'Музыка и спорт — моя жизнь.',
-    distance: 10, match: 65 
-  }
+  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', distance: 2, match: 87, gender: 'female' },
+  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек и обсуждения технологий.', distance: 5, match: 92, gender: 'male' },
+  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, interests: ['Искусство', 'Книги', 'Вино'], bio: 'Ищу кого-то, кто любит музеи и долгие прогулки.', distance: 3, match: 81, gender: 'female' },
+  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, interests: ['Бизнес', 'Авто', 'Спорт'], bio: 'Ценю время и качественный отдых.', distance: 12, match: 75, gender: 'male' },
+  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, interests: ['Музыка', 'Гитара', 'Фестивали'], bio: 'Мечтаю собрать свою группу и объехать мир.', distance: 7, match: 88, gender: 'female' },
+  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, interests: ['Игры', 'Аниме', 'Пицца'], bio: 'Давай поиграем вместе или посмотрим сериал.', distance: 4, match: 69, gender: 'male' },
+  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, interests: ['Йога', 'Кулинария', 'Природа'], bio: 'Люблю готовить полезную еду и ходить в походы.', distance: 1, match: 94, gender: 'female' },
+  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, interests: ['Фотография', 'Горы', 'Кемпинг'], bio: 'Пейзажный фотограф в поисках приключений.', distance: 15, match: 72, gender: 'male' },
+  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, interests: ['Мода', 'Дизайн', 'Вечеринки'], bio: 'Жизнь слишком коротка, чтобы носить скучную одежду.', distance: 6, match: 83, gender: 'female' },
+  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, interests: ['Наука', 'История', 'Музеи'], bio: 'Люблю узнавать что-то новое каждый день.', distance: 9, match: 77, gender: 'male' }
 ];
 
-const INTEREST_OPTIONS = ["Фотография", "Путешествия", "Кофе", "Искусство", "Книги", "Вино", "Танцы", "Театр", "Пицца", "Спорт", "Музыка"];
+const INTEREST_OPTIONS = ["Фотография", "Путешествия", "Кофе", "Искусство", "Книги", "Бизнес", "Спорт", "Музыка", "Игры", "Йога", "Мода", "Дизайн", "История"];
 
 export default function SearchPage() {
   const router = useRouter();
@@ -66,6 +48,7 @@ export default function SearchPage() {
   const [ageRange, setAgeRange] = useState([18, 40]);
   const [maxDistance, setMaxDistance] = useState([50]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filteredUsers = useMemo(() => {
@@ -74,10 +57,11 @@ export default function SearchPage() {
       const matchesDistance = user.distance <= maxDistance[0];
       const matchesInterests = selectedInterests.length === 0 || 
         user.interests.some(interest => selectedInterests.includes(interest));
+      const matchesGender = selectedGender === 'all' || user.gender === selectedGender;
       
-      return matchesAge && matchesDistance && matchesInterests;
+      return matchesAge && matchesDistance && matchesInterests && matchesGender;
     });
-  }, [ageRange, maxDistance, selectedInterests]);
+  }, [ageRange, maxDistance, selectedInterests, selectedGender]);
 
   const user = filteredUsers[index % filteredUsers.length];
 
@@ -125,7 +109,6 @@ export default function SearchPage() {
 
   const handleStartChat = () => {
     if (matchUser) {
-      // Переходим в чаты с параметром ID пользователя
       router.push(`/chats?matchId=${matchUser.id}`);
     }
   };
@@ -134,7 +117,6 @@ export default function SearchPage() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-hidden px-5 pt-4 pb-24 flex flex-col items-center">
-        {/* Centered Top Filter Toggle */}
         <div className="flex flex-col items-center gap-3 mb-6 w-full max-w-sm">
           <div className="flex items-center gap-2">
             <div className="bg-white/90 px-4 py-2 rounded-2xl flex items-center gap-2 text-sm text-primary font-bold border border-primary/5 shadow-sm">
@@ -152,7 +134,6 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Swipe Card Area */}
         <div className="relative w-full flex-1 mb-8 max-w-[400px]">
           {filteredUsers.length > 0 ? (
             <div key={user.id} className="absolute inset-0 bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col animate-in fade-in zoom-in-95 duration-500">
@@ -200,6 +181,7 @@ export default function SearchPage() {
                 setAgeRange([18, 40]);
                 setMaxDistance([50]);
                 setSelectedInterests([]);
+                setSelectedGender('all');
               }}>
                 Сбросить
               </Button>
@@ -207,7 +189,6 @@ export default function SearchPage() {
           )}
         </div>
 
-        {/* Swipe Buttons */}
         <div className="flex items-center justify-center">
           <button 
             disabled={filteredUsers.length === 0}
@@ -219,7 +200,6 @@ export default function SearchPage() {
         </div>
       </main>
 
-      {/* Centered Filter Dialog */}
       <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
         <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0">
           <DialogHeader className="p-6 bg-muted/30">
@@ -228,6 +208,29 @@ export default function SearchPage() {
           </DialogHeader>
           
           <div className="p-6 space-y-8 overflow-y-auto max-h-[60vh] no-scrollbar">
+            <div className="space-y-4">
+              <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Пол</Label>
+              <div className="flex gap-2">
+                {[
+                  { id: 'all', label: 'Все' },
+                  { id: 'male', label: 'Мужской' },
+                  { id: 'female', label: 'Женский' }
+                ].map((g) => (
+                  <Button
+                    key={g.id}
+                    variant={selectedGender === g.id ? 'default' : 'outline'}
+                    className={cn(
+                      "flex-1 rounded-full text-[10px] font-bold uppercase",
+                      selectedGender === g.id ? "gradient-bg text-white border-0" : "border-primary/10 text-muted-foreground"
+                    )}
+                    onClick={() => setSelectedGender(g.id)}
+                  >
+                    {g.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Возраст</Label>
@@ -285,7 +288,6 @@ export default function SearchPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Match Dialog */}
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
         <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden shadow-2xl">
           <div className="relative h-32 gradient-bg flex items-center justify-center">
@@ -296,7 +298,7 @@ export default function SearchPage() {
           <div className="px-6 py-8 text-center -mt-10">
             <div className="flex items-center justify-center gap-0 mb-6 relative">
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-10 -mr-4 bg-muted">
-                  <Image src={PlaceHolderImages[9].imageUrl} alt="Вы" fill className="object-cover" />
+                  <Image src={PlaceHolderImages[10].imageUrl} alt="Вы" fill className="object-cover" />
                </div>
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-0 bg-muted">
                   <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />

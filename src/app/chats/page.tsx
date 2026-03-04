@@ -15,45 +15,11 @@ import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 
 const CHATS_DATA = [
-  { 
-    id: 1, 
-    name: 'Анна', 
-    last: 'Привет! Как дела? 😊', 
-    time: '2 мин', 
-    unread: 2, 
-    img: PlaceHolderImages[0].imageUrl, 
-    online: true,
-    interests: ['Фотография', 'Путешествия', 'Кофе'],
-    bio: 'Люблю закаты и интересные разговоры.'
-  },
-  { 
-    id: 2, 
-    name: 'Максим', 
-    last: 'Давай встретимся завтра', 
-    time: '1 час', 
-    unread: 0, 
-    img: PlaceHolderImages[1].imageUrl, 
-    online: false,
-    interests: ['Спорт', 'IT', 'Книги'],
-    bio: 'Ищу компанию для пробежек.'
-  },
-  { 
-    id: 3, 
-    name: 'Елена', 
-    last: 'Спасибо за комплимент!', 
-    time: '3 часа', 
-    unread: 1, 
-    img: PlaceHolderImages[2].imageUrl, 
-    online: true,
-    interests: ['Искусство', 'Музыка'],
-    bio: 'Мечтаю о кругосветке.'
-  },
-];
-
-// Дополнительные данные пользователей из поиска для реализации мэтча
-const SEARCH_USERS = [
-  { id: 4, name: 'Мария', img: PlaceHolderImages[3].imageUrl, interests: ['Танцы', 'Театр'], bio: 'Жизнь - это танец!' },
-  { id: 5, name: 'София', img: PlaceHolderImages[5].imageUrl, interests: ['Спорт', 'Музыка'], bio: 'Музыка и спорт — моя жизнь.' }
+  { id: 1, name: 'Анна', last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, img: PlaceHolderImages[0].imageUrl, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
+  { id: 2, name: 'Максим', age: 28, last: 'Давай встретимся завтра', time: '1 час', unread: 0, img: PlaceHolderImages[1].imageUrl, online: false, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
+  { id: 3, name: 'Елена', age: 26, last: 'Спасибо за комплимент!', time: '3 часа', unread: 1, img: PlaceHolderImages[2].imageUrl, online: true, interests: ['Искусство', 'Музыка'], bio: 'Мечтаю о кругосветке.' },
+  { id: 4, name: 'Дмитрий', age: 31, last: 'Был рад познакомиться', time: '5 час', unread: 0, img: PlaceHolderImages[3].imageUrl, online: false, interests: ['Бизнес', 'Авто'], bio: 'Ценю время.' },
+  { id: 5, name: 'София', age: 22, last: 'Круто!', time: '1 день', unread: 0, img: PlaceHolderImages[4].imageUrl, online: true, interests: ['Музыка', 'Гитара'], bio: 'Рок-н-ролл жив!' }
 ];
 
 const INITIAL_MESSAGES = [
@@ -84,15 +50,32 @@ function ChatsContent() {
     }
   }, [messages, selectedChat]);
 
-  // Эффект для обработки входящего мэтча
   useEffect(() => {
     if (matchId) {
       const id = parseInt(matchId);
-      let chat = CHATS_DATA.find(c => c.id === id) || SEARCH_USERS.find(u => u.id === id);
+      // Ищем в существующих чатах или создаем новый на основе демо-данных
+      let chat = CHATS_DATA.find(c => c.id === id);
       
+      if (!chat) {
+        // Если это новый мэтч из поиска, создаем временный объект чата
+        // (в реальном приложении это бы бралось из БД)
+        const demoUsers = [
+          { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, interests: ['Фотография'], bio: '...' },
+          { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, interests: ['Спорт'], bio: '...' },
+          { id: 3, name: 'Елена', img: PlaceHolderImages[2].imageUrl, interests: ['Искусство'], bio: '...' },
+          { id: 4, name: 'Дмитрий', img: PlaceHolderImages[3].imageUrl, interests: ['Бизнес'], bio: '...' },
+          { id: 5, name: 'София', img: PlaceHolderImages[4].imageUrl, interests: ['Музыка'], bio: '...' },
+          { id: 6, name: 'Артем', img: PlaceHolderImages[5].imageUrl, interests: ['Игры'], bio: '...' },
+          { id: 7, name: 'Мария', img: PlaceHolderImages[6].imageUrl, interests: ['Йога'], bio: '...' },
+          { id: 8, name: 'Иван', img: PlaceHolderImages[7].imageUrl, interests: ['Фотография'], bio: '...' },
+          { id: 9, name: 'Ксения', img: PlaceHolderImages[8].imageUrl, interests: ['Мода'], bio: '...' },
+          { id: 10, name: 'Никита', img: PlaceHolderImages[9].imageUrl, interests: ['Наука'], bio: '...' }
+        ];
+        chat = demoUsers.find(u => u.id === id);
+      }
+
       if (chat) {
         setSelectedChat(chat);
-        // Если это новый мэтч, добавляем первое сообщение от нас
         setMessages([
           { 
             id: Date.now(), 
@@ -119,7 +102,6 @@ function ChatsContent() {
     setMessages([...messages, newMessage]);
     setInputValue("");
 
-    // Simulate response
     setTimeout(() => {
       setIsTyping(true);
       setTimeout(() => {
@@ -161,7 +143,6 @@ function ChatsContent() {
   if (selectedChat) {
     return (
       <div className="flex flex-col h-svh bg-white">
-        {/* Chat Header */}
         <header className="flex items-center gap-3 px-4 py-3 border-b border-border sticky top-0 bg-white/95 backdrop-blur-md z-10">
           <Button variant="ghost" size="icon" onClick={() => setSelectedChat(null)} className="rounded-full">
             <ChevronLeft size={24} />
@@ -183,7 +164,6 @@ function ChatsContent() {
           </Button>
         </header>
 
-        {/* Messages Area */}
         <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8f9fb]">
           <div className="text-center my-4">
             <Badge variant="secondary" className="bg-white/50 text-[10px] text-muted-foreground border-0 font-medium">Сегодня</Badge>
@@ -223,9 +203,7 @@ function ChatsContent() {
           <div ref={messagesEndRef} />
         </main>
 
-        {/* Input Area */}
         <div className="p-4 bg-white border-t border-border">
-          {/* AI Icebreakers */}
           {!isTyping && messages.length < 5 && (
             <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
               <div className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-full border border-primary/10">

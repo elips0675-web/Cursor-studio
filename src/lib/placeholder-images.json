@@ -3,7 +3,7 @@
     {
       "id": "user-anna",
       "description": "Attractive young woman smiling",
-      "imageUrl": "https://images.unsplash.com/photo-1554727242-741c14fa561c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzcyNTc4MzM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzcyNTc4MzM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman smiling"
     },
     {
@@ -19,16 +19,10 @@
       "imageHint": "woman library"
     },
     {
-      "id": "user-maria",
-      "description": "Woman with sunglasses in a city",
-      "imageUrl": "https://picsum.photos/seed/maria/400/600",
-      "imageHint": "woman fashion"
-    },
-    {
-      "id": "user-alex",
-      "description": "Man with glasses coding",
-      "imageUrl": "https://picsum.photos/seed/alex/400/600",
-      "imageHint": "man computer"
+      "id": "user-dmitry",
+      "description": "Man in a business suit",
+      "imageUrl": "https://picsum.photos/seed/dmitry/400/600",
+      "imageHint": "man business"
     },
     {
       "id": "user-sophia",
@@ -37,22 +31,34 @@
       "imageHint": "woman music"
     },
     {
-      "id": "group-running",
-      "description": "People running together",
-      "imageUrl": "https://picsum.photos/seed/run/400/300",
-      "imageHint": "running group"
+      "id": "user-artem",
+      "description": "Young man with gaming headset",
+      "imageUrl": "https://picsum.photos/seed/artem/400/600",
+      "imageHint": "man gaming"
     },
     {
-      "id": "group-music",
-      "description": "Indie music concert",
-      "imageUrl": "https://images.unsplash.com/photo-1656283384093-1e227e621fad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtdXNpYyUyMGNvbmNlcnR8ZW58MHx8fHwxNzcyNTQ1ODg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "music concert"
+      "id": "user-maria",
+      "description": "Woman doing yoga",
+      "imageUrl": "https://picsum.photos/seed/maria/400/600",
+      "imageHint": "woman yoga"
     },
     {
-      "id": "group-art",
-      "description": "Art gallery exhibition",
-      "imageUrl": "https://picsum.photos/seed/gallery/400/300",
-      "imageHint": "art gallery"
+      "id": "user-ivan",
+      "description": "Man with professional camera",
+      "imageUrl": "https://picsum.photos/seed/ivan/400/600",
+      "imageHint": "man photography"
+    },
+    {
+      "id": "user-ksenia",
+      "description": "Woman in fashionable clothes",
+      "imageUrl": "https://picsum.photos/seed/ksenia/400/600",
+      "imageHint": "woman fashion"
+    },
+    {
+      "id": "user-nikita",
+      "description": "Man in a museum",
+      "imageUrl": "https://picsum.photos/seed/nikita/400/600",
+      "imageHint": "man history"
     },
     {
       "id": "user-avatar-main",

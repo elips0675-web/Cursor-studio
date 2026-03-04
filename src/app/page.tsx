@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Flame, Search } from "lucide-react";
@@ -12,10 +13,10 @@ import Image from "next/image";
 const users = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2 },
   { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5 },
-  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 8 },
-  { id: 4, name: 'Мария', age: 23, img: PlaceHolderImages[3].imageUrl, online: true, distance: 1 },
-  { id: 5, name: 'Александр', age: 29, img: PlaceHolderImages[4].imageUrl, online: false, distance: 12 },
-  { id: 6, name: 'София', age: 25, img: PlaceHolderImages[5].imageUrl, online: true, distance: 3 }
+  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1 },
+  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7 },
+  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3 },
+  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9 }
 ];
 
 export default function Home() {
@@ -53,7 +54,7 @@ export default function Home() {
         <section>
           <h5 className="font-bold mb-4 text-lg mt-8">✨ Новые</h5>
           <div className="grid grid-cols-2 gap-4">
-            {users.slice(2).map((u) => (
+            {users.slice(2, 6).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
           </div>
@@ -66,7 +67,7 @@ export default function Home() {
 
 function ProfilePreviewCard({ user }: { user: any }) {
   return (
-    <Link href="/search" className="bg-white rounded-3xl overflow-hidden app-shadow group active:scale-[0.98] transition-all">
+    <Link href={`/search`} className="bg-white rounded-3xl overflow-hidden app-shadow group active:scale-[0.98] transition-all">
       <div className="relative aspect-[3/4]">
         <Image 
           src={user.img} 
