@@ -26,7 +26,6 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 
@@ -90,7 +89,8 @@ export default function SearchPage() {
 
   const handleSwipeRight = async () => {
     if (!user) return;
-    if (Math.random() > 0.5) {
+    // Simulate match
+    if (Math.random() > 0.3) {
       setMatchUser(user);
       getAiInsight(user);
     }
@@ -152,7 +152,6 @@ export default function SearchPage() {
               </SheetHeader>
               
               <div className="space-y-8 overflow-y-auto max-h-[60vh] pb-6 no-scrollbar">
-                {/* Age Filter */}
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <Label className="text-sm font-bold">Возраст</Label>
@@ -168,7 +167,6 @@ export default function SearchPage() {
                   />
                 </div>
 
-                {/* Distance Filter */}
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <Label className="text-sm font-bold">Расстояние (км)</Label>
@@ -184,7 +182,6 @@ export default function SearchPage() {
                   />
                 </div>
 
-                {/* Interests Filter */}
                 <div className="space-y-4">
                   <Label className="text-sm font-bold">Интересы</Label>
                   <div className="flex flex-wrap gap-2">
@@ -281,36 +278,53 @@ export default function SearchPage() {
       </main>
 
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
-        <DialogContent className="max-w-[360px] rounded-[2rem] border-0 bg-black/95 text-white">
-          <div className="flex flex-col items-center py-6 text-center">
-            <div className="text-6xl mb-4 animate-bounce">💕</div>
-            <DialogTitle className="text-3xl font-black font-headline mb-2 text-white">Это совпадение!</DialogTitle>
-            <DialogDescription className="text-white/70 mb-6">
-              Вы с {matchUser?.name} понравились друг другу
+        <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden shadow-2xl">
+          <div className="relative h-32 gradient-bg flex items-center justify-center">
+             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+             <Heart className="text-white animate-pulse" size={48} fill="currentColor" />
+          </div>
+
+          <div className="px-6 py-8 text-center -mt-10">
+            {/* Avatars Pair */}
+            <div className="flex items-center justify-center gap-0 mb-6 relative">
+               <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-10 -mr-4 bg-muted">
+                  <Image src={PlaceHolderImages[9].imageUrl} alt="Вы" fill className="object-cover" />
+               </div>
+               <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden relative z-0 bg-muted">
+                  <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />
+               </div>
+               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-md z-20">
+                  <Heart size={16} className="text-primary" fill="currentColor" />
+               </div>
+            </div>
+
+            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text">Это совпадение!</DialogTitle>
+            <DialogDescription className="text-muted-foreground text-sm mb-6 px-4">
+              Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу. Не заставляйте ждать!
             </DialogDescription>
             
-            <div className="bg-white/10 p-4 rounded-2xl mb-6 text-left w-full border border-white/5">
-              <h4 className="text-xs font-bold text-primary mb-2 flex items-center gap-1">
-                <Sparkles size={12} /> AI ПОДСКАЗКА
+            <div className="bg-primary/5 p-4 rounded-3xl mb-8 text-left border border-primary/10">
+              <h4 className="text-[10px] font-bold text-primary mb-2 flex items-center gap-1 uppercase tracking-wider">
+                <Sparkles size={12} /> AI Инсайт
               </h4>
               {loadingAi ? (
-                <div className="flex items-center gap-2 text-xs text-white/50">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
                   <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  Генерация инсайта...
+                  Анализируем интересы...
                 </div>
               ) : (
-                <p className="text-xs leading-relaxed text-white/90 italic">
+                <p className="text-xs leading-relaxed text-foreground/80 italic">
                   {compatibility}
                 </p>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3 w-full">
-              <Button variant="outline" onClick={() => setMatchUser(null)} className="rounded-full border-white/20 hover:bg-white/10 text-white">
-                Позже
+            <div className="flex flex-col gap-3 w-full">
+              <Button className="w-full h-12 rounded-full gradient-bg text-white font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                Написать первым
               </Button>
-              <Button className="rounded-full gradient-bg text-white font-bold" onClick={() => setMatchUser(null)}>
-                Написать
+              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-11 text-muted-foreground font-semibold hover:bg-muted">
+                Продолжить поиск
               </Button>
             </div>
           </div>
