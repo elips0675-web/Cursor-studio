@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -14,12 +13,26 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 
+// Консистентные демо-данные пользователей для всех разделов
 const CHATS_DATA = [
   { id: 1, name: 'Анна', last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, img: PlaceHolderImages[0].imageUrl, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
-  { id: 2, name: 'Максим', age: 28, last: 'Давай встретимся завтра', time: '1 час', unread: 0, img: PlaceHolderImages[1].imageUrl, online: false, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
-  { id: 3, name: 'Елена', age: 26, last: 'Спасибо за комплимент!', time: '3 часа', unread: 1, img: PlaceHolderImages[2].imageUrl, online: true, interests: ['Искусство', 'Музыка'], bio: 'Мечтаю о кругосветке.' },
-  { id: 4, name: 'Дмитрий', age: 31, last: 'Был рад познакомиться', time: '5 час', unread: 0, img: PlaceHolderImages[3].imageUrl, online: false, interests: ['Бизнес', 'Авто'], bio: 'Ценю время.' },
-  { id: 5, name: 'София', age: 22, last: 'Круто!', time: '1 день', unread: 0, img: PlaceHolderImages[4].imageUrl, online: true, interests: ['Музыка', 'Гитара'], bio: 'Рок-н-ролл жив!' }
+  { id: 2, name: 'Максим', last: 'Давай встретимся завтра', time: '1 час', unread: 0, img: PlaceHolderImages[1].imageUrl, online: false, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
+  { id: 3, name: 'Елена', last: 'Спасибо за комплимент!', time: '3 часа', unread: 1, img: PlaceHolderImages[2].imageUrl, online: true, interests: ['Искусство', 'Музыка'], bio: 'Мечтаю о кругосветке.' },
+  { id: 4, name: 'Дмитрий', last: 'Был рад познакомиться', time: '5 час', unread: 0, img: PlaceHolderImages[3].imageUrl, online: false, interests: ['Бизнес', 'Авто'], bio: 'Ценю время.' },
+  { id: 5, name: 'София', last: 'Круто!', time: '1 день', unread: 0, img: PlaceHolderImages[4].imageUrl, online: true, interests: ['Музыка', 'Гитара'], bio: 'Рок-н-ролл жив!' }
+];
+
+const ALL_DEMO_USERS = [
+  { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, interests: ['Фотография'], bio: 'Люблю закаты и интересные разговоры.' },
+  { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, interests: ['Спорт'], bio: 'Ищу компанию для пробежек.' },
+  { id: 3, name: 'Елена', img: PlaceHolderImages[2].imageUrl, interests: ['Искусство'], bio: 'Мечтаю о кругосветке.' },
+  { id: 4, name: 'Дмитрий', img: PlaceHolderImages[3].imageUrl, interests: ['Бизнес'], bio: 'Ценю время.' },
+  { id: 5, name: 'София', img: PlaceHolderImages[4].imageUrl, interests: ['Музыка'], bio: 'Рок-н-ролл жив!' },
+  { id: 6, name: 'Артем', img: PlaceHolderImages[5].imageUrl, interests: ['Игры'], bio: 'Геймер со стажем.' },
+  { id: 7, name: 'Мария', img: PlaceHolderImages[6].imageUrl, interests: ['Йога'], bio: 'За здоровый образ жизни.' },
+  { id: 8, name: 'Иван', img: PlaceHolderImages[7].imageUrl, interests: ['Фотография'], bio: 'Фотограф-пейзажист.' },
+  { id: 9, name: 'Ксения', img: PlaceHolderImages[8].imageUrl, interests: ['Мода'], bio: 'Стиль - это всё.' },
+  { id: 10, name: 'Никита', img: PlaceHolderImages[9].imageUrl, interests: ['Наука'], bio: 'Люблю космос.' }
 ];
 
 const INITIAL_MESSAGES = [
@@ -53,25 +66,10 @@ function ChatsContent() {
   useEffect(() => {
     if (matchId) {
       const id = parseInt(matchId);
-      // Ищем в существующих чатах или создаем новый на основе демо-данных
       let chat = CHATS_DATA.find(c => c.id === id);
       
       if (!chat) {
-        // Если это новый мэтч из поиска, создаем временный объект чата
-        // (в реальном приложении это бы бралось из БД)
-        const demoUsers = [
-          { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, interests: ['Фотография'], bio: '...' },
-          { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, interests: ['Спорт'], bio: '...' },
-          { id: 3, name: 'Елена', img: PlaceHolderImages[2].imageUrl, interests: ['Искусство'], bio: '...' },
-          { id: 4, name: 'Дмитрий', img: PlaceHolderImages[3].imageUrl, interests: ['Бизнес'], bio: '...' },
-          { id: 5, name: 'София', img: PlaceHolderImages[4].imageUrl, interests: ['Музыка'], bio: '...' },
-          { id: 6, name: 'Артем', img: PlaceHolderImages[5].imageUrl, interests: ['Игры'], bio: '...' },
-          { id: 7, name: 'Мария', img: PlaceHolderImages[6].imageUrl, interests: ['Йога'], bio: '...' },
-          { id: 8, name: 'Иван', img: PlaceHolderImages[7].imageUrl, interests: ['Фотография'], bio: '...' },
-          { id: 9, name: 'Ксения', img: PlaceHolderImages[8].imageUrl, interests: ['Мода'], bio: '...' },
-          { id: 10, name: 'Никита', img: PlaceHolderImages[9].imageUrl, interests: ['Наука'], bio: '...' }
-        ];
-        chat = demoUsers.find(u => u.id === id);
+        chat = ALL_DEMO_USERS.find(u => u.id === id);
       }
 
       if (chat) {

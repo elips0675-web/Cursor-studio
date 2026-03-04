@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-// Полный список из 10 демо-пользователей
+// Полный список из 10 демо-пользователей (5 женщин, 5 мужчин)
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, gender: 'female' },
   { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, gender: 'male' },
@@ -49,7 +49,6 @@ export default function Home() {
         <section className="mb-6">
           <h5 className="font-bold mb-4 text-lg">🔥 Топ пользователей</h5>
           <div className="grid grid-cols-2 gap-4">
-            {/* Показываем первых двух (Анна и Максим) */}
             {ALL_DEMO_USERS.slice(0, 2).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
@@ -59,7 +58,6 @@ export default function Home() {
         <section>
           <h5 className="font-bold mb-4 text-lg mt-8">✨ Новые анкеты</h5>
           <div className="grid grid-cols-2 gap-4">
-            {/* Показываем остальных (всего 10) */}
             {ALL_DEMO_USERS.slice(2, 10).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
