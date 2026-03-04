@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal } from "lucide-react";
@@ -8,8 +9,9 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 // Консистентный список из 10 демо-пользователей
 const ALL_DEMO_USERS = [
@@ -27,17 +29,27 @@ const ALL_DEMO_USERS = [
 
 export default function Home() {
   const [isAutoSearching, setIsAutoSearching] = useState(false);
+  const recommendRef = useRef<HTMLDivElement>(null);
 
   const handleAutoSearch = () => {
     setIsAutoSearching(true);
     toast({
       title: "Автопоиск запущен",
-      description: "Мы подбираем лучшие профили на основе ваших предпочтений.",
+      description: "Подбираем лучшие анкеты специально для вас...",
     });
+    
+    // Имитация процесса поиска и скролл к рекомендациям
     setTimeout(() => {
       setIsAutoSearching(false);
+      recommendRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1500);
+  };
+
+  const handleGoToSwipes = () => {
+    setIsAutoSearching(true);
+    setTimeout(() => {
       window.location.href = "/search";
-    }, 2000);
+    }, 800);
   };
 
   return (
@@ -59,10 +71,11 @@ export default function Home() {
         {/* Action Buttons & Filters */}
         <div className="space-y-4 mb-10">
           <div className="flex gap-3">
-            <Button asChild className="flex-1 h-14 rounded-2xl gradient-bg text-white font-bold text-lg app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0">
-              <Link href="/search">
-                <Search size={20} className="mr-2 stroke-[3px]" /> Найти пару
-              </Link>
+            <Button 
+              onClick={handleGoToSwipes}
+              className="flex-1 h-14 rounded-2xl gradient-bg text-white font-bold text-lg app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0"
+            >
+              <Search size={20} className="mr-2 stroke-[3px]" /> Свайпы
             </Button>
             <Button 
               onClick={handleAutoSearch}
@@ -74,8 +87,16 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
-            <Button variant="outline" size="sm" className="rounded-xl border-muted bg-white h-9 text-[10px] font-bold uppercase tracking-tight gap-1.5 shadow-sm shrink-0">
-              <SlidersHorizontal size={12} /> Фильтры
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleAutoSearch}
+              className={cn(
+                "rounded-xl border-muted bg-white h-9 text-[10px] font-bold uppercase tracking-tight gap-1.5 shadow-sm shrink-0 transition-all",
+                isAutoSearching && "border-primary text-primary"
+              )}
+            >
+              <Zap size={12} className={isAutoSearching ? "animate-spin" : ""} /> Автопоиск
             </Button>
             {['Интересы', 'Возраст', 'Город', 'Зодиак'].map((filter) => (
               <Button key={filter} variant="secondary" size="sm" className="rounded-xl bg-white border border-border h-9 text-[10px] font-bold uppercase tracking-tight shadow-sm shrink-0">
@@ -101,12 +122,15 @@ export default function Home() {
         </section>
 
         {/* Grid Section */}
-        <section>
+        <section ref={recommendRef} className="scroll-mt-6">
           <div className="flex justify-between items-end mb-4">
             <h5 className="font-black text-xl font-headline">✨ Рекомендуем</h5>
             <Badge variant="outline" className="text-[10px] font-bold text-muted-foreground border-muted px-3 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className={cn(
+            "grid grid-cols-2 gap-4 transition-opacity duration-500",
+            isAutoSearching ? "opacity-40" : "opacity-100"
+          )}>
             {ALL_DEMO_USERS.slice(4).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
