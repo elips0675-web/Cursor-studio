@@ -14,26 +14,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 
-// Консистентные демо-данные пользователей для всех разделов
-const CHATS_DATA = [
-  { id: 1, name: 'Анна', last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, img: PlaceHolderImages[0].imageUrl, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
-  { id: 2, name: 'Максим', last: 'Давай встретимся завтра', time: '1 час', unread: 0, img: PlaceHolderImages[1].imageUrl, online: false, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
-  { id: 3, name: 'Елена', last: 'Спасибо за комплимент!', time: '3 часа', unread: 1, img: PlaceHolderImages[2].imageUrl, online: true, interests: ['Искусство', 'Музыка'], bio: 'Мечтаю о кругосветке.' },
-  { id: 4, name: 'Дмитрий', last: 'Был рад познакомиться', time: '5 час', unread: 0, img: PlaceHolderImages[3].imageUrl, online: false, interests: ['Бизнес', 'Авто'], bio: 'Ценю время.' },
-  { id: 5, name: 'София', last: 'Круто!', time: '1 день', unread: 0, img: PlaceHolderImages[4].imageUrl, online: true, interests: ['Музыка', 'Гитара'], bio: 'Рок-н-ролл жив!' }
-];
-
+// Консистентный список из 10 демо-пользователей
 const ALL_DEMO_USERS = [
-  { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, interests: ['Фотография'], bio: 'Люблю закаты и интересные разговоры.' },
-  { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, interests: ['Спорт'], bio: 'Ищу компанию для пробежек.' },
-  { id: 3, name: 'Елена', img: PlaceHolderImages[2].imageUrl, interests: ['Искусство'], bio: 'Мечтаю о кругосветке.' },
-  { id: 4, name: 'Дмитрий', img: PlaceHolderImages[3].imageUrl, interests: ['Бизнес'], bio: 'Ценю время.' },
-  { id: 5, name: 'София', img: PlaceHolderImages[4].imageUrl, interests: ['Музыка'], bio: 'Рок-н-ролл жив!' },
-  { id: 6, name: 'Артем', img: PlaceHolderImages[5].imageUrl, interests: ['Игры'], bio: 'Геймер со стажем.' },
-  { id: 7, name: 'Мария', img: PlaceHolderImages[6].imageUrl, interests: ['Йога'], bio: 'За здоровый образ жизни.' },
-  { id: 8, name: 'Иван', img: PlaceHolderImages[7].imageUrl, interests: ['Фотография'], bio: 'Фотограф-пейзажист.' },
-  { id: 9, name: 'Ксения', img: PlaceHolderImages[8].imageUrl, interests: ['Мода'], bio: 'Стиль - это всё.' },
-  { id: 10, name: 'Никита', img: PlaceHolderImages[9].imageUrl, interests: ['Наука'], bio: 'Люблю космос.' }
+  { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
+  { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, last: 'Давай встретимся завтра', time: '1 час', unread: 0, online: true, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
+  { id: 3, name: 'Елена', img: PlaceHolderImages[2].imageUrl, last: 'Спасибо за комплимент!', time: '3 часа', unread: 1, online: false, interests: ['Искусство', 'Книги', 'Вино'], bio: 'Мечтаю о кругосветке.' },
+  { id: 4, name: 'Дмитрий', img: PlaceHolderImages[3].imageUrl, last: 'Был рад познакомиться', time: '5 час', unread: 0, online: false, interests: ['Бизнес', 'Авто', 'Спорт'], bio: 'Ценю время.' },
+  { id: 5, name: 'София', img: PlaceHolderImages[4].imageUrl, last: 'Круто!', time: '1 день', unread: 0, online: true, interests: ['Музыка', 'Гитара'], bio: 'Рок-н-ролл жив!' },
+  { id: 6, name: 'Артем', img: PlaceHolderImages[5].imageUrl, last: 'Го играть!', time: '1 день', unread: 0, online: true, interests: ['Игры', 'Аниме'], bio: 'Геймер со стажем.' },
+  { id: 7, name: 'Мария', img: PlaceHolderImages[6].imageUrl, last: 'Завтра в парк?', time: '2 дня', unread: 0, online: true, interests: ['Йога', 'Природа'], bio: 'За здоровый образ жизни.' },
+  { id: 8, name: 'Иван', img: PlaceHolderImages[7].imageUrl, last: 'Фото готовы!', time: '3 дня', unread: 0, online: false, interests: ['Фотография', 'Горы'], bio: 'Фотограф-пейзажист.' },
+  { id: 9, name: 'Ксения', img: PlaceHolderImages[8].imageUrl, last: 'Как тебе образ?', time: '4 дня', unread: 0, online: true, interests: ['Мода', 'Дизайн'], bio: 'Стиль - это всё.' },
+  { id: 10, name: 'Никита', img: PlaceHolderImages[9].imageUrl, last: 'Интересный факт...', time: '5 дней', unread: 0, online: false, interests: ['Наука', 'История'], bio: 'Люблю космос.' }
 ];
 
 const INITIAL_MESSAGES = [
@@ -67,11 +59,7 @@ function ChatsContent() {
   useEffect(() => {
     if (matchId) {
       const id = parseInt(matchId);
-      let chat = CHATS_DATA.find(c => c.id === id);
-      
-      if (!chat) {
-        chat = ALL_DEMO_USERS.find(u => u.id === id);
-      }
+      const chat = ALL_DEMO_USERS.find(u => u.id === id);
 
       if (chat) {
         setSelectedChat(chat);
@@ -269,7 +257,7 @@ function ChatsContent() {
         </div>
 
         <div className="space-y-4">
-          {CHATS_DATA.map((chat) => (
+          {ALL_DEMO_USERS.map((chat) => (
             <div 
               key={chat.id} 
               onClick={() => openChat(chat)}
