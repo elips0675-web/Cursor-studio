@@ -22,6 +22,10 @@ const IcebreakerInputSchema = z.object({
     .string()
     .optional()
     .describe("The bio or 'about me' section of the matched user."),
+  mood: z
+    .string()
+    .optional()
+    .describe("The desired mood or theme for the icebreaker (e.g., 'Funny', 'Romantic', 'Deep')."),
 });
 export type IcebreakerInput = z.infer<typeof IcebreakerInputSchema>;
 
@@ -43,6 +47,10 @@ const icebreakerPrompt = ai.definePrompt({
   input: { schema: IcebreakerInputSchema },
   output: { schema: IcebreakerOutputSchema },
   prompt: `You are a friendly, creative, and engaging conversation starter for a dating app. Your goal is to generate 3-5 unique and personalized icebreaker suggestions or opening lines for a new chat.
+
+{{#if mood}}
+The desired mood/theme for these suggestions is: {{{mood}}}. Make sure the tone matches this perfectly.
+{{/if}}
 
 Focus on common interests between the two users and any details from the matched user's bio to make the suggestions sound natural, encouraging, and easy to respond to.
 

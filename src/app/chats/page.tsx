@@ -1,8 +1,7 @@
-
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { MessageCircle, Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile } from "lucide-react";
+import { MessageCircle, Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -14,7 +13,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 
-// Консистентный список из 10 демо-пользователей
+const CHAT_THEMES = [
+  { id: 'romantic', label: 'Романтика', icon: Heart, color: 'text-pink-500', mood: 'Romantic and sweet' },
+  { id: 'funny', label: 'Юмор', icon: Laugh, color: 'text-orange-500', mood: 'Funny and lighthearted' },
+  { id: 'hobbies', label: 'О хобби', icon: Compass, color: 'text-blue-500', mood: 'About shared hobbies and activities' },
+  { id: 'daily', label: 'Про день', icon: Coffee, color: 'text-amber-600', mood: 'Casual daily talk' },
+  { id: 'deep', label: 'Глубокое', icon: MessageSquareQuote, color: 'text-purple-500', mood: 'Deep and philosophical questions' },
+  { id: 'bold', label: 'Смело', icon: Zap, color: 'text-yellow-500', mood: 'Bold, direct and flirty' },
+];
+
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
   { id: 2, name: 'Максим', img: PlaceHolderImages[1].imageUrl, last: 'Давай встретимся завтра', time: '1 час', unread: 0, online: true, interests: ['Спорт', 'IT', 'Книги'], bio: 'Ищу компанию для пробежек.' },
@@ -44,6 +51,7 @@ function ChatsContent() {
   const [isTyping, setIsTyping] = useState(false);
   const [icebreakers, setIcebreakers] = useState<string[]>([]);
   const [loadingIcebreakers, setLoadingIcebreakers] = useState(false);
+  const [showThemeGrid, setShowThemeGrid] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -88,6 +96,7 @@ function ChatsContent() {
 
     setMessages([...messages, newMessage]);
     setInputValue("");
+    setShowThemeGrid(false);
 
     setTimeout(() => {
       setIsTyping(true);
@@ -104,26 +113,30 @@ function ChatsContent() {
     }, 1000);
   };
 
-  const loadIcebreakers = async (chat: any) => {
+  const loadIcebreakers = async (chat: any, mood?: string) => {
     setLoadingIcebreakers(true);
     try {
       const res = await generateIcebreakerSuggestions({
         currentUserInterests: ["Спорт", "Кофе", "Кино"],
         matchedUserName: chat.name,
         matchedUserInterests: chat.interests || [],
-        matchedUserBio: chat.bio || ""
+        matchedUserBio: chat.bio || "",
+        mood: mood || "Friendly and polite"
       });
       setIcebreakers(res.suggestions);
     } catch (e) {
       setIcebreakers(["Привет! Как прошел твой день?", "Чем любишь заниматься в свободное время?", "Какой твой любимый фильм?"]);
     } finally {
       setLoadingIcebreakers(false);
+      if (mood) setShowThemeGrid(false);
     }
   };
 
   const openChat = (chat: any) => {
     setSelectedChat(chat);
     setMessages(INITIAL_MESSAGES);
+    setShowThemeGrid(false);
+    setIcebreakers([]);
     loadIcebreakers(chat);
   };
 
@@ -190,20 +203,56 @@ function ChatsContent() {
           <div ref={messagesEndRef} />
         </main>
 
-        <div className="p-4 bg-white border-t border-border">
-          {!isTyping && messages.length < 5 && (
-            <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
-              <div className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 bg-primary/5 text-primary text-[10px] font-bold rounded-full border border-primary/10">
-                <Sparkles size={12} /> AI
-              </div>
+        <div className="p-4 bg-white border-t border-border shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)]">
+          {/* AI Theme Grid Toggle */}
+          <div className="flex items-center justify-between mb-3">
+             <button 
+               onClick={() => setShowThemeGrid(!showThemeGrid)}
+               className={cn(
+                 "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tight transition-all",
+                 showThemeGrid ? "gradient-bg text-white shadow-md" : "bg-primary/5 text-primary border border-primary/10"
+               )}
+             >
+               <Sparkles size={12} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? "Закрыть темы" : "Темы ответов AI"}
+             </button>
+             {!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (
+               <p className="text-[9px] text-muted-foreground font-medium italic">Листайте вправо →</p>
+             )}
+          </div>
+
+          {/* AI Themes Grid */}
+          {showThemeGrid && (
+            <div className="grid grid-cols-3 gap-2 mb-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              {CHAT_THEMES.map((theme) => {
+                const Icon = theme.icon;
+                return (
+                  <button
+                    key={theme.id}
+                    onClick={() => loadIcebreakers(selectedChat, theme.mood)}
+                    className="flex flex-col items-center justify-center p-3 rounded-2xl bg-muted/40 border border-border/50 hover:border-primary/30 hover:bg-white transition-all group"
+                  >
+                    <Icon size={20} className={cn("mb-1 group-hover:scale-110 transition-transform", theme.color)} />
+                    <span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{theme.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Icebreaker Suggestions */}
+          {!showThemeGrid && (
+            <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4 h-9 items-center">
               {loadingIcebreakers ? (
-                <div className="h-7 w-32 bg-muted animate-pulse rounded-full"></div>
+                <div className="flex gap-2">
+                  <div className="h-7 w-32 bg-muted animate-pulse rounded-full"></div>
+                  <div className="h-7 w-28 bg-muted animate-pulse rounded-full"></div>
+                </div>
               ) : (
                 icebreakers.map((text, i) => (
                   <button 
                     key={i} 
                     onClick={() => setInputValue(text)}
-                    className="whitespace-nowrap px-4 py-1.5 bg-muted hover:bg-border transition-colors text-[10px] font-medium rounded-full text-foreground/80"
+                    className="whitespace-nowrap px-4 py-1.5 bg-muted hover:bg-border transition-colors text-[10px] font-medium rounded-full text-foreground/80 border border-transparent active:scale-95 transition-transform"
                   >
                     {text}
                   </button>
@@ -219,7 +268,7 @@ function ChatsContent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Ваше сообщение..." 
-                className="pr-10 h-11 bg-muted border-0 rounded-2xl focus-visible:ring-primary/20"
+                className="pr-10 h-11 bg-muted border-0 rounded-2xl focus-visible:ring-primary/20 font-medium"
               />
               <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors">
                 <Smile size={20} />
