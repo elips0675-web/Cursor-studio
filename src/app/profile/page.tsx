@@ -20,7 +20,9 @@ import {
   Briefcase,
   Gamepad2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Maximize2,
+  X
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,6 +38,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
   // Profile State
@@ -52,10 +60,23 @@ export default function ProfilePage() {
     PlaceHolderImages[0].imageUrl,
     PlaceHolderImages[2].imageUrl,
     PlaceHolderImages[4].imageUrl,
+    PlaceHolderImages[6].imageUrl,
+    PlaceHolderImages[8].imageUrl,
   ]);
 
+  // Gallery Viewer State
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+
   const handleAddPhoto = () => {
-    // Симуляция добавления фото
+    if (photos.length >= 9) {
+      toast({
+        variant: "destructive",
+        title: "Лимит достигнут",
+        description: "Максимум 9 фотографий в профиле.",
+      });
+      return;
+    }
     const newPhoto = PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl;
     setPhotos(prev => [...prev, newPhoto]);
     toast({
@@ -77,6 +98,11 @@ export default function ProfilePage() {
     toast({
       title: "Фото удалено",
     });
+  };
+
+  const openPhotoViewer = (index: number) => {
+    setActivePhotoIndex(index);
+    setIsViewerOpen(true);
   };
 
   // Карта иконок для всех возможных интересов
@@ -115,7 +141,7 @@ export default function ProfilePage() {
                 <CarouselContent className="h-full ml-0">
                   {photos.length > 0 ? (
                     photos.map((url, idx) => (
-                      <CarouselItem key={idx} className="pl-0 h-full relative">
+                      <CarouselItem key={idx} className="pl-0 h-full relative cursor-pointer" onClick={() => openPhotoViewer(idx)}>
                         <Image 
                           src={url} 
                           alt={`Profile ${idx}`} 
@@ -135,7 +161,7 @@ export default function ProfilePage() {
                   <>
                     <CarouselPrevious className="left-4 bg-black/20 border-0 text-white hover:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md h-12 w-12" />
                     <CarouselNext className="right-4 bg-black/20 border-0 text-white hover:bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md h-12 w-12" />
-                    <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+                    <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
                       {photos.map((_, i) => (
                         <div key={i} className="w-2 h-2 rounded-full bg-white/40 shadow-sm" />
                       ))}
@@ -204,19 +230,26 @@ export default function ProfilePage() {
             </div>
             <div className="grid grid-cols-3 gap-4">
               {photos.map((url, idx) => (
-                <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-md border border-border/20">
+                <div 
+                  key={idx} 
+                  onClick={() => openPhotoViewer(idx)}
+                  className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-md border border-border/20 cursor-pointer hover:scale-[1.03] transition-transform active:scale-95"
+                >
                   <Image src={url} alt={`Photo ${idx}`} fill className="object-cover" />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <div className="p-2 bg-white/20 backdrop-blur-md text-white rounded-full">
+                      <Maximize2 size={16} />
+                    </div>
                     <button 
-                      onClick={() => handleDeletePhoto(idx)}
-                      className="p-2.5 bg-white/20 backdrop-blur-md text-white rounded-full hover:bg-white/40 transition-colors"
+                      onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }}
+                      className="p-2 bg-white/20 backdrop-blur-md text-white rounded-full hover:bg-destructive/60 transition-colors"
                     >
                       <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
               ))}
-              {photos.length < 6 && (
+              {photos.length < 9 && (
                 <button 
                   onClick={handleAddPhoto}
                   className="aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/30 hover:border-primary/30 transition-all group shadow-sm"
@@ -261,6 +294,53 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+
+      {/* Fullscreen Photo Viewer */}
+      <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
+        <DialogContent className="max-w-[440px] w-[95vw] h-[80vh] p-0 border-0 bg-transparent shadow-none overflow-hidden flex flex-col items-center justify-center outline-none">
+          <DialogTitle className="sr-only">Просмотр фото</DialogTitle>
+          <button 
+            onClick={() => setIsViewerOpen(false)}
+            className="absolute top-4 right-4 z-50 p-3 bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-all active:scale-90"
+          >
+            <X size={24} />
+          </button>
+          
+          <Carousel 
+            className="w-full h-full" 
+            opts={{ startIndex: activePhotoIndex }}
+          >
+            <CarouselContent className="h-full ml-0">
+              {photos.map((url, idx) => (
+                <CarouselItem key={idx} className="pl-0 h-[80vh] flex items-center justify-center relative">
+                  <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden app-shadow border-4 border-white/10">
+                    <Image 
+                      src={url} 
+                      alt={`Gallery view ${idx}`} 
+                      fill 
+                      className="object-cover"
+                      sizes="(max-width: 480px) 100vw, 440px"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="absolute -bottom-12 left-0 right-0 flex justify-center gap-3">
+              {photos.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-300",
+                    activePhotoIndex === i ? "bg-white scale-150" : "bg-white/30"
+                  )} 
+                />
+              ))}
+            </div>
+            <CarouselPrevious className="left-2 h-14 w-14 bg-white/10 hover:bg-white/20 border-0 text-white backdrop-blur-md" />
+            <CarouselNext className="right-2 h-14 w-14 bg-white/10 hover:bg-white/20 border-0 text-white backdrop-blur-md" />
+          </Carousel>
+        </DialogContent>
+      </Dialog>
 
       <BottomNav />
     </>
