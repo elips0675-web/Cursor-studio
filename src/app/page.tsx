@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Flame, Search } from "lucide-react";
@@ -10,13 +9,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-const users = [
-  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2 },
-  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5 },
-  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1 },
-  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7 },
-  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3 },
-  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9 }
+// Полный список из 10 демо-пользователей
+const ALL_DEMO_USERS = [
+  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, gender: 'female' },
+  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, gender: 'male' },
+  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3, gender: 'female' },
+  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, online: false, distance: 12, gender: 'male' },
+  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7, gender: 'female' },
+  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, online: true, distance: 4, gender: 'male' },
+  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1, gender: 'female' },
+  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, online: false, distance: 15, gender: 'male' },
+  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, online: true, distance: 6, gender: 'female' },
+  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9, gender: 'male' }
 ];
 
 export default function Home() {
@@ -45,16 +49,18 @@ export default function Home() {
         <section className="mb-6">
           <h5 className="font-bold mb-4 text-lg">🔥 Топ пользователей</h5>
           <div className="grid grid-cols-2 gap-4">
-            {users.slice(0, 2).map((u) => (
+            {/* Показываем первых двух (Анна и Максим) */}
+            {ALL_DEMO_USERS.slice(0, 2).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
           </div>
         </section>
 
         <section>
-          <h5 className="font-bold mb-4 text-lg mt-8">✨ Новые</h5>
+          <h5 className="font-bold mb-4 text-lg mt-8">✨ Новые анкеты</h5>
           <div className="grid grid-cols-2 gap-4">
-            {users.slice(2, 6).map((u) => (
+            {/* Показываем остальных (всего 10) */}
+            {ALL_DEMO_USERS.slice(2, 10).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} />
             ))}
           </div>
