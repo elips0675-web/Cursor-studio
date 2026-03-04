@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -156,7 +157,10 @@ export default function ProfilePage() {
         {/* Profile Info */}
         <div className="px-6 -mt-16 text-center">
           <div className="relative inline-block mb-8">
-            <div className="relative w-32 h-32 rounded-[2rem] border-4 border-white app-shadow overflow-hidden bg-muted transition-transform duration-500 hover:scale-[1.02]">
+            <div 
+              onClick={() => openPhotoViewer(0)}
+              className="relative w-32 h-32 rounded-[2rem] border-4 border-white app-shadow overflow-hidden bg-muted transition-transform duration-500 hover:scale-[1.02] cursor-pointer"
+            >
               <Image 
                 src={photos[0]} 
                 alt={profile.name} 
@@ -165,7 +169,7 @@ export default function ProfilePage() {
                 priority
               />
             </div>
-            <Badge className="absolute -bottom-1 -right-1 bg-primary text-white border-2 border-white font-black text-[8px] h-6 px-2 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest">
+            <Badge className="absolute -bottom-1 -right-1 bg-primary text-white border-2 border-white font-black text-[8px] h-6 px-2 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest pointer-events-none">
               PRO 💎
             </Badge>
           </div>
@@ -320,6 +324,7 @@ export default function ProfilePage() {
           <Carousel 
             className="w-full h-full" 
             opts={{ startIndex: activePhotoIndex }}
+            key={activePhotoIndex} // Force re-mount to ensure correct startIndex
           >
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
