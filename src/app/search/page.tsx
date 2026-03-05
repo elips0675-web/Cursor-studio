@@ -32,20 +32,20 @@ const ALL_USERS = [
   { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, interests: ['Наука', 'История', 'Музеи'], bio: 'Люблю узнавать что-то новое каждый день.', distance: 9, match: 77, gender: 'male' }
 ];
 
-// Обновленный компонент HeartConfetti (SwiftMatch1 Style)
+// Обновленный компонент HeartConfetti (SwiftMatch1 Style - Centered)
 function HeartConfetti() {
   const hearts = Array.from({ length: 45 });
   return (
-    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden flex items-center justify-center">
       {hearts.map((_, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 1, scale: 0, x: "50%", y: "50%" }}
+          initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
           animate={{ 
             opacity: [1, 1, 0], 
             scale: [0, 1.3, 0.7], 
-            x: [`50%`, `${Math.random() * 160 - 30}%`], 
-            y: [`50%`, `${Math.random() * 160 - 30}%`],
+            x: [`0px`, `${(Math.random() - 0.5) * 400}px`], 
+            y: [`0px`, `${(Math.random() - 0.5) * 500}px`],
             rotate: Math.random() * 1080
           }}
           transition={{ 

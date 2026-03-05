@@ -42,33 +42,33 @@ const ALL_DEMO_USERS = [
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
 
-// Компонент "Салют из сердец" (Обновленный)
+// Компонент "Салют из сердец" (SwiftMatch1 Style - Centered)
 function HeartConfetti() {
-  const hearts = Array.from({ length: 40 });
+  const hearts = Array.from({ length: 45 });
   return (
-    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden flex items-center justify-center">
       {hearts.map((_, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 1, scale: 0, x: "50%", y: "50%" }}
+          initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
           animate={{ 
             opacity: [1, 1, 0], 
-            scale: [0, 1.2, 0.8], 
-            x: [`50%`, `${Math.random() * 140 - 20}%`], 
-            y: [`50%`, `${Math.random() * 140 - 20}%`],
-            rotate: Math.random() * 720
+            scale: [0, 1.3, 0.7], 
+            x: [`0px`, `${(Math.random() - 0.5) * 400}px`], 
+            y: [`0px`, `${(Math.random() - 0.5) * 500}px`],
+            rotate: Math.random() * 1080
           }}
           transition={{ 
-            duration: 2.5, 
-            ease: [0.23, 1, 0.32, 1], 
-            delay: Math.random() * 0.4 
+            duration: 3, 
+            ease: [0.16, 1, 0.3, 1], 
+            delay: Math.random() * 0.5 
           }}
           className="absolute"
         >
           <Heart 
-            size={Math.random() * 28 + 14} 
-            fill={i % 2 === 0 ? "#fe3c72" : "#ff8e53"} 
-            className="text-transparent drop-shadow-lg" 
+            size={Math.random() * 30 + 12} 
+            fill={i % 3 === 0 ? "#fe3c72" : i % 3 === 1 ? "#ff8e53" : "#ffc0cb"} 
+            className="text-transparent drop-shadow-xl" 
           />
         </motion.div>
       ))}
