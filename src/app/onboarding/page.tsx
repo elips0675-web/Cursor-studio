@@ -11,7 +11,10 @@ import {
   Camera,
   CheckCircle2,
   ChevronLeft,
-  Navigation
+  Navigation,
+  Ruler,
+  Target,
+  Stars
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -19,6 +22,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { generateProfileBio } from "@/ai/flows/ai-generate-profile-bio";
@@ -34,16 +44,32 @@ const GENDER_OPTIONS = [
   { id: 'female', label: 'Женщина' }
 ];
 
+const DATING_GOALS = [
+  "Серьезные отношения",
+  "Свидания",
+  "Новые друзья",
+  "Просто общение",
+  "Пока не знаю"
+];
+
+const ZODIAC_SIGNS = [
+  "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", 
+  "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"
+];
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   const [formData, setFormData] = useState({
     gender: "",
     name: "",
     age: "",
     city: "",
+    height: "",
+    datingGoal: "",
+    zodiac: "",
     interests: [] as string[],
     bio: "",
     photo: PlaceHolderImages[10].imageUrl
@@ -195,15 +221,27 @@ export default function OnboardingPage() {
               <p className="text-muted-foreground text-sm">Это поможет нам найти людей поблизости.</p>
             </div>
             <div className="space-y-4">
-              <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Возраст</Label>
-                <Input 
-                  type="number"
-                  value={formData.age} 
-                  onChange={e => setFormData({...formData, age: e.target.value})}
-                  placeholder="Например, 25"
-                  className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Возраст</Label>
+                  <Input 
+                    type="number"
+                    value={formData.age} 
+                    onChange={e => setFormData({...formData, age: e.target.value})}
+                    placeholder="25"
+                    className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Рост (см)</Label>
+                  <Input 
+                    type="number"
+                    value={formData.height} 
+                    onChange={e => setFormData({...formData, height: e.target.value})}
+                    placeholder="175"
+                    className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6"
+                  />
+                </div>
               </div>
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center ml-1">
@@ -235,6 +273,52 @@ export default function OnboardingPage() {
         return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2">
+              <h2 className="text-3xl font-black font-headline tracking-tight">Личное</h2>
+              <p className="text-muted-foreground text-sm">Расскажи о своих целях и знаке зодиака.</p>
+            </div>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
+                  <Target size={14} className="text-primary" /> Цель знакомства
+                </Label>
+                <Select value={formData.datingGoal} onValueChange={(val) => setFormData({...formData, datingGoal: val})}>
+                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6">
+                    <SelectValue placeholder="Выберите цель" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                    {DATING_GOALS.map(goal => (
+                      <SelectItem key={goal} value={goal} className="font-bold py-3">
+                        {goal}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
+                  <Stars size={14} className="text-primary" /> Знак зодиака
+                </Label>
+                <Select value={formData.zodiac} onValueChange={(val) => setFormData({...formData, zodiac: val})}>
+                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6">
+                    <SelectValue placeholder="Выберите знак" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                    {ZODIAC_SIGNS.map(sign => (
+                      <SelectItem key={sign} value={sign} className="font-bold py-3">
+                        {sign}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="space-y-2">
               <h2 className="text-3xl font-black font-headline tracking-tight">Твои интересы</h2>
               <p className="text-muted-foreground text-sm">Выбери минимум 1, чтобы AI составил крутое био.</p>
             </div>
@@ -257,7 +341,7 @@ export default function OnboardingPage() {
             </div>
           </div>
         );
-      case 4:
+      case 5:
         return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2 text-center">
@@ -300,9 +384,10 @@ export default function OnboardingPage() {
 
   const isStepValid = () => {
     if (step === 1) return formData.name.length > 1 && formData.gender !== "";
-    if (step === 2) return formData.age !== ""; // Город теперь опционален
-    if (step === 3) return formData.interests.length >= 1;
-    if (step === 4) return formData.bio.length > 5;
+    if (step === 2) return formData.age !== "";
+    if (step === 3) return formData.datingGoal !== "" || formData.zodiac !== "";
+    if (step === 4) return formData.interests.length >= 1;
+    if (step === 5) return formData.bio.length > 5;
     return true;
   };
 
