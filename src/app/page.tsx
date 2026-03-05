@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -9,7 +9,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,7 @@ const ALL_DEMO_USERS = [
 ];
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
+const ITEMS_PER_PAGE = 4;
 
 function HeartConfetti() {
   const hearts = Array.from({ length: 45 });
@@ -78,6 +79,7 @@ export default function Home() {
   const [isAutoSearching, setIsAutoSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [visibleResultsCount, setVisibleResultsCount] = useState(ITEMS_PER_PAGE);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   
   const [matchUser, setMatchUser] = useState<any>(null);
@@ -89,6 +91,12 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("Все");
 
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  const paginatedResults = useMemo(() => {
+    return searchResults.slice(0, visibleResultsCount);
+  }, [searchResults, visibleResultsCount]);
+
+  const hasMore = visibleResultsCount < searchResults.length;
 
   const getAiInsight = async (targetUser: any) => {
     setLoadingAi(true);
@@ -130,6 +138,7 @@ export default function Home() {
   const handleAutoSearch = () => {
     setIsAutoSearching(true);
     setShowResults(false);
+    setVisibleResultsCount(ITEMS_PER_PAGE);
     
     setTimeout(() => {
       const filtered = ALL_DEMO_USERS.filter(user => {
@@ -149,6 +158,10 @@ export default function Home() {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }, 1500);
+  };
+
+  const handleLoadMore = () => {
+    setVisibleResultsCount(prev => prev + ITEMS_PER_PAGE);
   };
 
   const toggleInterest = (interest: string) => {
@@ -250,10 +263,22 @@ export default function Home() {
               </div>
               
               {searchResults.length > 0 ? (
-                <div className="grid grid-cols-2 gap-4">
-                  {searchResults.map((u) => (
-                    <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
-                  ))}
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    {paginatedResults.map((u) => (
+                      <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
+                    ))}
+                  </div>
+                  
+                  {hasMore && (
+                    <Button 
+                      onClick={handleLoadMore}
+                      variant="outline"
+                      className="w-full h-12 rounded-2xl border-2 border-primary/20 text-primary font-black uppercase tracking-widest text-[10px] bg-white hover:bg-primary/5 transition-all shadow-sm flex items-center justify-center gap-2"
+                    >
+                      Показать еще <ChevronDown size={14} />
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="bg-white rounded-[2rem] p-8 text-center app-shadow border border-dashed border-muted/50">
@@ -448,7 +473,7 @@ export default function Home() {
 function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
   return (
     <div className="bg-white rounded-[1.25rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
-      <Link href={`/search`} className="relative aspect-[3/4] bg-muted block overflow-hidden cursor-pointer">
+      <Link href={`/user?id=${user.id}`} className="relative aspect-[3/4] bg-muted block overflow-hidden cursor-pointer">
         <Image 
           src={user.img} 
           alt={user.name} 
@@ -497,7 +522,7 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
 function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) {
   return (
     <div className="bg-white rounded-[1.25rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
-      <Link href={`/search`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
+      <Link href={`/user?id=${user.id}`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
         <Image 
           src={user.img} 
           alt={user.name} 
