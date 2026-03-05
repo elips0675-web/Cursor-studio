@@ -31,7 +31,9 @@ import {
   Heart,
   Upload,
   Info,
-  User
+  User,
+  GraduationCap,
+  Bed
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,14 +76,19 @@ export default function ProfilePage() {
     name: "Анна",
     age: 24,
     city: t('profile.city'),
+    height: 172,
+    work: "Дизайнер",
+    education: "Высшее",
+    pets: "Есть собака",
+    sleepSchedule: "Сова",
     datingGoal: t('profile.goal_value'),
     zodiac: language === 'RU' ? "Лев" : "Leo",
     bio: language === 'RU' 
       ? "Люблю закаты, хороший кофе и интересные разговоры. Ищу человека, с которым можно разделить эти моменты."
       : "I love sunsets, good coffee, and interesting conversations. Looking for someone to share these moments with.",
     interests: language === 'RU' 
-      ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Собаки", "Рост: 172 см", "Сова"]
-      : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art", "Dogs", "Height: 172 cm", "Night owl"]
+      ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Собаки"]
+      : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art", "Dogs"]
   };
 
   const [profile, setProfile] = useState(defaultProfile);
@@ -98,28 +105,22 @@ export default function ProfilePage() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
-    } else {
-        setProfile({
-            name: "Анна",
-            age: 24,
-            city: t('profile.city'),
-            datingGoal: t('profile.goal_value'),
-            zodiac: language === 'RU' ? "Лев" : "Leo",
-            bio: language === 'RU' 
-              ? "Люблю закаты, хороший кофе и интересные разговоры. Ищу человека, с которым можно разделить эти моменты."
-              : "I love sunsets, good coffee, and interesting conversations. Looking for someone to share these moments with.",
-            interests: language === 'RU' 
-              ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Собаки", "Рост: 172 см", "Сова"]
-              : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art", "Dogs", "Height: 172 cm", "Night owl"]
-        });
-    }
-    
-    const savedPhotos = localStorage.getItem('userProfileGallery');
-    if (savedPhotos) {
-      setPhotos(JSON.parse(savedPhotos));
+    try {
+      const savedProfile = localStorage.getItem('userProfile');
+      if (savedProfile) {
+        setProfile(prev => ({ ...prev, ...JSON.parse(savedProfile) }));
+      } else {
+        setProfile(defaultProfile);
+      }
+      
+      const savedPhotos = localStorage.getItem('userProfileGallery');
+      if (savedPhotos) {
+        setPhotos(JSON.parse(savedPhotos));
+      }
+    } catch (error) {
+      console.error("Failed to parse profile from localStorage", error);
+      // Reset to default if parsing fails
+      setProfile(defaultProfile);
     }
   }, [language, t]);
 
@@ -177,37 +178,19 @@ export default function ProfilePage() {
   };
 
   const interestMap: Record<string, React.ElementType> = {
-    "Фотография": Camera,
-    "Путешествия": Globe,
-    "Кофе": Coffee,
-    "Музыка": Music,
-    "Спорт": Dumbbell,
-    "Искусство": Palette,
-    "Кино": Film,
-    "Йога": Flower2,
-    "Бизнес": Briefcase,
-    "Игры": Gamepad2,
-    "Собаки": Dog,
-    "Кошки": Dog,
-    "Сова": Moon,
-    "Жаворонок": Sun,
-    "Photography": Camera,
-    "Travel": Globe,
-    "Sports": Dumbbell,
-    "Art": Palette,
-    "Movies": Film,
-    "Yoga": Flower2,
-    "Business": Briefcase,
-    "Gaming": Gamepad2,
-    "Dogs": Dog,
-    "Cats": Dog,
-    "Night owl": Moon,
-    "Early bird": Sun,
+    "Фотография": Camera, "Путешествия": Globe, "Кофе": Coffee, "Музыка": Music, "Спорт": Dumbbell,
+    "Искусство": Palette, "Кино": Film, "Йога": Flower2, "Бизнес": Briefcase, "Игры": Gamepad2,
+    "Собаки": Dog, "Кошки": Dog,
+    "Photography": Camera, "Travel": Globe, "Sports": Dumbbell, "Art": Palette, "Movies": Film,
+    "Yoga": Flower2, "Business": Briefcase, "Gaming": Gamepad2, "Dogs": Dog, "Cats": Dog
   };
 
-  const heightInfo = profile.interests.find(i => i.startsWith("Рост:") || i.startsWith("Height:"));
-  const allOtherInterests = profile.interests.filter(i => !(i.startsWith("Рост:") || i.startsWith("Height:")));
-  
+  const getSleepIcon = () => {
+    if (profile.sleepSchedule === 'Сова') return Moon;
+    if (profile.sleepSchedule === 'Жаворонок') return Sun;
+    return Bed;
+  };
+
   return (
     <>
       <AppHeader />
@@ -266,14 +249,34 @@ export default function ProfilePage() {
                 <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
                   <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
                 </Badge>
-                {heightInfo && (
+                {profile.height && (
                   <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
-                    <Ruler size={12} /> {heightInfo.replace("Рост: ", "").replace("Height: ", "")}
+                    <Ruler size={12} /> {profile.height} см
                   </Badge>
                 )}
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
                   <Target size={12} /> {profile.datingGoal}
                 </Badge>
+                {profile.education && (
+                  <Badge variant="secondary" className="bg-purple-50 text-purple-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
+                    <GraduationCap size={12} /> {profile.education}
+                  </Badge>
+                )}
+                {profile.work && (
+                  <Badge variant="secondary" className="bg-green-50 text-green-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
+                    <Briefcase size={12} /> {profile.work}
+                  </Badge>
+                )}
+                {profile.pets && (
+                   <Badge variant="secondary" className="bg-amber-50 text-amber-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
+                    <Dog size={12} /> {profile.pets}
+                  </Badge>
+                )}
+                {profile.sleepSchedule && (
+                   <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
+                    {React.createElement(getSleepIcon(), { size: 12 })} {profile.sleepSchedule}
+                  </Badge>
+                )}
               </div>
             </div>
 
@@ -285,7 +288,7 @@ export default function ProfilePage() {
                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4>
               </div>
               <div className="flex flex-wrap gap-2">
-                {allOtherInterests.map((interest) => {
+                {profile.interests.map((interest) => {
                   const Icon = interestMap[interest] || Heart;
                   return (
                     <Badge key={interest} variant="secondary" className="bg-muted/40 text-foreground/80 border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-xl">

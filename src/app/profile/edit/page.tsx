@@ -8,7 +8,11 @@ import {
   Camera, 
   User,
   MapPin,
-  Info
+  Info,
+  GraduationCap,
+  Dog,
+  Briefcase,
+  Bed
 } from "lucide-react";
 import Image from "next/image";
 import { AppHeader } from "@/components/layout/app-header";
@@ -31,21 +35,20 @@ import { cn } from "@/lib/utils";
 
 const INTEREST_OPTIONS = [
   "Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Кино", "Йога", "Бизнес", "Игры",
-  "Собаки", "Кошки", "Жаворонок", "Сова"
+  "Собаки", "Кошки"
 ];
 
 const DATING_GOALS = [
-  "Серьезные отношения",
-  "Свидания",
-  "Новые друзья",
-  "Просто общение",
-  "Пока не знаю"
+  "Серьезные отношения", "Свидания", "Новые друзья", "Просто общение", "Пока не знаю"
 ];
 
 const ZODIAC_SIGNS = [
-  "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", 
-  "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"
+  "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"
 ];
+
+const PET_OPTIONS = ["Нет", "Есть собака", "Есть кошка", "Есть другие", "Спроси в чате"];
+const SLEEP_SCHEDULE_OPTIONS = ["Жаворонок", "Сова", "Когда как"];
+const EDUCATION_OPTIONS = ["Среднее", "Среднее специальное", "Неоконченное высшее", "Высшее", "Ученая степень"];
 
 const defaultProfile = {
     name: "Анна",
@@ -55,7 +58,11 @@ const defaultProfile = {
     datingGoal: "Серьезные отношения",
     zodiac: "Лев",
     bio: "Люблю закаты, хороший кофе и интересные разговоры.",
-    interests: ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Собаки", "Сова"]
+    interests: ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Собаки"],
+    pets: "Есть собака",
+    education: "Высшее",
+    sleepSchedule: "Сова",
+    work: "Дизайнер"
 };
 
 export default function EditProfilePage() {
@@ -143,6 +150,20 @@ export default function EditProfilePage() {
         </div>
 
         <div className="bg-white rounded-[2rem] p-6 app-shadow space-y-6 border border-border/40">
+          
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
+                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">О себе</h3>
+              </div>
+              <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-tight bg-primary/5 px-3 py-1.5 rounded-full">
+                <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> AI Улучшить
+              </button>
+            </div>
+            <Textarea value={profile.bio} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
+          </div>
+
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
             <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Основные данные</h3>
@@ -172,6 +193,14 @@ export default function EditProfilePage() {
                 <Input value={profile.city} onChange={e => setProfile({...profile, city: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" />
               </div>
             </div>
+            
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Профессия</Label>
+              <div className="relative">
+                <Briefcase size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" />
+                <Input value={profile.work} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" placeholder="Напр. Дизайнер" />
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -192,20 +221,34 @@ export default function EditProfilePage() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
-                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">О себе</h3>
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
+                <Select value={profile.education} onValueChange={(val) => setProfile({...profile, education: val})}>
+                  <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {EDUCATION_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
+                  </SelectContent>
+                </Select>
               </div>
-              <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-tight bg-primary/5 px-3 py-1.5 rounded-full">
-                <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> AI Улучшить
-              </button>
+               <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><Dog size={12}/> Питомцы</Label>
+                <Select value={profile.pets} onValueChange={(val) => setProfile({...profile, pets: val})}>
+                  <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {PET_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+               <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><Bed size={12}/> Режим сна</Label>
+                <Select value={profile.sleepSchedule} onValueChange={(val) => setProfile({...profile, sleepSchedule: val})}>
+                  <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {SLEEP_SCHEDULE_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <Textarea value={profile.bio} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
           </div>
 
           <div className="space-y-3">
