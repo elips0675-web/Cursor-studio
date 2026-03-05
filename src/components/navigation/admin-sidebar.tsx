@@ -7,23 +7,29 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarContent,
+  useSidebar,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, Flag, Settings, LogOut, Home, Shield } from 'lucide-react';
+import { LayoutDashboard, Users, Flag, Home, Shield, LogOut, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Button } from '../ui/button';
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const { state, toggleSidebar } = useSidebar();
 
   const isActive = (path: string) => pathname === path;
 
   return (
     <>
-        <SidebarHeader className="border-b">
+        <SidebarHeader className="border-b flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
                 <Shield className="h-6 w-6 text-primary" />
-                <span>SwiftMatch</span>
+                <span className='group-data-[state=collapsed]:hidden'>SwiftMatch</span>
             </Link>
+            <Button variant="ghost" size="icon" className="hidden md:flex" onClick={toggleSidebar}>
+              {state === 'expanded' ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
+            </Button>
         </SidebarHeader>
         <SidebarContent className="p-2">
             <SidebarMenu>
@@ -31,10 +37,11 @@ export function AdminSidebar() {
                     <SidebarMenuButton
                         asChild
                         isActive={isActive('/admin')}
+                        tooltip="Dashboard"
                     >
                         <Link href="/admin">
                             <LayoutDashboard />
-                            Dashboard
+                            <span>Dashboard</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -42,10 +49,11 @@ export function AdminSidebar() {
                     <SidebarMenuButton
                         asChild
                         isActive={isActive('/admin/users')}
+                        tooltip="Users"
                     >
                         <Link href="/admin/users">
                             <Users />
-                            Users
+                            <span>Users</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -53,10 +61,11 @@ export function AdminSidebar() {
                     <SidebarMenuButton
                         asChild
                         isActive={isActive('/admin/reports')}
+                        tooltip="Reports"
                     >
                         <Link href="/admin/reports">
                             <Flag />
-                            Reports
+                            <span>Reports</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -65,18 +74,18 @@ export function AdminSidebar() {
         <SidebarFooter className="mt-auto border-t p-2">
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild tooltip="Back to App">
                          <Link href="/">
                             <Home />
-                            Back to App
+                            <span>Back to App</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton asChild tooltip="Logout">
                          <Link href="/login">
                             <LogOut />
-                            Logout
+                            <span>Logout</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

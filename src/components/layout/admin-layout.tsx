@@ -14,7 +14,7 @@ import Link from 'next/link';
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-        <Sidebar>
+        <Sidebar collapsible="icon">
           <SidebarContent className="p-0">
             <AdminSidebar />
           </SidebarContent>
