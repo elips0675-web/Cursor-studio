@@ -303,7 +303,7 @@ export default function SearchPage() {
                     >
                         <Image 
                             src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
-                            alt={matchUser?.name} 
+                            alt={matchUser?.name || "Matched user photo"} 
                             fill 
                             data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
                             className="object-cover" 

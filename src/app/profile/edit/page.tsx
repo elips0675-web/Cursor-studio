@@ -83,13 +83,25 @@ export default function EditProfilePage() {
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      try {
+        const loadedProfile = JSON.parse(savedProfile);
+        if (!Array.isArray(loadedProfile.titles)) {
+          loadedProfile.titles = [];
+        }
+        setProfile(loadedProfile);
+      } catch(e) {
+        console.error("Failed to parse profile from localStorage", e);
+      }
     }
     const savedGallery = localStorage.getItem('userProfileGallery');
     if (savedGallery) {
-      const photos = JSON.parse(savedGallery);
-      if (photos.length > 0) {
-        setMainPhoto(photos[0]);
+      try {
+        const photos = JSON.parse(savedGallery);
+        if (photos.length > 0) {
+          setMainPhoto(photos[0]);
+        }
+      } catch(e) {
+        console.error("Failed to parse gallery from localStorage", e);
       }
     }
   }, []);
@@ -142,9 +154,9 @@ export default function EditProfilePage() {
   const toggleTitle = (title: {id: string, name: string}) => {
     setProfile(prev => ({
       ...prev,
-      titles: prev.titles.some(t => t.id === title.id)
-        ? prev.titles.filter(t => t.id !== title.id)
-        : [...prev.titles, title]
+      titles: (prev.titles || []).some(t => t.id === title.id)
+        ? (prev.titles || []).filter(t => t.id !== title.id)
+        : [...(prev.titles || []), title]
     }));
   };
 
@@ -285,7 +297,7 @@ export default function EditProfilePage() {
             </div>
             <div className="flex flex-wrap gap-2">
               {ALL_TITLES.map(title => (
-                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={profile.titles.some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", profile.titles.some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
+                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={profile.titles?.some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", profile.titles?.some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
               ))}
             </div>
           </div>

@@ -283,11 +283,14 @@ export default function ProfilePage() {
                     <Dog size={12} /> {profile.pets}
                   </Badge>
                 )}
-                {profile.sleepSchedule && (
-                   <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
-                    {React.createElement(getSleepIcon(), { size: 12 })} {profile.sleepSchedule}
-                  </Badge>
-                )}
+                {profile.sleepSchedule && (() => {
+                  const SleepIcon = getSleepIcon();
+                  return (
+                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
+                      <SleepIcon size={12} /> {profile.sleepSchedule}
+                    </Badge>
+                  );
+                })()}
               </div>
             </div>
 
