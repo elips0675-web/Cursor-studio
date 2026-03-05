@@ -23,6 +23,13 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 import { useLanguage } from "@/context/language-context";
 
@@ -40,6 +47,10 @@ const ALL_DEMO_USERS = [
 ];
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
+const CAPITALS = [
+  'Москва', 'Вашингтон', 'Лондон', 'Париж', 'Берлин', 'Пекин', 'Токио', 'Дели', 'Бразилиа', 'Канберра',
+  'Оттава', 'Рим', 'Мадрид', 'Сеул', 'Мехико', 'Анкара', 'Каир', 'Буэнос-Айрес', 'Джакарта', 'Киев'
+];
 const ITEMS_PER_PAGE = 4;
 
 function HeartConfetti() {
@@ -93,6 +104,24 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("Все");
 
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isFilterDialogOpen) {
+      // Mock current user data for pre-filling filters
+      const currentUser = {
+        interests: ['Спорт', 'Музыка'],
+        city: 'Москва',
+      };
+      
+      setSelectedInterests(currentUser.interests.filter(interest => INTEREST_OPTIONS.includes(interest)));
+      
+      if ([...CAPITALS, "Все"].includes(currentUser.city)) {
+          setSelectedCity(currentUser.city);
+      } else {
+          setSelectedCity("Все");
+      }
+    }
+  }, [isFilterDialogOpen]);
 
   const paginatedResults = useMemo(() => {
     return searchResults.slice(0, visibleResultsCount);
@@ -226,7 +255,7 @@ export default function Home() {
               <Sparkles size={16} className="text-primary" />
               <h5 className="font-black text-base font-headline tracking-tight">{t('home.recommend')}</h5>
             </div>
-            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{ALL_DEMO_USERS.length} {t('home.nearby')}</Badge>
+            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{ALL_DEMO_USERS.length} {t('swipes.nearby')}</Badge>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {ALL_DEMO_USERS.slice(6, 10).map((u) => (
@@ -408,7 +437,7 @@ export default function Home() {
 
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
         <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
-          <DialogHeader className="p-8 bg-muted/30 pb-4">
+          <DialogHeader className="p-6 bg-muted/30 pb-4">
             <div className="flex items-center gap-3 mb-1">
               <div className="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center text-white shadow-lg">
                 <Zap size={20} fill="currentColor" />
@@ -418,7 +447,7 @@ export default function Home() {
             <p className="text-xs text-muted-foreground font-medium">{t('button.filters')}</p>
           </DialogHeader>
 
-          <div className="p-8 space-y-8 overflow-y-auto max-h-[60vh] no-scrollbar">
+          <div className="p-6 space-y-6 overflow-y-auto max-h-[60vh] no-scrollbar">
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.interests')}</label>
               <div className="flex flex-wrap gap-2">
@@ -451,32 +480,27 @@ export default function Home() {
                 min={18} 
                 max={60} 
                 step={1} 
-                className="py-4"
+                className="py-2"
               />
             </div>
 
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.city')}</label>
-              <div className="grid grid-cols-2 gap-2">
-                {["Все", "Москва", "Питер", "Казань", "Сочи"].map(city => (
-                  <button
-                    key={city}
-                    onClick={() => setSelectedCity(city)}
-                    className={cn(
-                      "h-10 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border-2",
-                      selectedCity === city 
-                        ? "border-primary bg-primary/5 text-primary shadow-sm" 
-                        : "border-muted text-muted-foreground bg-transparent"
-                    )}
-                  >
-                    {city}
-                  </button>
-                ))}
-              </div>
+              <Select value={selectedCity} onValueChange={setSelectedCity}>
+                <SelectTrigger className="h-12 rounded-xl bg-muted/30 border-0 font-bold px-4">
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-0 shadow-2xl">
+                  <SelectItem value="Все" className="font-bold text-sm">Все города</SelectItem>
+                  {CAPITALS.map(city => (
+                    <SelectItem key={city} value={city} className="font-bold text-sm">{city}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          <DialogFooter className="p-8 pt-0">
+          <DialogFooter className="p-6 pt-2">
             <Button 
               onClick={() => {
                 setIsFilterDialogOpen(false);
@@ -600,11 +624,3 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
     </div>
   );
 }
-
-    
-
-    
-
-
-
-

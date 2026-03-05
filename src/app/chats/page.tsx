@@ -185,7 +185,7 @@ function ChatsContent() {
   if (selectedChat) {
     return (
       <div className="flex flex-col h-svh bg-[#f8f9fb]">
-        <header className="flex items-center gap-3 px-4 py-3 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50">
+        <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50">
           <Button variant="ghost" size="icon" onClick={() => setSelectedChat(null)} className="rounded-full hover:bg-muted/50">
             <ChevronLeft size={24} className="text-foreground" />
           </Button>
@@ -199,24 +199,24 @@ function ChatsContent() {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
+            <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
               {selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline')}
             </p>
           </div>
           <div className="flex items-center">
             <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
-              <Phone size={20} />
+              <Phone size={18} />
             </Button>
             <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
-              <Video size={20} />
+              <Video size={18} />
             </Button>
             <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
-              <MoreVertical size={20} />
+              <MoreVertical size={18} />
             </Button>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 space-y-3">
+        <main className="flex-1 overflow-y-auto p-4 space-y-2">
           <div className="text-center my-2">
             <Badge variant="secondary" className="bg-white/50 text-[9px] text-muted-foreground border-0 font-black uppercase tracking-widest px-2.5 py-0.5">{t('chats.today')}</Badge>
           </div>
@@ -335,7 +335,7 @@ function ChatsContent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder={t('chats.placeholder')} 
-                className="pr-12 h-11 bg-muted/50 border-0 rounded-3xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
+                className="pr-12 h-11 bg-muted/50 border-0 rounded-2xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
               />
               <Popover>
                 <PopoverTrigger asChild>
@@ -388,22 +388,22 @@ function ChatsContent() {
         </div>
 
         <div className="relative mb-8 px-1">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground/60" size={18} />
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground/60" size={16} />
           <Input 
-            className="pl-12 h-14 bg-white border-0 rounded-3xl placeholder:text-muted-foreground/50 focus-visible:ring-primary/20 app-shadow text-sm font-medium" 
+            className="pl-12 h-12 bg-white border-0 rounded-2xl placeholder:text-muted-foreground/50 focus-visible:ring-primary/20 app-shadow text-sm font-medium" 
             placeholder={t('chats.search')} 
           />
         </div>
 
-        <div className="space-y-2 px-1">
+        <div className="space-y-1 px-1">
           {ALL_DEMO_USERS.map((chat) => (
             <div 
               key={chat.id} 
               onClick={() => openChat(chat)}
-              className="flex items-center gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white"
+              className="flex items-center gap-3 p-2 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white"
             >
               <div className="relative flex-shrink-0">
-                <div className="w-14 h-14 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-transform group-hover:scale-105">
+                <div className="w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-transform group-hover:scale-105">
                   <Image src={chat.img} alt={chat.name} fill className="object-cover" />
                 </div>
                 {chat.online && (
@@ -443,5 +443,3 @@ export default function ChatsPage() {
     </Suspense>
   );
 }
-
-    
