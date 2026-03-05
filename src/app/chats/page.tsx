@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -556,5 +555,3 @@ export default function ChatsPage() {
     </Suspense>
   );
 }
-
-    
