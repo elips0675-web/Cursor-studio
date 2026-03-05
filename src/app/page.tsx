@@ -41,7 +41,6 @@ const ALL_DEMO_USERS = [
 ];
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
-const ZODIAC_SIGNS = ["Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева", "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"];
 
 // Компонент "Салют из сердец"
 function HeartConfetti() {
@@ -297,9 +296,6 @@ export default function Home() {
                </div>
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
                   <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />
-               </div>
-               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white rounded-full p-2 shadow-lg z-20">
-                  <Heart size={16} className="text-primary" fill="currentColor" />
                </div>
             </div>
 
