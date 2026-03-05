@@ -11,7 +11,8 @@ import {
   Heart, 
   Camera,
   CheckCircle2,
-  ChevronLeft
+  ChevronLeft,
+  Navigation
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ export default function OnboardingPage() {
   });
 
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
 
   const nextStep = () => {
     if (step < totalSteps) setStep(step + 1);
@@ -75,6 +77,44 @@ export default function OnboardingPage() {
         ? prev.interests.filter(i => i !== interest)
         : [...prev.interests, interest]
     }));
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast({ title: "Геолокация не поддерживается вашим браузером", variant: "destructive" });
+      return;
+    }
+
+    setIsDetectingLocation(true);
+    toast({ title: "Определяем местоположение..." });
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          // Используем бесплатный API Nominatim для обратного геокодирования
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=10`
+          );
+          const data = await response.json();
+          const city = data.address.city || data.address.town || data.address.village || data.address.state || "";
+          
+          if (city) {
+            setFormData(prev => ({ ...prev, city }));
+            toast({ title: `Город определен: ${city}` });
+          } else {
+            toast({ title: "Не удалось точно определить город", variant: "destructive" });
+          }
+        } catch (error) {
+          toast({ title: "Ошибка при получении города", variant: "destructive" });
+        } finally {
+          setIsDetectingLocation(false);
+        }
+      },
+      () => {
+        setIsDetectingLocation(false);
+        toast({ title: "Доступ к геолокации отклонен", variant: "destructive" });
+      }
+    );
   };
 
   const handleGenerateBio = async () => {
@@ -175,8 +215,16 @@ export default function OnboardingPage() {
                     value={formData.city} 
                     onChange={e => setFormData({...formData, city: e.target.value})}
                     placeholder="Где ты находишься?"
-                    className="h-14 pl-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold pr-6"
+                    className="h-14 pl-14 pr-16 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold"
                   />
+                  <button 
+                    onClick={handleDetectLocation}
+                    disabled={isDetectingLocation}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors active:scale-90"
+                    title="Определить город"
+                  >
+                    <Navigation size={20} className={cn(isDetectingLocation && "animate-pulse")} fill={isDetectingLocation ? "currentColor" : "none"} />
+                  </button>
                 </div>
               </div>
             </div>
