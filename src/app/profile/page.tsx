@@ -260,17 +260,16 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          {/* Interests & Lifestyle Section - COMPACT */}
+          {/* Lifestyle Section - COMPACT */}
           <div className="bg-white rounded-[1.75rem] p-5 app-shadow border border-border/40 mb-5 text-left">
             <div className="flex items-center gap-2 mb-3.5">
               <Heart size={12} className="text-primary" />
-              <h4 className="font-black text-[8px] uppercase tracking-[0.1em] text-muted-foreground">Интересы и стиль жизни</h4>
+              <h4 className="font-black text-[8px] uppercase tracking-[0.1em] text-muted-foreground">Стиль жизни</h4>
             </div>
             
             <div className="space-y-3.5">
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-1">Стиль жизни</p>
               <div className="flex flex-wrap gap-1.5">
-                {/* We can still keep these here for detailed view or just show other lifestyle details */}
                 {lifestyleDetails.filter(d => !d.includes("Рост:")).map((detail) => {
                   const mapItem = interestMap.find(m => detail.includes(m.label));
                   const Icon = mapItem?.icon || Star;
