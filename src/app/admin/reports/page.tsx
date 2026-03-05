@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -25,9 +27,11 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
+import { toast } from "@/hooks/use-toast";
 
 const REPORTS_DATA = [
     {
@@ -62,6 +66,12 @@ const REPORTS_DATA = [
 
 export default function AdminReportsPage() {
   const router = useRouter();
+  const [reports, setReports] = useState(REPORTS_DATA);
+
+  const handleUpdateReport = (reportId: number, toastMessage: { title: string; description: string }) => {
+    setReports(reports.map(r => r.id === reportId ? { ...r, status: 'resolved' } : r));
+    toast(toastMessage);
+  };
 
   return (
     <Card>
@@ -70,7 +80,7 @@ export default function AdminReportsPage() {
         <CardDescription>Просмотр и управление жалобами от пользователей.</CardDescription>
       </CardHeader>
       <CardContent>
-        {REPORTS_DATA.length > 0 ? (
+        {reports.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
@@ -85,7 +95,7 @@ export default function AdminReportsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {REPORTS_DATA.map((report) => (
+              {reports.map((report) => (
                 <TableRow key={report.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -103,7 +113,7 @@ export default function AdminReportsPage() {
                   <TableCell>{report.reason}</TableCell>
                   <TableCell className="hidden md:table-cell">{report.date}</TableCell>
                   <TableCell>
-                    <Badge variant={report.status === 'new' ? 'destructive' : 'secondary'}>
+                    <Badge variant={report.status === 'new' ? 'destructive' : 'outline'} className={report.status !== 'new' ? "bg-green-100 text-green-800 border-green-200" : ""}>
                       {report.status === 'new' ? 'Новая' : 'Решена'}
                     </Badge>
                   </TableCell>
@@ -118,8 +128,10 @@ export default function AdminReportsPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Действия</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => router.push(`/user?id=${report.reportedUser.id}`)}>Просмотреть профиль</DropdownMenuItem>
-                        <DropdownMenuItem>Заблокировать</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Удалить пользователя</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Отчет решен', description: 'Статус отчета был изменен.' })}>Отметить как решенный</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Пользователь заблокирован', description: `${report.reportedUser.name} был заблокирован.` })}>Заблокировать</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Пользователь удален', description: `${report.reportedUser.name} был удален.` })} className="text-destructive focus:text-destructive">Удалить пользователя</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Table,
@@ -29,6 +31,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { toast } from "@/hooks/use-toast";
 
 const ADMIN_USERS_DATA = [
     { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, email: 'anna@example.com', online: true, city: 'Москва', joined: '2024-05-01' },
@@ -42,6 +45,16 @@ const ADMIN_USERS_DATA = [
 
 export default function AdminUsersPage() {
   const router = useRouter();
+  const [users, setUsers] = useState(ADMIN_USERS_DATA);
+
+  const handleDeleteUser = (userId: number, userName: string) => {
+    setUsers(users.filter(user => user.id !== userId));
+    toast({
+      variant: "destructive",
+      title: "Пользователь удален",
+      description: `${userName} был удален из системы.`,
+    });
+  };
 
   return (
     <Card>
@@ -67,7 +80,7 @@ export default function AdminUsersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {ADMIN_USERS_DATA.map(user => (
+            {users.map(user => (
               <TableRow key={user.id}>
                 <TableCell className="hidden sm:table-cell">
                   <Image
@@ -99,7 +112,7 @@ export default function AdminUsersPage() {
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem onClick={() => router.push(`/user?id=${user.id}`)}>View Profile</DropdownMenuItem>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDeleteUser(user.id, user.name)} className="text-destructive focus:text-destructive">Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -110,7 +123,7 @@ export default function AdminUsersPage() {
       </CardContent>
       <CardFooter>
         <div className="text-xs text-muted-foreground">
-          Showing <strong>1-7</strong> of <strong>{ADMIN_USERS_DATA.length}</strong> users
+          Showing <strong>1-{users.length}</strong> of <strong>{users.length}</strong> users
         </div>
       </CardFooter>
     </Card>
