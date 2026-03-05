@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -14,14 +15,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/language-context";
 
 const CHAT_THEMES = [
-  { id: 'romantic', label: 'Романтика', icon: Heart, color: 'text-pink-500', mood: 'Romantic, sweet and poetic' },
-  { id: 'funny', label: 'Юмор', icon: Laugh, color: 'text-orange-500', mood: 'Funny, witty and lighthearted' },
-  { id: 'hobbies', label: 'О хобби', icon: Compass, color: 'text-blue-500', mood: 'Focus on shared interests and activities' },
-  { id: 'daily', label: 'Про день', icon: Coffee, color: 'text-amber-600', mood: 'Casual, relaxed daily life conversation' },
-  { id: 'deep', label: 'Глубокое', icon: MessageSquareQuote, color: 'text-purple-500', mood: 'Deep, philosophical and meaningful questions' },
-  { id: 'bold', label: 'Смело', icon: Zap, color: 'text-yellow-500', mood: 'Bold, confident and slightly flirty' },
+  { id: 'romantic', label_ru: 'Романтика', label_en: 'Romantic', icon: Heart, color: 'text-pink-500', mood: 'Romantic, sweet and poetic' },
+  { id: 'funny', label_ru: 'Юмор', label_en: 'Humor', icon: Laugh, color: 'text-orange-500', mood: 'Funny, witty and lighthearted' },
+  { id: 'hobbies', label_ru: 'О хобби', label_en: 'Hobbies', icon: Compass, color: 'text-blue-500', mood: 'Focus on shared interests and activities' },
+  { id: 'daily', label_ru: 'Про день', label_en: 'Daily', icon: Coffee, color: 'text-amber-600', mood: 'Casual, relaxed daily life conversation' },
+  { id: 'deep', label_ru: 'Глубокое', label_en: 'Deep', icon: MessageSquareQuote, color: 'text-purple-500', mood: 'Deep, philosophical and meaningful questions' },
+  { id: 'bold', label_ru: 'Смело', label_en: 'Bold', icon: Zap, color: 'text-yellow-500', mood: 'Bold, confident and slightly flirty' },
 ];
 
 const QUICK_EMOJIS = ["😊", "😂", "😍", "👋", "👍", "❤️", "🔥", "✨", "🙌", "😎"];
@@ -47,6 +49,7 @@ const INITIAL_MESSAGES = [
 
 function ChatsContent() {
   const searchParams = useSearchParams();
+  const { t, language } = useLanguage();
   const matchId = searchParams.get('matchId');
 
   const [selectedChat, setSelectedChat] = useState<any>(null);
@@ -78,7 +81,7 @@ function ChatsContent() {
         setMessages([
           { 
             id: Date.now(), 
-            text: "Привет! Это совпадение, рад(а) знакомству! 😊", 
+            text: language === 'RU' ? "Привет! Это совпадение, рад(а) знакомству! 😊" : "Hi! It's a match, glad to meet you! 😊", 
             sender: "me", 
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
           }
@@ -86,7 +89,7 @@ function ChatsContent() {
         loadIcebreakers(chat);
       }
     }
-  }, [matchId]);
+  }, [matchId, language]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -108,7 +111,7 @@ function ChatsContent() {
         setIsTyping(false);
         const response = {
           id: Date.now() + 1,
-          text: "Звучит здорово! Давай это обсудим.",
+          text: language === 'RU' ? "Звучит здорово! Давай это обсудим." : "Sounds great! Let's discuss it.",
           sender: "other",
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
@@ -129,7 +132,7 @@ function ChatsContent() {
       });
       setIcebreakers(res.suggestions);
     } catch (e) {
-      setIcebreakers(["Привет! Как прошел твой день?", "Чем любишь заниматься в свободное время?", "Какой твой любимый фильм?"]);
+      setIcebreakers(language === 'RU' ? ["Привет! Как прошел твой день?", "Чем любишь заниматься в свободное время?", "Какой твой любимый фильм?"] : ["Hi! How was your day?", "What do you like doing in your free time?", "What's your favorite movie?"]);
     } finally {
       setLoadingIcebreakers(false);
       if (mood) setShowThemeGrid(false);
@@ -166,7 +169,7 @@ function ChatsContent() {
           <div className="flex-1 min-w-0">
             <h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
-              {selectedChat.online ? '• В сети' : 'Был(а) недавно'}
+              {selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline')}
             </p>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground">
@@ -176,7 +179,7 @@ function ChatsContent() {
 
         <main className="flex-1 overflow-y-auto p-5 space-y-5">
           <div className="text-center my-2">
-            <Badge variant="secondary" className="bg-white/50 text-[10px] text-muted-foreground border-0 font-black uppercase tracking-widest px-3 py-1">Сегодня</Badge>
+            <Badge variant="secondary" className="bg-white/50 text-[10px] text-muted-foreground border-0 font-black uppercase tracking-widest px-3 py-1">{t('chats.today')}</Badge>
           </div>
 
           <AnimatePresence>
@@ -218,13 +221,13 @@ function ChatsContent() {
                 <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
                 <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
               </div>
+              <span className="text-[9px] font-bold uppercase tracking-widest">{t('chats.typing')}</span>
             </motion.div>
           )}
           <div ref={messagesEndRef} />
         </main>
 
         <div className="p-4 bg-white border-t border-border shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] relative z-10">
-          {/* AI Theme Grid Toggle */}
           <div className="flex items-center justify-between mb-3 px-1">
              <button 
                onClick={() => setShowThemeGrid(!showThemeGrid)}
@@ -233,15 +236,14 @@ function ChatsContent() {
                  showThemeGrid ? "gradient-bg text-white shadow-lg shadow-primary/20" : "bg-primary/5 text-primary border border-primary/10 hover:bg-primary/10"
                )}
              >
-               <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? "Закрыть темы" : "Темы ответов AI"}
+               <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? t('chats.close_themes') : t('chats.ai_themes')}
              </button>
              {!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">Листайте →</p>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">{language === 'RU' ? 'Листайте →' : 'Swipe →'}</p>
              )}
           </div>
 
           <AnimatePresence>
-            {/* AI Themes Grid */}
             {showThemeGrid && (
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
@@ -258,7 +260,7 @@ function ChatsContent() {
                       className="flex flex-col items-center justify-center p-3.5 rounded-[1.5rem] bg-muted/40 border border-border/50 hover:border-primary/30 hover:bg-white hover:shadow-md transition-all group active:scale-95"
                     >
                       <Icon size={22} className={cn("mb-1.5 group-hover:scale-110 transition-transform", theme.color)} />
-                      <span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{theme.label}</span>
+                      <span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{language === 'RU' ? theme.label_ru : theme.label_en}</span>
                     </button>
                   )
                 })}
@@ -266,7 +268,6 @@ function ChatsContent() {
             )}
           </AnimatePresence>
 
-          {/* Icebreaker Suggestions */}
           {!showThemeGrid && (
             <div className="flex gap-2.5 overflow-x-auto no-scrollbar mb-5 h-10 items-center px-1">
               {loadingIcebreakers ? (
@@ -294,7 +295,7 @@ function ChatsContent() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ваше сообщение..." 
+                placeholder={t('chats.placeholder')} 
                 className="pr-12 h-14 bg-muted/50 border-0 rounded-3xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
               />
               <Popover>
@@ -338,17 +339,17 @@ function ChatsContent() {
       <main className="flex-1 overflow-y-auto px-5 pt-6 pb-24 bg-[#f8f9fb]">
         <div className="flex justify-between items-center mb-6 px-1">
           <div>
-            <h2 className="text-2xl font-black font-headline tracking-tight text-foreground">Сообщения</h2>
-            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-0.5 opacity-60">Твои диалоги</p>
+            <h2 className="text-2xl font-black font-headline tracking-tight text-foreground">{t('chats.title')}</h2>
+            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-0.5 opacity-60">{t('chats.subtitle')}</p>
           </div>
-          <Badge className="gradient-bg text-white rounded-full px-3 py-1 font-black text-[10px] border-0 shadow-lg shadow-primary/20">3 новых</Badge>
+          <Badge className="gradient-bg text-white rounded-full px-3 py-1 font-black text-[10px] border-0 shadow-lg shadow-primary/20">3 {t('activity.new')}</Badge>
         </div>
 
         <div className="relative mb-8 px-1">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground/60" size={18} />
           <Input 
             className="pl-12 h-14 bg-white border-0 rounded-3xl placeholder:text-muted-foreground/50 focus-visible:ring-primary/20 app-shadow text-sm font-medium" 
-            placeholder="Поиск по чатам..." 
+            placeholder={t('chats.search')} 
           />
         </div>
 
@@ -370,7 +371,9 @@ function ChatsContent() {
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-black text-sm text-foreground tracking-tight group-hover:text-primary transition-colors">{chat.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">{chat.time}</span>
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">
+                    {chat.time.replace('мин', language === 'RU' ? 'мин' : 'min').replace('час', language === 'RU' ? 'час' : 'hour').replace('день', language === 'RU' ? 'день' : 'day').replace('дня', language === 'RU' ? 'дня' : 'days')}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-muted-foreground truncate pr-3 font-medium opacity-80 leading-snug">{chat.last}</p>
@@ -391,8 +394,9 @@ function ChatsContent() {
 }
 
 export default function ChatsPage() {
+  const { language } = useLanguage();
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen font-black text-primary animate-pulse uppercase tracking-[0.2em] text-xs">Загрузка чатов...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center h-screen font-black text-primary animate-pulse uppercase tracking-[0.2em] text-xs">{language === 'RU' ? 'Загрузка чатов...' : 'Loading chats...'}</div>}>
       <ChatsContent />
     </Suspense>
   );

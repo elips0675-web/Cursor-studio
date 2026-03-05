@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
+import { useLanguage } from "@/context/language-context";
 
 const ALL_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', distance: 2, match: 87, gender: 'female' },
@@ -68,6 +69,7 @@ function HeartConfetti() {
 
 export default function SearchPage() {
   const router = useRouter();
+  const { t, language } = useLanguage();
   const [index, setIndex] = useState(0);
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
@@ -118,7 +120,7 @@ export default function SearchPage() {
       });
       setCompatibility(res.explanation);
     } catch (e) {
-      setCompatibility("Вы отлично подходите друг другу!");
+      setCompatibility(t('match.insight_default') || "Great match!");
     } finally {
       setLoadingAi(false);
     }
@@ -143,7 +145,7 @@ export default function SearchPage() {
         <div className="flex items-center justify-center w-full max-w-sm mb-4 z-10">
           <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl flex items-center gap-2 text-[11px] text-primary font-bold border border-primary/5 shadow-md">
             <Sparkles size={14} />
-            <span>{filteredUsers.length} анкет рядом</span>
+            <span>{filteredUsers.length} {t('swipes.nearby')}</span>
           </div>
         </div>
 
@@ -173,18 +175,18 @@ export default function SearchPage() {
                     priority 
                   />
                   <div className="absolute top-4 left-4">
-                     <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">Онлайн</Badge>
+                     <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">{language === 'RU' ? 'Онлайн' : 'Online'}</Badge>
                   </div>
                   <div className="absolute top-4 right-4">
                      <Badge className="gradient-bg text-white border-0 px-3 py-1 font-bold shadow-lg">
-                       {user.match}% совпадение
+                       {user.match}% {language === 'RU' ? 'совпадение' : 'match'}
                      </Badge>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
                   <div className="absolute bottom-6 left-6 right-6 text-white text-left">
                     <h3 className="text-3xl font-black font-headline mb-1 drop-shadow-md">{user.name}, {user.age}</h3>
                     <p className="text-white/90 text-xs flex items-center gap-1 font-bold mb-3">
-                      <MapPin size={14} /> {user.distance} км от вас
+                      <MapPin size={14} /> {user.distance} {language === 'RU' ? 'км от вас' : 'km from you'}
                     </p>
                     <div className="flex flex-wrap gap-1.5 mb-2">
                       {user.interests.slice(0, 3).map(i => (
@@ -198,8 +200,8 @@ export default function SearchPage() {
             ) : (
               <div className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted shadow-inner">
                 <X size={32} className="text-muted-foreground mb-4" />
-                <h4 className="text-lg font-bold uppercase tracking-tight">Никого не нашли</h4>
-                <p className="text-xs text-muted-foreground mt-2">Попробуйте зайти позже</p>
+                <h4 className="text-lg font-bold uppercase tracking-tight">{language === 'RU' ? 'Никого не нашли' : 'No one found'}</h4>
+                <p className="text-xs text-muted-foreground mt-2">{language === 'RU' ? 'Попробуйте зайти позже' : 'Please try again later'}</p>
               </div>
             )}
           </AnimatePresence>
@@ -225,7 +227,7 @@ export default function SearchPage() {
             disabled={filteredUsers.length === 0}
             onClick={handleDirectMessage}
             className="w-14 h-14 rounded-full bg-white text-blue-500 flex items-center justify-center hover:bg-blue-50 active:scale-90 transition-all app-shadow border border-blue-100 group"
-            title="Личные сообщения"
+            title={language === 'RU' ? "Личные сообщения" : "Direct messages"}
           >
             <MessageCircle size={24} className="group-hover:scale-110 transition-transform" />
           </button>
@@ -280,9 +282,9 @@ export default function SearchPage() {
                </motion.div>
             </div>
 
-            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">Это совпадение!</DialogTitle>
+            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">{t('match.title')}</DialogTitle>
             <DialogDescription className="text-muted-foreground text-sm mb-6 px-4 leading-relaxed font-medium">
-               Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу.
+               {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}
             </DialogDescription>
             
             <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
@@ -290,12 +292,12 @@ export default function SearchPage() {
                 <Sparkles size={24} />
               </div>
               <h4 className="text-[10px] font-black text-primary mb-2 flex items-center gap-1 uppercase tracking-widest">
-                <Sparkles size={12} /> AI Инсайт
+                <Sparkles size={12} /> {t('match.insight')}
               </h4>
               {loadingAi ? (
                 <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
                   <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  Анализируем...
+                  {language === 'RU' ? 'Анализируем...' : 'Analyzing...'}
                 </div>
               ) : (
                 <p className="text-[11px] leading-relaxed text-foreground/80 italic font-medium relative z-10">
@@ -306,10 +308,10 @@ export default function SearchPage() {
             
             <div className="flex flex-col gap-3">
               <Button onClick={handleStartChat} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.15em] text-[11px] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                Написать первым
+                {t('button.write_first')}
               </Button>
               <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full h-12 rounded-full text-muted-foreground font-black uppercase tracking-[0.1em] text-[10px] hover:bg-muted shadow-sm">
-                Продолжить
+                {t('button.continue')}
               </Button>
             </div>
           </div>

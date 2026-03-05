@@ -44,13 +44,13 @@ const ACTIVITY_DATA = [
 ];
 
 const PREMIUM_PLANS = [
-  { id: '1m', name: '1 месяц', price: '499 ₽', oldPrice: '', discount: '', popular: false },
-  { id: '6m', name: '6 месяцев', price: '1 990 ₽', oldPrice: '2 994 ₽', discount: '-33%', popular: true },
-  { id: '12m', name: '12 месяцев', price: '2 990 ₽', oldPrice: '5 988 ₽', discount: '-50%', popular: false },
+  { id: '1m', name_ru: '1 месяц', name_en: '1 month', price: '499 ₽', oldPrice: '', discount: '', popular: false },
+  { id: '6m', name_ru: '6 месяцев', name_en: '6 months', price: '1 990 ₽', oldPrice: '2 994 ₽', discount: '-33%', popular: true },
+  { id: '12m', name_ru: '12 месяцев', name_en: '12 months', price: '2 990 ₽', oldPrice: '5 988 ₽', discount: '-50%', popular: false },
 ];
 
 export default function ActivityPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState("all");
   const [showPremium, setShowPremium] = useState(false);
   const [showAd, setShowAd] = useState(false);
@@ -63,8 +63,8 @@ export default function ActivityPage() {
       setIsAdLoading(false);
       setShowAd(false);
       toast({
-        title: "Профиль открыт!",
-        description: "Вы получили 1 бесплатный просмотр лайка за рекламу.",
+        title: language === 'RU' ? "Профиль открыт!" : "Profile unlocked!",
+        description: language === 'RU' ? "Вы получили 1 бесплатный просмотр лайка за рекламу." : "You got 1 free like view for watching an ad.",
       });
     }, 3000);
   };
@@ -83,14 +83,14 @@ export default function ActivityPage() {
         <div className="flex justify-between items-end mb-6 px-1">
           <div>
             <h2 className="text-2xl font-black font-headline tracking-tighter text-foreground">
-              {activeTab === 'all' ? 'События' : activeTab === 'likes' ? 'Лайки' : 'Визиты'}
+              {activeTab === 'all' ? t('activity.title') : activeTab === 'likes' ? t('activity.likes') : t('activity.visits')}
             </h2>
             <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1 opacity-60">
-              Ваша активность сегодня
+              {t('activity.today_activity')}
             </p>
           </div>
           <Badge className="gradient-bg text-white rounded-full px-3 py-1 border-0 shadow-lg shadow-primary/20 font-black text-[9px]">
-            5 новых
+            5 {t('activity.new')}
           </Badge>
         </div>
 
@@ -100,24 +100,23 @@ export default function ActivityPage() {
               value="all" 
               className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
-              Все
+              {t('activity.all')}
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
               className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
-              Лайки
+              {t('activity.likes')}
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
               className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
-              Визиты
+              {t('activity.visits')}
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value={activeTab} className="mt-6 space-y-4 outline-none">
-            {/* Ad Banner Action */}
             <motion.button 
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
@@ -127,10 +126,9 @@ export default function ActivityPage() {
               <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <Play size={12} className="ml-0.5 fill-primary text-primary" />
               </div>
-              Разблокировать бесплатно
+              {t('button.unlock')}
             </motion.button>
 
-            {/* List */}
             <div className="space-y-3">
               <AnimatePresence mode="popLayout">
                 {filteredActivity.length > 0 ? (
@@ -150,7 +148,7 @@ export default function ActivityPage() {
                     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
                       <Info size={24} />
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest">Ничего не найдено</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest">{t('activity.empty')}</p>
                   </div>
                 )}
               </AnimatePresence>
@@ -158,7 +156,6 @@ export default function ActivityPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Premium Banner */}
         <motion.div 
           whileHover={{ y: -4 }}
           whileTap={{ scale: 0.98 }}
@@ -175,19 +172,18 @@ export default function ActivityPage() {
               <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md border border-white/20">
                 <Star size={16} className="text-yellow-300" fill="currentColor" />
               </div>
-              <h4 className="font-black text-xl tracking-tighter">Premium Доступ</h4>
+              <h4 className="font-black text-xl tracking-tighter">{t('activity.premium_title')}</h4>
             </div>
             <p className="text-xs text-white/90 mb-6 max-w-[220px] leading-relaxed font-medium">
-              Узнайте, кому вы понравились, и получите безлимитные лайки!
+              {t('activity.premium_desc')}
             </p>
             <div className="inline-flex items-center gap-2 bg-white text-primary text-[9px] font-black uppercase tracking-[0.2em] py-3 px-8 rounded-full shadow-2xl hover:bg-orange-50 transition-colors">
-              Подключить <ChevronRight size={12} strokeWidth={4} />
+              {t('button.continue')} <ChevronRight size={12} strokeWidth={4} />
             </div>
           </div>
         </motion.div>
       </main>
 
-      {/* Premium Tariffs Dialog */}
       <Dialog open={showPremium} onOpenChange={setShowPremium}>
         <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
           <div className="relative h-40 gradient-bg flex flex-col items-center justify-center text-white p-6 overflow-hidden">
@@ -201,7 +197,9 @@ export default function ActivityPage() {
              </motion.div>
              <Star className="text-yellow-300 mb-2 drop-shadow-lg relative z-10" size={48} fill="currentColor" />
              <DialogTitle className="text-2xl font-black uppercase tracking-tighter relative z-10">Premium</DialogTitle>
-             <p className="text-[9px] text-white/80 font-bold uppercase tracking-[0.3em] relative z-10 mt-1">Выберите план</p>
+             <p className="text-[9px] text-white/80 font-bold uppercase tracking-[0.3em] relative z-10 mt-1">
+               {language === 'RU' ? 'Выберите план' : 'Select plan'}
+             </p>
           </div>
 
           <div className="p-6 space-y-3">
@@ -224,7 +222,9 @@ export default function ActivityPage() {
                 )}
                 
                 <div>
-                  <h6 className="font-bold text-xs text-foreground/80 group-hover:text-foreground">{plan.name}</h6>
+                  <h6 className="font-bold text-xs text-foreground/80 group-hover:text-foreground">
+                    {language === 'RU' ? plan.name_ru : plan.name_en}
+                  </h6>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-xl font-black text-foreground">{plan.price}</span>
                     {plan.oldPrice && <span className="text-[9px] text-muted-foreground line-through decoration-primary/40 opacity-60">{plan.oldPrice}</span>}
@@ -242,38 +242,37 @@ export default function ActivityPage() {
 
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 pt-4 border-t border-muted mt-2">
                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                 <Zap size={12} className="text-primary" /> Безлимит
+                 <Zap size={12} className="text-primary" /> {language === 'RU' ? 'Безлимит' : 'Unlimited'}
                </div>
                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                 <Eye size={12} className="text-primary" /> Просмотры
+                 <Eye size={12} className="text-primary" /> {language === 'RU' ? 'Просмотры' : 'Views'}
                </div>
                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                 <ShieldCheck size={12} className="text-primary" /> Инкогнито
+                 <ShieldCheck size={12} className="text-primary" /> {language === 'RU' ? 'Инкогнито' : 'Incognito'}
                </div>
                <div className="flex items-center gap-2 text-[8px] text-muted-foreground font-black uppercase tracking-widest">
-                 <Sparkles size={12} className="text-primary" /> Супер-лайки
+                 <Sparkles size={12} className="text-primary" /> {language === 'RU' ? 'Супер-лайки' : 'Super-likes'}
                </div>
             </div>
           </div>
 
           <DialogFooter className="p-6 pt-0">
             <Button className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all text-[10px] border-0">
-              Начать сейчас
+              {language === 'RU' ? 'Начать сейчас' : 'Start now'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Watch Ad Dialog */}
       <Dialog open={showAd} onOpenChange={setShowAd}>
         <DialogContent className="max-w-[320px] rounded-[2.5rem] p-8 text-center bg-white app-shadow border-0">
           <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 relative">
             <div className="absolute inset-0 rounded-2xl bg-primary/5 animate-ping"></div>
             <Play size={32} className="text-primary ml-1 relative z-10" fill="currentColor" />
           </div>
-          <DialogTitle className="text-xl font-black mb-2 font-headline tracking-tighter uppercase">Бонус</DialogTitle>
+          <DialogTitle className="text-xl font-black mb-2 font-headline tracking-tighter uppercase">{t('activity.unlock_title')}</DialogTitle>
           <DialogDescription className="text-muted-foreground text-xs mb-8 leading-relaxed font-medium">
-            Посмотрите рекламу, чтобы открыть анкету бесплатно на <span className="text-primary font-bold">24 часа</span>.
+            {t('activity.unlock_desc')}
           </DialogDescription>
           
           <div className="flex flex-col gap-3">
@@ -282,10 +281,10 @@ export default function ActivityPage() {
               disabled={isAdLoading}
               className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 text-[10px] border-0"
             >
-              {isAdLoading ? "Загрузка..." : "Смотреть"}
+              {isAdLoading ? (language === 'RU' ? "Загрузка..." : "Loading...") : t('button.watch')}
             </Button>
             <Button variant="ghost" onClick={() => setShowAd(false)} className="rounded-full text-muted-foreground text-[9px] font-black uppercase tracking-widest h-10">
-              Не сейчас
+              {t('button.not_now')}
             </Button>
           </div>
         </DialogContent>
@@ -297,6 +296,8 @@ export default function ActivityPage() {
 }
 
 function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
+  const { t, language } = useLanguage();
+  
   const getIcon = () => {
     switch (item.type) {
       case 'like': return <Heart size={12} className="text-white" fill="currentColor" />;
@@ -317,9 +318,9 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
 
   const getMessage = () => {
     switch (item.type) {
-      case 'like': return 'поставила вам лайк';
-      case 'visit': return 'посетила ваш профиль';
-      case 'match': return 'новое совпадение с вами!';
+      case 'like': return t('activity.msg_like');
+      case 'visit': return t('activity.msg_visit');
+      case 'match': return t('activity.msg_match');
       default: return '';
     }
   };
@@ -357,7 +358,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
         <div className="flex justify-between items-start">
           <p className="text-[12px] leading-tight text-foreground/90 font-medium">
             {item.blurred ? (
-              <span><span className="font-black text-primary">Кто-то</span> {getMessage()}</span>
+              <span><span className="font-black text-primary">{t('profile.someone')}</span> {getMessage()}</span>
             ) : (
               <>
                 <span className="font-black text-foreground">{item.user}, {item.age}</span> {getMessage()}
@@ -371,14 +372,16 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
             </div>
           )}
         </div>
-        <p className="text-[8px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-1">{item.time}</p>
+        <p className="text-[8px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-1">
+          {item.time.replace('мин назад', language === 'RU' ? 'мин назад' : 'min ago').replace('час назад', language === 'RU' ? 'час назад' : 'hour ago').replace('дня назад', language === 'RU' ? 'дня назад' : 'days ago')}
+        </p>
         
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
             className="text-[8px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-4 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-[0.1em] shadow-sm border border-primary/10"
           >
-            <Sparkles size={10} className="animate-pulse" /> Раскрыть
+            <Sparkles size={10} className="animate-pulse" /> {language === 'RU' ? 'Раскрыть' : 'Reveal'}
           </button>
         )}
       </div>
