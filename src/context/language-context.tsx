@@ -40,6 +40,7 @@ const translations = {
     'button.unlock': 'Разблокировать бесплатно',
     'button.watch': 'Смотреть',
     'button.not_now': 'Не сейчас',
+    'button.report': 'Пожаловаться',
     // Profile
     'profile.edit': 'Изменить',
     'profile.about': 'О себе',
@@ -132,6 +133,21 @@ const translations = {
     'onboarding.loc.success': 'Город определен: ',
     'onboarding.loc.fail': 'Не удалось определить город',
     'onboarding.loc.denied': 'Доступ к геолокации отклонен',
+    // Report
+    'report.title': 'Жалоба на пользователя',
+    'report.description': 'Ваша жалоба анонимна. Выберите причину, и мы рассмотрим ситуацию.',
+    'report.reason.spam': 'Спам',
+    'report.reason.abuse': 'Оскорбительное поведение',
+    'report.reason.fake': 'Фейковый профиль',
+    'report.reason.scam': 'Мошенничество',
+    'report.reason.content': 'Неприемлемый контент',
+    'report.details_placeholder': 'Дополнительные детали (необязательно)',
+    'report.button.send': 'Отправить жалобу',
+    'report.button.cancel': 'Отмена',
+    'report.toast.success_title': 'Жалоба отправлена',
+    'report.toast.success_desc': 'Спасибо! Мы рассмотрим вашу жалобу на',
+    'report.toast.no_reason_title': 'Выберите причину',
+    'report.toast.no_reason_desc': 'Необходимо указать причину для отправки жалобы.',
   },
   EN: {
     // Bottom Nav
@@ -158,6 +174,7 @@ const translations = {
     'button.unlock': 'Unlock for free',
     'button.watch': 'Watch',
     'button.not_now': 'Not now',
+    'button.report': 'Report',
     // Profile
     'profile.edit': 'Edit',
     'profile.about': 'About Me',
@@ -250,6 +267,21 @@ const translations = {
     'onboarding.loc.success': 'City determined: ',
     'onboarding.loc.fail': 'Could not determine city accurately',
     'onboarding.loc.denied': 'Geolocation access denied',
+    // Report
+    'report.title': 'Report User',
+    'report.description': 'Your report is anonymous. Please select a reason, and we will review the situation.',
+    'report.reason.spam': 'Spam',
+    'report.reason.abuse': 'Abusive behavior',
+    'report.reason.fake': 'Fake profile',
+    'report.reason.scam': 'Scam',
+    'report.reason.content': 'Inappropriate content',
+    'report.details_placeholder': 'Additional details (optional)',
+    'report.button.send': 'Send Report',
+    'report.button.cancel': 'Cancel',
+    'report.toast.success_title': 'Report sent',
+    'report.toast.success_desc': 'Thank you! We will review your report on',
+    'report.toast.no_reason_title': 'Select a reason',
+    'report.toast.no_reason_desc': 'A reason is required to send a report.',
   }
 };
 

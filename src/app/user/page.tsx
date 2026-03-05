@@ -65,6 +65,8 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
+  DialogHeader,
+  DialogFooter
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -72,6 +74,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 
@@ -131,6 +136,14 @@ const interestIcons: Record<string, any> = {
     "Вино": Wine,
 };
 
+const REPORT_REASONS = [
+    'report.reason.spam',
+    'report.reason.abuse',
+    'report.reason.fake',
+    'report.reason.scam',
+    'report.reason.content'
+];
+
 function HeartConfetti() {
   const hearts = Array.from({ length: 20 });
   return (
@@ -179,6 +192,30 @@ function UserProfileContent() {
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
+
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
+
+  const handleReportSubmit = () => {
+    if (!reportReason) {
+      toast({
+        variant: 'destructive',
+        title: t('report.toast.no_reason_title'),
+        description: t('report.toast.no_reason_desc'),
+      });
+      return;
+    }
+    
+    toast({
+      title: t('report.toast.success_title'),
+      description: `${t('report.toast.success_desc')} ${user.name}.`,
+    });
+
+    setIsReportDialogOpen(false);
+    setReportReason('');
+    setReportDescription('');
+  };
 
   useEffect(() => {
     // Populate gallery photos on client mount to avoid hydration mismatch
@@ -239,11 +276,11 @@ function UserProfileContent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white">
                   <DropdownMenuItem 
-                  onClick={() => toast({ title: language === 'RU' ? 'Жалоба отправлена' : 'Report sent', description: language === 'RU' ? `Мы рассмотрим вашу жалобу на ${user.name}.` : `We will review your report on ${user.name}.` })}
+                  onClick={() => setIsReportDialogOpen(true)}
                   className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                   >
                   <Flag size={14} className="mr-2" />
-                  {language === 'RU' ? 'Пожаловаться' : 'Report'}
+                  {t('button.report')}
                   </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -478,6 +515,42 @@ function UserProfileContent() {
           </div>
         </DialogContent>
       </Dialog>
+      
+      <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow">
+          <DialogHeader className="p-6 pb-4 text-left">
+              <DialogTitle className="flex items-center gap-2 font-black tracking-tight">
+                  <Flag size={20} className="text-destructive" />
+                  {t('report.title')}
+              </DialogTitle>
+              <DialogDescription className="pt-2">
+                  {t('report.description')}
+              </DialogDescription>
+          </DialogHeader>
+          <div className="px-6 space-y-4">
+              <RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">
+                  {REPORT_REASONS.map(reasonKey => (
+                      <div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg">
+                          <RadioGroupItem value={t(reasonKey)} id={reasonKey} />
+                          <Label htmlFor={reasonKey} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label>
+                      </div>
+                  ))}
+              </RadioGroup>
+              
+              <Textarea 
+                  placeholder={t('report.details_placeholder')}
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20"
+              />
+          </div>
+          <DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl">
+              <Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button>
+              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
