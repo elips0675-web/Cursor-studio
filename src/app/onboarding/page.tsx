@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -91,7 +90,6 @@ export default function OnboardingPage() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
-          // Используем бесплатный API Nominatim для обратного геокодирования
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=10`
           );
@@ -208,7 +206,9 @@ export default function OnboardingPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Город</Label>
+                <div className="flex justify-between items-center ml-1">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Город (опционально)</Label>
+                </div>
                 <div className="relative">
                   <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-primary" size={20} />
                   <Input 
@@ -220,6 +220,7 @@ export default function OnboardingPage() {
                   <button 
                     onClick={handleDetectLocation}
                     disabled={isDetectingLocation}
+                    type="button"
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors active:scale-90"
                     title="Определить город"
                   >
@@ -235,7 +236,7 @@ export default function OnboardingPage() {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2">
               <h2 className="text-3xl font-black font-headline tracking-tight">Твои интересы</h2>
-              <p className="text-muted-foreground text-sm">Выбери минимум 3, чтобы AI составил крутое био.</p>
+              <p className="text-muted-foreground text-sm">Выбери минимум 1, чтобы AI составил крутое био.</p>
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
               {INTEREST_OPTIONS.map(interest => (
@@ -299,7 +300,7 @@ export default function OnboardingPage() {
 
   const isStepValid = () => {
     if (step === 1) return formData.name.length > 1 && formData.gender !== "";
-    if (step === 2) return formData.age !== "" && formData.city.length > 2;
+    if (step === 2) return formData.age !== ""; // Город теперь опционален
     if (step === 3) return formData.interests.length >= 1;
     if (step === 4) return formData.bio.length > 5;
     return true;
