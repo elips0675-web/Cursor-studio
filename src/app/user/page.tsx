@@ -1,7 +1,9 @@
+
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import dynamic from 'next/dynamic';
 import { 
   MapPin, 
   CheckCircle2, 
@@ -52,33 +54,31 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
 import { motion } from "framer-motion";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-  DialogHeader,
-  DialogFooter
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 import { useFeatureFlags } from "@/context/feature-flags-context";
+
+// Динамические импорты для PageSpeed
+const Carousel = dynamic(() => import("@/components/ui/carousel").then(mod => mod.Carousel));
+const CarouselContent = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselContent));
+const CarouselItem = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselItem));
+const CarouselPrevious = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselPrevious));
+const CarouselNext = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselNext));
+
+const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
+const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
+const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
+const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
+const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
+
+const DropdownMenu = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenu));
+const DropdownMenuContent = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuContent));
+const DropdownMenuItem = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuItem));
+const DropdownMenuTrigger = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuTrigger));
 
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе', 'Музыка', 'Путешествия'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', height: 172, goal: 'Серьезные отношения' },
@@ -219,7 +219,6 @@ function UserProfileContent() {
   };
 
   useEffect(() => {
-    // Populate gallery photos on client mount to avoid hydration mismatch
     setPhotos([
       user.img,
       PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl,
@@ -295,7 +294,13 @@ function UserProfileContent() {
 
       <main className="flex-1 overflow-y-auto pb-24">
         <div className="relative aspect-square w-full">
-          <Image src={user.img} alt={user.name} fill className="object-cover" priority />
+          <Image 
+            src={user.img} 
+            alt={user.name} 
+            fill 
+            className="object-cover" 
+            priority // Оптимизация LCP
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fb] via-transparent to-black/30"></div>
           
           <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">

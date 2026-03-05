@@ -3,6 +3,7 @@
 
 import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown, Cpu, User } from "lucide-react";
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -14,14 +15,6 @@ import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -33,6 +26,14 @@ import {
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 import { useLanguage } from "@/context/language-context";
 import { useFeatureFlags } from "@/context/feature-flags-context";
+
+// Динамический импорт тяжелых диалогов для ускорения первой загрузки
+const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
+const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
+const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
+const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
+const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
 
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
@@ -177,7 +178,7 @@ export default function Home() {
       setMatchUser(user);
       getAiInsight(user);
     }
-  }, [aiCompatibilityEnabled]);
+  }, [aiCompatibilityEnabled, t]);
 
   const handleAutoSearch = () => {
     setIsAutoSearching(true);
@@ -256,8 +257,8 @@ export default function Home() {
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {ALL_DEMO_USERS.slice(0, 4).map((u) => (
-              <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} />
+            {ALL_DEMO_USERS.slice(0, 4).map((u, i) => (
+              <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} priority={i < 2} />
             ))}
           </div>
         </section>
@@ -533,7 +534,7 @@ export default function Home() {
   );
 }
 
-function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
+function FeaturedCard({ user, onLike, priority = false }: { user: any; onLike: () => void; priority?: boolean }) {
   const { t } = useLanguage();
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
@@ -543,6 +544,7 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
           alt={user.name} 
           fill 
           data-ai-hint={user.hint}
+          priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-1.5 right-1.5">

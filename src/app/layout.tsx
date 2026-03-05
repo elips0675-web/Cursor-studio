@@ -1,5 +1,5 @@
 
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
@@ -22,10 +22,24 @@ const quicksand = Quicksand({
   weight: ['500', '600', '700']
 });
 
+export const viewport: Viewport = {
+  themeColor: '#fe3c72',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: 'SwiftMatch - Найти свою идеальную пару',
-  description: 'Современный опыт знакомств с искусственным интеллектом.',
+  description: 'Современный опыт знакомств с искусственным интеллектом. Найди свою любовь в SwiftMatch.',
+  keywords: 'знакомства, ИИ, мэтчи, любовь, общение',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'SwiftMatch',
+  },
 };
 
 export default function RootLayout({

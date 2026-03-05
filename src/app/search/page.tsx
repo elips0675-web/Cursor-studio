@@ -1,8 +1,10 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
 import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Cpu, Sparkles } from "lucide-react";
 import Image from "next/image";
+import dynamic from 'next/dynamic';
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppHeader } from "@/components/layout/app-header";
@@ -13,13 +15,13 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/language-context";
 import { toast } from "@/hooks/use-toast";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import Link from "next/link";
+
+// Тяжелый диалог мэтча загружаем динамически
+const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
+const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
+const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
+const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
 
 const ALL_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', distance: 2, match: 87, gender: 'female' },
@@ -223,7 +225,7 @@ export default function SearchPage() {
                     fill 
                     data-ai-hint={user.hint} 
                     className="object-cover" 
-                    priority 
+                    priority // Оптимизация LCP
                   />
                   <div className="absolute top-4 left-4">
                      <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">{language === 'RU' ? 'Онлайн' : 'Online'}</Badge>
