@@ -238,7 +238,7 @@ export default function ProfilePage() {
           <div className="bg-white rounded-[2.5rem] p-8 app-shadow border border-border/40 mb-8 text-left">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles size={16} className="text-primary" />
-              <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Биография</h4>
+              <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">О себе</h4>
             </div>
             <p className="text-sm text-foreground/80 leading-relaxed font-medium">
               {profile.bio}
