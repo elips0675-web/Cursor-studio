@@ -75,6 +75,33 @@ function HeartConfetti() {
   );
 }
 
+function TwoHeartsAnimation() {
+  return (
+    <div className="relative flex items-center justify-center gap-2">
+      <motion.div
+        animate={{ 
+          scale: [1, 1.2, 1],
+          rotate: [-5, 5, -5]
+        }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 p-4 bg-white rounded-2xl shadow-xl"
+      >
+        <Heart className="text-primary" size={28} fill="currentColor" />
+      </motion.div>
+      <motion.div
+        animate={{ 
+          scale: [1, 1.2, 1],
+          rotate: [5, -5, 5]
+        }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+        className="relative z-10 p-4 bg-white rounded-2xl shadow-xl -ml-4 mt-4"
+      >
+        <Heart className="text-orange-400" size={28} fill="currentColor" />
+      </motion.div>
+    </div>
+  );
+}
+
 export default function Home() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -299,28 +326,23 @@ export default function Home() {
       </main>
 
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
-        <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden app-shadow">
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 bg-white p-0 overflow-hidden app-shadow">
           <HeartConfetti />
           
-          <div className="relative h-40 gradient-bg flex items-center justify-center">
-             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-             <motion.div 
-               initial={{ scale: 0 }}
-               animate={{ scale: 1 }}
-               transition={{ type: "spring", damping: 10, stiffness: 100 }}
-               className="relative z-10 bg-white p-4 rounded-full shadow-2xl"
-             >
-               <Heart className="text-primary animate-pulse" size={32} fill="currentColor" />
-             </motion.div>
+          <div className="relative h-48 gradient-bg flex items-center justify-center overflow-hidden">
+             <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+             <TwoHeartsAnimation />
+             <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+             <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
           </div>
 
-          <div className="px-6 py-10 text-center -mt-10 bg-white rounded-t-[2.5rem] relative">
-            <div className="flex items-center justify-center gap-0 mb-8 relative h-28">
+          <div className="px-8 py-8 text-center bg-white relative">
+            <div className="flex items-center justify-center gap-0 mb-10 relative h-32">
                <motion.div 
-                 initial={{ x: -50, opacity: 0, rotate: -10 }}
-                 animate={{ x: 0, opacity: 1, rotate: -5 }}
-                 transition={{ delay: 0.2 }}
-                 className="w-28 h-28 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-6"
+                 initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
+                 animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
+                 transition={{ type: "spring", damping: 12, delay: 0.2 }}
+                 className="w-32 h-32 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
                >
                   <Image 
                     src={PlaceHolderImages[10].imageUrl} 
@@ -331,10 +353,10 @@ export default function Home() {
                   />
                </motion.div>
                <motion.div 
-                 initial={{ x: 50, opacity: 0, rotate: 10 }}
-                 animate={{ x: 0, opacity: 1, rotate: 5 }}
-                 transition={{ delay: 0.3 }}
-                 className="w-28 h-28 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0"
+                 initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
+                 animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
+                 transition={{ type: "spring", damping: 12, delay: 0.3 }}
+                 className="w-32 h-32 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
                >
                   <Image 
                     src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
@@ -346,35 +368,44 @@ export default function Home() {
                </motion.div>
             </div>
 
-            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">{t('match.title')}</DialogTitle>
-            <DialogDescription className="text-muted-foreground text-sm mb-6 px-4 leading-relaxed font-medium">
+            <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
+              {t('match.title')}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground text-sm mb-8 px-6 leading-relaxed font-medium">
               {t('match.desc')}
             </DialogDescription>
             
-            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
-              <div className="absolute top-0 right-0 p-2 text-primary/20 group-hover:text-primary/40 transition-colors">
-                <Sparkles size={32} />
+            <div className="bg-gradient-to-br from-primary/5 to-orange-500/5 p-6 rounded-[2.5rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-sm">
+              <div className="absolute top-0 right-0 p-3 text-primary/10 group-hover:text-primary/30 transition-colors">
+                <Sparkles size={36} />
               </div>
-              <h4 className="text-[10px] font-black text-primary mb-2 flex items-center gap-1 uppercase tracking-widest">
-                <Sparkles size={12} /> {t('match.insight')}
+              <h4 className="text-[11px] font-black text-primary mb-2.5 flex items-center gap-1.5 uppercase tracking-[0.15em]">
+                <Sparkles size={14} /> {t('match.insight')}
               </h4>
               {loadingAi ? (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
-                  <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  ...
+                <div className="flex items-center gap-3 text-xs text-muted-foreground py-2">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                  <span className="animate-pulse">{t('home.searching')}</span>
                 </div>
               ) : (
-                <p className="text-[11px] leading-relaxed text-foreground/80 italic font-medium relative z-10 pr-4">
+                <p className="text-[12px] leading-relaxed text-foreground/80 italic font-medium relative z-10 pr-2">
                   {compatibility}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-col gap-3 w-full">
-              <Button onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.15em] text-[11px]">
+            <div className="flex flex-col gap-4 w-full">
+              <Button 
+                onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} 
+                className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-primary/30"
+              >
                 {t('button.write_first')}
               </Button>
-              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted shadow-sm uppercase tracking-[0.1em] text-[10px]">
+              <Button 
+                variant="ghost" 
+                onClick={() => setMatchUser(null)} 
+                className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted transition-all uppercase tracking-[0.1em] text-[10px]"
+              >
                 {t('button.continue')}
               </Button>
             </div>
