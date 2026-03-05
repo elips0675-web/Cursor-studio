@@ -178,14 +178,14 @@ export default function Home() {
             className="h-12 rounded-2xl gradient-bg text-white font-black text-sm app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
           >
             <Link href="/search">
-              <Search size={18} className="mr-2 stroke-[3px]" /> Свайпы
+              <Search size={18} className="stroke-[3px]" /> Свайпы
             </Link>
           </Button>
           <Button 
             onClick={() => setIsFilterDialogOpen(true)}
             className="h-12 rounded-2xl bg-white border-2 border-primary text-primary font-black text-sm app-shadow hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
           >
-            <Zap size={18} fill={isAutoSearching ? "currentColor" : "none"} className={cn("mr-2", isAutoSearching && "animate-pulse")} /> Автопоиск
+            <Zap size={18} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> Автопоиск
           </Button>
         </div>
 

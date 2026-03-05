@@ -285,8 +285,8 @@ export default function SearchPage() {
                Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу.
             </DialogDescription>
             
-            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden">
-               <div className="absolute top-0 right-0 p-2 text-primary/20">
+            <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
+               <div className="absolute top-0 right-0 p-2 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <Sparkles size={24} />
               </div>
               <h4 className="text-[10px] font-black text-primary mb-2 flex items-center gap-1 uppercase tracking-widest">
@@ -298,17 +298,17 @@ export default function SearchPage() {
                   Анализируем...
                 </div>
               ) : (
-                <p className="text-[11px] leading-relaxed text-foreground/80 italic font-medium">
+                <p className="text-[11px] leading-relaxed text-foreground/80 italic font-medium relative z-10">
                   {compatibility}
                 </p>
               )}
             </div>
             
             <div className="flex flex-col gap-3">
-              <Button onClick={handleStartChat} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.15em] text-[11px] shadow-lg shadow-primary/20">
+              <Button onClick={handleStartChat} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.15em] text-[11px] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
                 Написать первым
               </Button>
-              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full h-12 rounded-full text-muted-foreground font-black uppercase tracking-[0.1em] text-[10px]">
+              <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full h-12 rounded-full text-muted-foreground font-black uppercase tracking-[0.1em] text-[10px] hover:bg-muted shadow-sm">
                 Продолжить
               </Button>
             </div>
