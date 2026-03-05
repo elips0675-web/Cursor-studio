@@ -112,17 +112,18 @@ export default function Home() {
 
   useEffect(() => {
     if (isFilterDialogOpen) {
-      const currentUser = {
-        interests: ['Спорт', 'Музыка'],
-        city: 'Москва',
-      };
+      const currentUser = ALL_DEMO_USERS.find(u => u.name === "Анна");
       
-      setSelectedInterests(currentUser.interests.filter(interest => INTEREST_OPTIONS.includes(interest)));
-      
-      if ([...CAPITALS, "Все"].includes(currentUser.city)) {
-          setSelectedCity(currentUser.city);
-      } else {
-          setSelectedCity("Все");
+      if(currentUser) {
+        setSelectedInterests(currentUser.interests.filter(interest => INTEREST_OPTIONS.includes(interest)));
+        
+        if ([...CAPITALS, "Все"].includes(currentUser.city)) {
+            setSelectedCity(currentUser.city);
+        } else {
+            setSelectedCity("Все");
+        }
+
+        setAgeRange([Math.max(18, currentUser.age - 2), currentUser.age + 2]);
       }
     }
   }, [isFilterDialogOpen]);
@@ -225,7 +226,7 @@ export default function Home() {
             className="h-10 rounded-xl gradient-bg text-white font-black text-xs app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
           >
             <Link href="/search">
-              <Search size={14} className="stroke-[3px]" /> {t('nav.swipes')}
+              <Search size={14} className="stroke-[3px]" /> {ALL_DEMO_USERS.length} {t('swipes.nearby')}
             </Link>
           </Button>
           <Button 
@@ -440,20 +441,20 @@ export default function Home() {
 
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
         <DialogContent className="max-w-[340px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
-          <DialogHeader className="p-6 bg-muted/30 pb-4">
+          <DialogHeader className="p-5 bg-muted/30 pb-4">
             <div className="flex items-center gap-3 mb-1">
               <div className="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center text-white shadow-lg">
                 <Zap size={20} fill="currentColor" />
               </div>
-              <DialogTitle className="text-2xl font-black font-headline tracking-tight">{t('button.autosearch')}</DialogTitle>
+              <DialogTitle className="text-xl font-black font-headline tracking-tight">{t('button.autosearch')}</DialogTitle>
             </div>
             <p className="text-xs text-muted-foreground font-medium">{t('button.filters')}</p>
           </DialogHeader>
 
-          <div className="p-5 space-y-5 overflow-y-auto max-h-[60vh] no-scrollbar">
+          <div className="p-4 space-y-4 overflow-y-auto max-h-[60vh] no-scrollbar">
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.interests')}</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.interests')}</label>
+              <div className="flex flex-wrap gap-1.5">
                 {INTEREST_OPTIONS.map(interest => (
                   <Badge 
                     key={interest}
@@ -466,7 +467,7 @@ export default function Home() {
                         : "bg-muted text-muted-foreground hover:bg-border"
                     )}
                   >
-                    {interest}
+                    {t(interest)}
                   </Badge>
                 ))}
               </div>
@@ -474,7 +475,7 @@ export default function Home() {
 
             <div className="space-y-3">
               <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('profile.age')}</label>
+                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{t('profile.age')}</label>
                 <span className="text-xs font-black text-primary">{ageRange[0]} - {ageRange[1]}</span>
               </div>
               <Slider 
@@ -488,9 +489,9 @@ export default function Home() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.city')}</label>
+              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.city')}</label>
               <Select value={selectedCity} onValueChange={setSelectedCity}>
-                <SelectTrigger className="h-12 rounded-xl bg-muted/30 border-0 font-bold px-4">
+                <SelectTrigger className="h-11 rounded-xl bg-muted/30 border-0 font-bold px-4">
                   <SelectValue placeholder="Выберите город" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-0 shadow-2xl">
@@ -503,13 +504,13 @@ export default function Home() {
             </div>
           </div>
 
-          <DialogFooter className="p-5 pt-2">
+          <DialogFooter className="p-4 pt-2">
             <Button 
               onClick={() => {
                 setIsFilterDialogOpen(false);
                 handleAutoSearch();
               }}
-              className="w-full h-12 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0"
+              className="w-full h-11 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0"
             >
               {t('button.autosearch')}
             </Button>
@@ -627,5 +628,3 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
     </div>
   );
 }
-
-    

@@ -195,6 +195,18 @@ export default function EditProfilePage() {
             <Textarea value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
           </div>
 
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center text-yellow-600"><Trophy size={14} /></div>
+                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Звания</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {ALL_TITLES.map(title => (
+                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={(profile.titles || []).some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", (profile.titles || []).some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
+              ))}
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
             <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Основные данные</h3>
@@ -291,18 +303,6 @@ export default function EditProfilePage() {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center text-yellow-600"><Trophy size={14} /></div>
-                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Звания</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {ALL_TITLES.map(title => (
-                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={(profile.titles || []).some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", (profile.titles || []).some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
-              ))}
-            </div>
-          </div>
-
         </div>
 
         <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-lg shadow-primary/20 border-0">Сохранить</Button>
@@ -310,5 +310,3 @@ export default function EditProfilePage() {
     </div>
   );
 }
-
-    
