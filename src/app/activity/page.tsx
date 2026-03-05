@@ -95,22 +95,22 @@ export default function ActivityPage() {
         </div>
 
         <Tabs defaultValue="all" className="w-full mb-6" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-white/50 backdrop-blur-md h-12 p-1 gap-2 rounded-2xl border border-white shadow-sm">
+          <TabsList className="flex w-full bg-transparent h-auto p-0 gap-3 border-0 shadow-none">
             <TabsTrigger 
               value="all" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
             >
               {t('activity.all')}
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
             >
               {t('activity.likes')}
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
             >
               {t('activity.visits')}
             </TabsTrigger>
@@ -327,7 +327,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-3 p-2 rounded-2xl transition-all cursor-pointer group relative overflow-hidden",
+      "flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer group relative overflow-hidden h-[72px]",
       item.seen ? "bg-white/40 opacity-70" : "bg-white app-shadow hover:translate-y-[-1px] border border-white"
     )}>
       {!item.seen && (
@@ -336,7 +336,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
       
       <div className="relative flex-shrink-0">
         <div className={cn(
-          "w-11 h-11 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-all duration-500",
+          "w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-all duration-500",
           item.blurred && "blur-[6px] grayscale opacity-60 scale-95"
         )}>
           <Image src={item.img} alt={item.user} fill className="object-cover" />
@@ -347,7 +347,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
           )}
         </div>
         <div className={cn(
-          "absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
+          "absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
           getBgColor()
         )}>
           {getIcon()}
