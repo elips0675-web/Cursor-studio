@@ -98,19 +98,19 @@ export default function ActivityPage() {
           <TabsList className="flex w-full bg-transparent h-auto p-0 gap-3 border-0 shadow-none">
             <TabsTrigger 
               value="all" 
-              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
+              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.all')}
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
+              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.likes')}
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="flex-1 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 transition-all duration-300"
+              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.visits')}
             </TabsTrigger>
