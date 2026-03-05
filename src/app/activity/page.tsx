@@ -98,19 +98,19 @@ export default function ActivityPage() {
           <TabsList className="grid w-full grid-cols-3 bg-white/50 backdrop-blur-md h-12 p-1 gap-2 rounded-2xl border border-white shadow-sm">
             <TabsTrigger 
               value="all" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
               {t('activity.all')}
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
               {t('activity.likes')}
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
+              className="rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:shadow-md transition-all duration-300 border-0"
             >
               {t('activity.visits')}
             </TabsTrigger>
@@ -327,7 +327,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-4 p-3.5 rounded-2xl transition-all cursor-pointer group relative overflow-hidden",
+      "flex items-center gap-4 p-3 rounded-2xl transition-all cursor-pointer group relative overflow-hidden",
       item.seen ? "bg-white/40 opacity-70" : "bg-white app-shadow hover:translate-y-[-2px] border border-white"
     )}>
       {!item.seen && (
@@ -336,18 +336,18 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
       
       <div className="relative flex-shrink-0">
         <div className={cn(
-          "w-14 h-14 rounded-2xl overflow-hidden relative border-2 border-white shadow-md transition-all duration-500",
-          item.blurred && "blur-[8px] grayscale opacity-60 scale-95"
+          "w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-md transition-all duration-500",
+          item.blurred && "blur-[6px] grayscale opacity-60 scale-95"
         )}>
           <Image src={item.img} alt={item.user} fill className="object-cover" />
           {item.blurred && (
              <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                <Sparkles className="text-white/40" size={20} />
+                <Sparkles className="text-white/40" size={16} />
              </div>
           )}
         </div>
         <div className={cn(
-          "absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
+          "absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
           getBgColor()
         )}>
           {getIcon()}
@@ -356,7 +356,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
       
       <div className="flex-1 min-w-0 pr-1">
         <div className="flex justify-between items-start">
-          <p className="text-[12px] leading-tight text-foreground/90 font-medium">
+          <p className="text-[11px] leading-tight text-foreground/90 font-medium">
             {item.blurred ? (
               <span><span className="font-black text-primary">{t('profile.someone')}</span> {getMessage()}</span>
             ) : (
@@ -379,14 +379,14 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
-            className="text-[8px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-4 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-[0.1em] shadow-sm border border-primary/10"
+            className="text-[8px] font-black text-primary flex items-center gap-1.5 mt-2 bg-primary/5 px-3 py-1.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-[0.1em] shadow-sm border border-primary/10"
           >
             <Sparkles size={10} className="animate-pulse" /> {language === 'RU' ? 'Раскрыть' : 'Reveal'}
           </button>
         )}
       </div>
 
-      <ChevronRight size={16} className="text-muted-foreground/20 group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={3} />
+      <ChevronRight size={14} className="text-muted-foreground/20 group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={3} />
     </div>
   );
 }
