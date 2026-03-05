@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -156,22 +155,22 @@ export default function ProfilePage() {
     <>
       <main className="flex-1 overflow-y-auto pb-24 bg-[#f8f9fb]">
         {/* Profile Header Background */}
-        <div className="h-28 gradient-bg relative shadow-lg">
-          <div className="absolute top-5 left-8 text-white text-2xl font-black uppercase tracking-tighter opacity-90">SwiftMatch</div>
+        <div className="h-24 gradient-bg relative shadow-md">
+          <div className="absolute top-4 left-6 text-white text-xl font-black uppercase tracking-tighter opacity-80">SwiftMatch</div>
           <Link 
             href="/settings"
-            className="absolute top-5 right-8 text-white/90 p-2.5 bg-black/10 rounded-full hover:bg-black/20 transition-colors backdrop-blur-sm shadow-sm"
+            className="absolute top-4 right-6 text-white/90 p-2 bg-black/10 rounded-full hover:bg-black/20 transition-colors backdrop-blur-sm"
           >
-            <Settings size={22} />
+            <Settings size={20} />
           </Link>
         </div>
 
         {/* Profile Info */}
-        <div className="px-6 -mt-12 text-center">
-          <div className="relative inline-block mb-6">
+        <div className="px-5 -mt-10 text-center">
+          <div className="relative inline-block mb-4">
             <div 
               onClick={() => openPhotoViewer(0)}
-              className="relative w-36 h-36 rounded-[2.5rem] border-4 border-white app-shadow overflow-hidden bg-muted transition-transform duration-500 hover:scale-[1.02] cursor-pointer"
+              className="relative w-32 h-32 rounded-[2.25rem] border-4 border-white app-shadow overflow-hidden bg-muted transition-transform duration-500 hover:scale-[1.02] cursor-pointer"
             >
               <Image 
                 src={photos[0]} 
@@ -181,107 +180,102 @@ export default function ProfilePage() {
                 priority
               />
             </div>
-            <Badge className="absolute bottom-1 right-1 bg-primary text-white border-2 border-white font-black text-[9px] h-7 px-3 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest pointer-events-none">
+            <Badge className="absolute bottom-1 right-1 bg-primary text-white border-2 border-white font-black text-[8px] h-6 px-2.5 flex items-center justify-center rounded-full shadow-xl z-20 uppercase tracking-widest pointer-events-none">
               PRO 💎
             </Badge>
           </div>
 
-          <div className="mb-6">
-            <h3 className="text-2xl font-black font-headline mb-1 flex items-center justify-center gap-2">
-              {profile.name}, {profile.age} <CheckCircle2 size={22} className="text-primary" fill="currentColor" />
+          <div className="mb-4">
+            <h3 className="text-xl font-black font-headline mb-0.5 flex items-center justify-center gap-2">
+              {profile.name}, {profile.age} <CheckCircle2 size={18} className="text-primary" fill="currentColor" />
             </h3>
-            <div className="flex flex-col items-center gap-2">
-              <p className="text-muted-foreground text-[11px] font-bold flex items-center justify-center gap-1.5 uppercase tracking-wider opacity-70">
-                <MapPin size={14} className="text-primary" /> {profile.city}
+            <div className="flex flex-col items-center gap-1.5">
+              <p className="text-muted-foreground text-[10px] font-bold flex items-center justify-center gap-1.5 uppercase tracking-wider opacity-60">
+                <MapPin size={12} className="text-primary" /> {profile.city}
               </p>
-              <div className="flex flex-wrap justify-center gap-2 mt-2">
-                <Badge variant="secondary" className="bg-primary/10 text-primary border-0 gap-2 py-1.5 px-4 font-black text-[10px] rounded-full uppercase tracking-widest shadow-sm">
-                  <Target size={14} /> {profile.datingGoal}
+              <div className="flex flex-wrap justify-center gap-1.5 mt-1">
+                <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-1 px-3 font-black text-[9px] rounded-full uppercase tracking-widest">
+                  <Target size={12} /> {profile.datingGoal}
                 </Badge>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-center gap-4 mb-8">
+          <div className="flex justify-center gap-3 mb-6">
             <Button 
               asChild
-              className="rounded-2xl gradient-bg text-white h-14 px-8 font-black uppercase text-xs tracking-widest app-shadow active:scale-95 transition-all border-0 flex-1"
+              className="rounded-xl gradient-bg text-white h-12 px-6 font-black uppercase text-[10px] tracking-widest app-shadow active:scale-95 transition-all border-0 flex-1"
             >
               <Link href="/profile/edit">
-                <Edit2 size={16} className="mr-2" /> Редактировать
+                <Edit2 size={14} className="mr-2" /> Изменить
               </Link>
             </Button>
             <Button 
               asChild
               variant="outline" 
-              className="rounded-2xl h-14 w-14 p-0 font-black uppercase border-border text-muted-foreground bg-white shadow-md active:scale-95 transition-all"
+              className="rounded-xl h-12 w-12 p-0 font-black border-border text-muted-foreground bg-white shadow-sm active:scale-95 transition-all"
             >
-              <Link href="/settings"><Settings size={20} /></Link>
+              <Link href="/settings"><Settings size={18} /></Link>
             </Button>
           </div>
 
           {/* Stats Bar */}
-          <div className="bg-white rounded-[2rem] p-5 app-shadow border border-border/40 mb-8">
+          <div className="bg-white rounded-[1.75rem] p-4 app-shadow border border-border/40 mb-6">
             <div className="grid grid-cols-2">
               <div className="text-center">
-                <div className="text-2xl font-black text-primary">128</div>
-                <div className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] mt-1">Лайков</div>
+                <div className="text-xl font-black text-primary">128</div>
+                <div className="text-[9px] text-muted-foreground uppercase font-black tracking-[0.15em] mt-0.5">Лайков</div>
               </div>
               <div className="text-center border-l border-border/50">
-                <div className="text-2xl font-black text-primary">45</div>
-                <div className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] mt-1">Мэтчей</div>
+                <div className="text-xl font-black text-primary">45</div>
+                <div className="text-[9px] text-muted-foreground uppercase font-black tracking-[0.15em] mt-0.5">Мэтчей</div>
               </div>
             </div>
           </div>
 
           {/* About Section */}
-          <div className="bg-white rounded-[2.5rem] p-8 app-shadow border border-border/40 mb-8 text-left">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles size={16} className="text-primary" />
-              <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">О себе</h4>
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles size={14} className="text-primary" />
+              <h4 className="font-black text-[9px] uppercase tracking-[0.15em] text-muted-foreground">О себе</h4>
             </div>
-            <p className="text-sm text-foreground/80 leading-relaxed font-medium">
+            <p className="text-xs text-foreground/80 leading-relaxed font-medium">
               {profile.bio}
             </p>
           </div>
 
-          {/* Interests & Lifestyle Combined Section */}
-          <div className="bg-white rounded-[2.5rem] p-8 app-shadow border border-border/40 mb-8 text-left">
-            <div className="flex items-center gap-2 mb-6">
-              <Heart size={16} className="text-primary" />
-              <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Интересы и стиль жизни</h4>
+          {/* Interests & Lifestyle Section */}
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left">
+            <div className="flex items-center gap-2 mb-4">
+              <Heart size={14} className="text-primary" />
+              <h4 className="font-black text-[9px] uppercase tracking-[0.15em] text-muted-foreground">Интересы и стиль жизни</h4>
             </div>
             
-            <div className="space-y-6">
-              {/* Lifestyle Details */}
-              <div className="flex flex-wrap gap-3">
-                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-2 py-3 px-5 font-bold text-[11px] rounded-xl shadow-sm">
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg shadow-sm">
                   <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
                 </Badge>
                 {lifestyleDetails.map((detail) => {
                   const mapItem = interestMap.find(m => detail.includes(m.label));
                   const Icon = mapItem?.icon || Star;
                   return (
-                    <Badge key={detail} variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-2 py-3 px-5 font-bold text-[11px] rounded-xl shadow-sm">
-                      <Icon size={16} /> {detail}
+                    <Badge key={detail} variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg shadow-sm">
+                      <Icon size={14} /> {detail}
                     </Badge>
                   );
                 })}
               </div>
 
-              {/* Separator if both exist */}
-              {lifestyleDetails.length > 0 && generalInterests.length > 0 && (
-                <div className="h-px bg-muted w-full" />
-              )}
+              <div className="h-px bg-muted/50 w-full" />
 
-              {/* General Interests */}
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2">
                 {generalInterests.map((interest) => {
                   const mapItem = interestMap.find(m => interest.includes(m.label));
                   const Icon = mapItem?.icon || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-2 py-3 px-5 font-bold text-[11px] rounded-xl hover:bg-muted transition-colors shadow-sm">
-                      <Icon size={16} className="text-primary" /> {interest}
+                    <Badge key={interest} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg hover:bg-muted transition-colors shadow-sm">
+                      <Icon size={14} className="text-primary" /> {interest}
                     </Badge>
                   );
                 })}
@@ -289,7 +283,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Gallery Management Section */}
+          {/* Gallery Management Section - KEPT AS P-8 */}
           <div className="bg-white rounded-[2.5rem] p-8 app-shadow border border-border/40 mb-10 text-left">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">
@@ -336,16 +330,16 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Premium CTA */}
-          <div className="gradient-bg rounded-[3rem] p-10 text-white text-center app-shadow mb-12 relative overflow-hidden group">
+          {/* Premium CTA - SLIGHTLY SMALLER PADDING */}
+          <div className="gradient-bg rounded-[2.5rem] p-8 text-white text-center app-shadow mb-12 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-              <Star size={100} fill="currentColor" />
+              <Star size={80} fill="currentColor" />
             </div>
-            <h5 className="font-black text-2xl mb-2 relative z-10 tracking-tight">SwiftMatch Premium</h5>
-            <p className="text-[11px] text-white/80 mb-8 max-w-[240px] mx-auto relative z-10 leading-relaxed font-bold uppercase tracking-wider">
+            <h5 className="font-black text-xl mb-1 relative z-10 tracking-tight">SwiftMatch Premium</h5>
+            <p className="text-[10px] text-white/80 mb-6 max-w-[200px] mx-auto relative z-10 leading-relaxed font-bold uppercase tracking-wider">
               Твои мэтчи ждут тебя — узнай кто тебя лайкнул первым
             </p>
-            <Button variant="secondary" className="w-full rounded-2xl h-14 bg-white text-primary font-black uppercase text-xs tracking-[0.2em] hover:bg-white/90 shadow-2xl relative z-10 active:scale-95 transition-all border-0">
+            <Button variant="secondary" className="w-full rounded-xl h-12 bg-white text-primary font-black uppercase text-[10px] tracking-[0.15em] hover:bg-white/90 shadow-2xl relative z-10 active:scale-95 transition-all border-0">
               Стать Premium
             </Button>
           </div>
