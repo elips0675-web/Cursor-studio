@@ -252,6 +252,7 @@ export default function ProfilePage() {
             </div>
             
             <div className="space-y-3.5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-1">Стиль жизни</p>
               <div className="flex flex-wrap gap-1.5">
                 <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-1.5 px-3 font-bold text-[9px] rounded-lg shadow-sm">
                   <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
@@ -268,7 +269,8 @@ export default function ProfilePage() {
               </div>
 
               <div className="h-px bg-muted/50 w-full" />
-
+              
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-1">Интересы</p>
               <div className="flex flex-wrap gap-1.5">
                 {generalInterests.map((interest) => {
                   const mapItem = interestMap.find(m => interest.includes(m.label));
