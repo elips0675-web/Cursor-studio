@@ -168,7 +168,22 @@ const translations = {
     'support.placeholder': 'Напишите ваше сообщение...',
     'support.greeting': 'Здравствуйте! Чем мы можем вам помочь?',
     'support.response': 'Спасибо за ваше сообщение! Наш специалист скоро с вами свяжется.',
-    'support.faq': 'Быстрые ответы',
+    'support.faq_promo': 'Не нашли ответ? Посетите наш',
+    'support.faq_promo_link': 'раздел FAQ',
+    // FAQ
+    'faq.title': 'Вопросы и ответы',
+    'faq.page_title': 'Часто задаваемые вопросы',
+    'faq.description': 'Ответы на популярные вопросы',
+    'faq.q1.question': 'Как я могу изменить свое фото профиля?',
+    'faq.q1.answer': 'Вы можете изменить свои фотографии, перейдя в свой профиль, нажав на кнопку "Изменить" и затем на вашу главную фотографию или на свободные слоты в галерее.',
+    'faq.q2.question': 'Безопасны ли мои платежные данные?',
+    'faq.q2.answer': 'Да, абсолютно. Мы используем ведущие в отрасли платежные шлюзы, такие как Stripe, и не храним вашу платежную информацию на наших серверах.',
+    'faq.q3.question': 'Что такое режим "Инкогнито"?',
+    'faq.q3.answer': 'В режиме "Инкогнито" ваш профиль виден только тем, кому вы поставили лайк. Это дает вам больше контроля над вашей конфиденциальностью.',
+    'faq.q4.question': 'Как я могу пожаловаться на пользователя?',
+    'faq.q4.answer': 'Вы можете пожаловаться на пользователя прямо из его профиля или из окна чата, нажав на меню с тремя точками и выбрав "Пожаловаться".',
+    'faq.q5.question': 'Как работает "Автопоиск"?',
+    'faq.q5.answer': '"Автопоиск" использует ваши предпочтения (возраст, интересы), чтобы найти для вас наиболее подходящих людей. Вы можете настроить фильтры, чтобы уточнить поиск.',
   },
   EN: {
     // Bottom Nav
@@ -323,7 +338,22 @@ const translations = {
     'support.placeholder': 'Write your message...',
     'support.greeting': 'Hello! How can we help you?',
     'support.response': 'Thank you for your message! Our specialist will contact you soon.',
-    'support.faq': 'Quick Answers',
+    'support.faq_promo': 'Can\'t find an answer? Visit our',
+    'support.faq_promo_link': 'FAQ section',
+    // FAQ
+    'faq.title': 'FAQ',
+    'faq.page_title': 'Frequently Asked Questions',
+    'faq.description': 'Answers to popular questions',
+    'faq.q1.question': 'How can I change my profile picture?',
+    'faq.q1.answer': 'You can change your photos by going to your profile, clicking the "Edit" button, and then tapping on your main photo or empty gallery slots.',
+    'faq.q2.question': 'Is my payment information secure?',
+    'faq.q2.answer': 'Yes, absolutely. We use industry-leading payment gateways like Stripe and do not store your payment information on our servers.',
+    'faq.q3.question': 'What is "Incognito" mode?',
+    'faq.q3.answer': 'In "Incognito" mode, your profile is only visible to people you have liked. This gives you more control over your privacy.',
+    'faq.q4.question': 'How can I report a user?',
+    'faq.q4.answer': 'You can report a user directly from their profile or from the chat window by clicking on the three-dots menu and selecting "Report".',
+    'faq.q5.question': 'How does "Auto-search" work?',
+    'faq.q5.answer': '"Auto-search" uses your preferences (age, interests) to find the most suitable people for you. You can adjust the filters to refine your search.',
   }
 };
 

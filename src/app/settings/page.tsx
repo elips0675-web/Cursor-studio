@@ -11,7 +11,8 @@ import {
   Trash2,
   MapPin,
   MessageSquare,
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
@@ -119,6 +120,18 @@ export default function SettingsPage() {
           <section className="space-y-4">
             <h5 className="text-[10px] font-black uppercase tracking-[2px] text-muted-foreground">{t('settings.support') || 'Поддержка'}</h5>
             <div className="space-y-1">
+              <div className="flex items-center justify-between py-3 border-b border-border/50 cursor-pointer hover:bg-muted/30 -mx-6 px-6 transition-colors" onClick={() => router.push('/faq')}>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
+                    <HelpCircle size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">{t('faq.title') || 'Часто задаваемые вопросы'}</p>
+                    <p className="text-xs text-muted-foreground">{t('faq.description') || 'Ответы на популярные вопросы'}</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-muted-foreground" />
+              </div>
               <div className="flex items-center justify-between py-3 border-b border-border/50 cursor-pointer hover:bg-muted/30 -mx-6 px-6 transition-colors" onClick={() => router.push('/support-chat')}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">

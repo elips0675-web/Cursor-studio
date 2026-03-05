@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { ChevronLeft, Send, Paperclip, HelpCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,20 +17,6 @@ const SUPPORT_AGENT = {
   img: 'https://picsum.photos/seed/support_agent/100/100', 
 };
 
-const QUICK_QUESTIONS_RU = [
-  "Как изменить фото профиля?",
-  "Проблемы с оплатой",
-  "Как работает режим инкогнито?",
-  "Пожаловаться на пользователя",
-];
-
-const QUICK_QUESTIONS_EN = [
-  "How to change profile picture?",
-  "Payment issues",
-  "How does incognito mode work?",
-  "Report a user",
-];
-
 export default function SupportChatPage() {
   const router = useRouter();
   const { t, language } = useLanguage();
@@ -42,7 +29,6 @@ export default function SupportChatPage() {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const quickQuestions = language === 'RU' ? QUICK_QUESTIONS_RU : QUICK_QUESTIONS_EN;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,14 +50,8 @@ export default function SupportChatPage() {
     };
 
     setMessages(prev => [...prev, newMessage]);
-    if (!textOverride) {
-      setInputValue("");
-    } else {
-      if (inputValue === textToSend) {
-        setInputValue("");
-      }
-    }
-
+    setInputValue("");
+    
     setTimeout(() => {
       setIsTyping(true);
       setTimeout(() => {
@@ -153,23 +133,9 @@ export default function SupportChatPage() {
       </main>
 
       <div className="p-4 bg-white border-t border-border shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] relative z-10">
-        <div className="flex items-center gap-2 mb-3">
-            <div className="flex items-center gap-1.5 text-primary text-[10px] font-black uppercase tracking-wider">
-                <HelpCircle size={14} />
-                <span>{t('support.faq') || 'Быстрые ответы'}</span>
-            </div>
-        </div>
-        <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-4">
-            {quickQuestions.map((q, i) => (
-                <Button
-                    key={i}
-                    variant="outline"
-                    className="h-auto px-4 py-2 text-[11px] font-bold rounded-full whitespace-nowrap bg-muted/40 border-muted hover:bg-muted"
-                    onClick={() => handleSendMessage(q)}
-                >
-                    {q}
-                </Button>
-            ))}
+        <div className="text-center text-xs text-muted-foreground mb-4">
+          {t('support.faq_promo')}
+          <Link href="/faq" className="text-primary font-bold hover:underline ml-1">{t('support.faq_promo_link')}</Link>.
         </div>
 
         <div className="flex items-center gap-3">
