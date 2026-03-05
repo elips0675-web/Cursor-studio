@@ -5,7 +5,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Heart, MapPin, Sparkles, X, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
