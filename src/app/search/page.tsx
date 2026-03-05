@@ -203,38 +203,42 @@ export default function SearchPage() {
         </div>
 
         <div className="flex items-center justify-around w-full max-w-md z-10 pb-4">
+          {/* Close/Nope Button */}
           <button 
             onClick={() => handleSwipe('left')} 
             disabled={filteredUsers.length === 0}
-            className="w-16 h-16 rounded-full bg-white text-muted-foreground flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow border border-border/40 group"
+            className="w-16 h-16 rounded-full bg-white text-red-500 flex items-center justify-center hover:bg-red-50 active:scale-90 transition-all app-shadow border border-border/20 group"
           >
             <X size={28} />
           </button>
           
-          <button 
-            disabled={filteredUsers.length === 0}
-            onClick={() => router.push(`/user?id=${user.id}`)}
-            className="w-14 h-14 rounded-full bg-white text-blue-500 flex items-center justify-center hover:bg-blue-50 active:scale-90 transition-all app-shadow border border-blue-100 group"
-            title={language === 'RU' ? "Просмотр Профиля" : "View Profile"}
-          >
-            <User size={24} />
-          </button>
-          
-          <button 
-            disabled={filteredUsers.length === 0}
-            onClick={() => router.push(`/chats?matchId=${user.id}`)}
-            className="w-14 h-14 rounded-full bg-white text-green-500 flex items-center justify-center hover:bg-green-50 active:scale-90 transition-all app-shadow border border-green-100 group"
-            title={language === 'RU' ? "Написать ЛС" : "Write DM"}
-          >
-            <MessageCircle size={24} />
-          </button>
-
+          {/* Like Button */}
           <button 
             disabled={filteredUsers.length === 0} 
             onClick={() => handleSwipe('right')} 
-            className="w-16 h-16 rounded-full bg-white text-primary flex items-center justify-center hover:bg-primary/5 active:scale-95 transition-all app-shadow border-2 border-primary group"
+            className="w-20 h-20 rounded-full gradient-bg text-white flex items-center justify-center active:scale-95 transition-all app-shadow shadow-primary/30 border-2 border-white/50 group"
           >
-            <Heart size={32} className="group-hover:fill-current transition-colors" />
+            <Heart size={36} fill="currentColor" />
+          </button>
+
+          {/* DM Button */}
+          <button 
+            disabled={filteredUsers.length === 0}
+            onClick={() => router.push(`/chats?matchId=${user.id}`)}
+            className="w-16 h-16 rounded-full bg-white text-green-500 flex items-center justify-center hover:bg-green-50 active:scale-90 transition-all app-shadow border border-border/20 group"
+            title={language === 'RU' ? "Написать ЛС" : "Write DM"}
+          >
+            <MessageCircle size={28} />
+          </button>
+
+          {/* Profile Button */}
+          <button 
+            disabled={filteredUsers.length === 0}
+            onClick={() => router.push(`/user?id=${user.id}`)}
+            className="w-16 h-16 rounded-full bg-white text-blue-500 flex items-center justify-center hover:bg-blue-50 active:scale-90 transition-all app-shadow border border-border/20 group"
+            title={language === 'RU' ? "Просмотр Профиля" : "View Profile"}
+          >
+            <User size={28} />
           </button>
         </div>
       </main>
