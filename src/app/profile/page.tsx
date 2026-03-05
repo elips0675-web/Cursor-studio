@@ -331,7 +331,7 @@ export default function ProfilePage() {
 
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} 
-                    className="absolute top-2 right-2 p-2 bg-black/40 backdrop-blur-md text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:scale-110 z-10"
+                    className="absolute top-2 right-2 p-2 bg-white text-destructive rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-white hover:scale-110 z-10 shadow-md"
                   >
                     <Trash2 size={14} />
                   </button>
