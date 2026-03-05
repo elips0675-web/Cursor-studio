@@ -113,12 +113,16 @@ function UserProfileContent() {
   
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const [photos, setPhotos] = useState<string[]>([]);
 
-  const photos = [
-    user.img,
-    PlaceHolderImages[Math.floor(Math.random() * 10)].imageUrl,
-    PlaceHolderImages[Math.floor(Math.random() * 10)].imageUrl,
-  ];
+  useEffect(() => {
+    // Populate gallery photos on client mount to avoid hydration mismatch
+    setPhotos([
+      user.img,
+      PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl,
+      PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl,
+    ]);
+  }, [user.img]);
 
   const handleLike = () => {
     toast({ title: language === 'RU' ? `Вы лайкнули ${user.name}!` : `You liked ${user.name}!` });
@@ -141,7 +145,7 @@ function UserProfileContent() {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-24">
-        <div className="relative aspect-[3/4] w-full">
+        <div className="relative aspect-square w-full">
           <Image src={user.img} alt={user.name} fill className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fb] via-transparent to-black/30"></div>
           
@@ -268,8 +272,9 @@ function UserProfileContent() {
 }
 
 export default function UserProfilePage() {
+  const { language } = useLanguage();
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-svh font-black">Загрузка...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center h-svh font-black">{language === 'RU' ? 'Загрузка...' : 'Loading...'}</div>}>
       <UserProfileContent />
     </Suspense>
   );
