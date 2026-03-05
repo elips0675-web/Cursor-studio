@@ -302,41 +302,46 @@ export default function ProfilePage() {
           
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-12 text-left">
             <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-2">
-                <Camera size={18} className="text-primary" />
-                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
-              </div>
-              <button 
-                onClick={handleTriggerFileInput} 
-                className="text-primary flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest hover:opacity-80 transition-opacity active:scale-95"
-              >
-                <Plus size={18} /> {t('profile.add')}
-              </button>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                accept="image/*" 
-                className="hidden" 
-              />
+                <div className="flex items-center gap-2">
+                    <Camera size={18} className="text-primary" />
+                    <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
+                </div>
+                <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileChange} 
+                    accept="image/*" 
+                    className="hidden" 
+                />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {photos.map((url, idx) => (
+                {photos.map((url, idx) => (
                 <div key={idx} onClick={() => openPhotoViewer(idx)} className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-sm border border-border/10 cursor-pointer">
-                  <Image src={url} alt={`Photo ${idx}`} fill className="object-cover" />
-                  
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Image src={url} alt={`Photo ${idx}`} fill className="object-cover" />
+                    
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Maximize2 size={24} className="text-white/80 drop-shadow-md" />
-                  </div>
+                    </div>
 
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} 
-                    className="absolute top-2 right-2 p-2 bg-white text-destructive rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-white hover:scale-110 z-10 shadow-md"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} 
+                        className="absolute top-2 right-2 p-2 bg-white text-destructive rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-white hover:scale-110 z-10 shadow-md"
+                    >
+                        <Trash2 size={14} />
+                    </button>
                 </div>
-              ))}
+                ))}
+                {photos.length < 10 && (
+                    <div 
+                        onClick={handleTriggerFileInput} 
+                        className="relative aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/50 hover:border-primary/50 hover:text-primary cursor-pointer transition-colors group"
+                    >
+                        <div className="p-4 bg-muted/60 rounded-full group-hover:bg-primary/10 transition-colors">
+                            <Upload size={24} />
+                        </div>
+                        <span className="mt-3 text-[9px] font-black uppercase tracking-widest">{t('profile.add')}</span>
+                    </div>
+                )}
             </div>
           </div>
         </div>
