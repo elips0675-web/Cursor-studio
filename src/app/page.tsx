@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy } from "lucide-react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -200,7 +200,10 @@ export default function Home() {
         {/* Featured Users */}
         <section className="mb-10">
           <div className="flex justify-between items-center mb-4">
-            <h5 className="font-black text-lg font-headline">🔥 Топ недели</h5>
+            <div className="flex items-center gap-2">
+              <Trophy size={20} className="text-primary" />
+              <h5 className="font-black text-lg font-headline">Топ недели</h5>
+            </div>
             <Button asChild variant="outline" className="text-primary font-black uppercase tracking-widest text-[9px] h-8 px-4 rounded-full border-primary/20 hover:bg-primary/5 bg-white transition-all shadow-sm">
                <Link href="/search">Все</Link>
             </Button>
@@ -215,7 +218,10 @@ export default function Home() {
         {/* Recommended Section */}
         <section className="scroll-mt-6 mb-10">
           <div className="flex justify-between items-end mb-4">
-            <h5 className="font-black text-lg font-headline">✨ Рекомендуем</h5>
+            <div className="flex items-center gap-2">
+              <Sparkles size={20} className="text-primary" />
+              <h5 className="font-black text-lg font-headline">Рекомендуем</h5>
+            </div>
             <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -237,9 +243,12 @@ export default function Home() {
           {showResults && (
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
               <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h5 className="font-black text-lg font-headline">🚀 Результаты</h5>
-                  <p className="text-[9px] text-primary font-bold uppercase tracking-wider">Найдено: {searchResults.length}</p>
+                <div className="flex items-center gap-2">
+                  <Zap size={20} className="text-primary fill-current" />
+                  <div>
+                    <h5 className="font-black text-lg font-headline">Результаты</h5>
+                    <p className="text-[9px] text-primary font-bold uppercase tracking-wider">Найдено: {searchResults.length}</p>
+                  </div>
                 </div>
                 <Button 
                   variant="ghost" 
