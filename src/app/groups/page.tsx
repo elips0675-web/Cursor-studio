@@ -1,13 +1,14 @@
 
 "use client";
 
-import { Plus, Users, Search, Heart } from "lucide-react";
+import { Plus, Users, Search, Heart, PackageX } from "lucide-react";
 import Image from "next/image";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { AppHeader } from "@/components/layout/app-header";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useFeatureFlags } from "@/context/feature-flags-context";
 
 const groups = [
   { id: 1, name: 'Вечерние пробежки', members: 128, online: 12, img: PlaceHolderImages[6].imageUrl, category: 'Спорт' },
@@ -16,6 +17,24 @@ const groups = [
 ];
 
 export default function GroupsPage() {
+  const { groupsPageEnabled } = useFeatureFlags();
+
+  if (!groupsPageEnabled) {
+      return (
+          <>
+              <AppHeader />
+              <main className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-[#f8f9fb]">
+                  <div className="p-6 bg-muted rounded-full mb-6">
+                    <PackageX size={32} className="text-muted-foreground" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground">Функция отключена</h3>
+                  <p className="text-muted-foreground mt-2 max-w-xs">Раздел "Группы" временно недоступен. Администратор скоро все включит!</p>
+              </main>
+              <BottomNav />
+          </>
+      )
+  }
+  
   return (
     <>
       <AppHeader />

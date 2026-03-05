@@ -9,7 +9,7 @@ import {
   SidebarContent,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, Flag, Home, Shield, LogOut, ChevronsLeft, ChevronsRight, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Users, Flag, Home, Shield, LogOut, ChevronsLeft, ChevronsRight, MessageSquare, SlidersHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -66,6 +66,18 @@ export function AdminSidebar() {
                         <Link href="/admin/reports">
                             <Flag />
                             <span>Reports</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={isActive('/admin/features')}
+                        tooltip="Features"
+                    >
+                        <Link href="/admin/features">
+                            <SlidersHorizontal />
+                            <span>Features</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

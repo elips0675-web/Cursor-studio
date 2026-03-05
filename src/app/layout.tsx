@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/context/language-context';
 import { Poppins, Quicksand } from 'next/font/google';
 import { AppContainer } from '@/components/layout/app-container';
+import { FeatureFlagsProvider } from '@/context/feature-flags-context';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -37,10 +38,12 @@ export default function RootLayout({
       <body className={`${quicksand.variable} ${poppins.variable} font-body antialiased selection:bg-primary/20`}>
         <LanguageProvider>
           <FirebaseClientProvider>
-            <AppContainer>
-              {children}
-            </AppContainer>
-            <Toaster />
+            <FeatureFlagsProvider>
+              <AppContainer>
+                {children}
+              </AppContainer>
+              <Toaster />
+            </FeatureFlagsProvider>
           </FirebaseClientProvider>
         </LanguageProvider>
       </body>

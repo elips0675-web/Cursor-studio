@@ -54,6 +54,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { toast } from "@/hooks/use-toast";
 import { VideoCallDialog } from "@/components/video-call";
+import { useFeatureFlags } from "@/context/feature-flags-context";
 
 const CHAT_THEMES = [
   { id: 'romantic', label_ru: 'Романтика', label_en: 'Romantic', icon: Heart, color: 'text-pink-500', mood: 'Romantic, sweet and poetic' },
@@ -107,6 +108,7 @@ const REPORT_REASONS = [
 function ChatsContent() {
   const searchParams = useSearchParams();
   const { t, language } = useLanguage();
+  const { videoCallsEnabled, aiIcebreakersEnabled } = useFeatureFlags();
   const matchId = searchParams.get('matchId');
 
   const [selectedChat, setSelectedChat] = useState<any>(null);
@@ -153,6 +155,26 @@ function ChatsContent() {
     }
   }, [messages, selectedChat]);
 
+  const loadIcebreakers = async (chat: any, mood?: string) => {
+    if (!aiIcebreakersEnabled) return;
+    setLoadingIcebreakers(true);
+    try {
+      const res = await generateIcebreakerSuggestions({
+        currentUserInterests: ["Спорт", "Кофе", "Кино"],
+        matchedUserName: chat.name,
+        matchedUserInterests: chat.interests || [],
+        matchedUserBio: chat.bio || "",
+        mood: mood || "Friendly and polite"
+      });
+      setIcebreakers(res.suggestions);
+    } catch (e) {
+      setIcebreakers(language === 'RU' ? ["Привет! Как прошел твой день?", "Чем любишь заниматься в свободное время?", "Какой твой любимый фильм?"] : ["Hi! How was your day?", "What do you like doing in your free time?", "What's your favorite movie?"]);
+    } finally {
+      setLoadingIcebreakers(false);
+      if (mood) setShowThemeGrid(false);
+    }
+  };
+
   useEffect(() => {
     if (matchId) {
       const id = parseInt(matchId);
@@ -171,7 +193,7 @@ function ChatsContent() {
         loadIcebreakers(chat);
       }
     }
-  }, [matchId, language]);
+  }, [matchId, language, aiIcebreakersEnabled]);
 
   const handleSendMessage = (textOverride?: string) => {
     const textToSend = textOverride || inputValue;
@@ -201,25 +223,6 @@ function ChatsContent() {
         setMessages(prev => [...prev, response]);
       }, 2000);
     }, 1000);
-  };
-
-  const loadIcebreakers = async (chat: any, mood?: string) => {
-    setLoadingIcebreakers(true);
-    try {
-      const res = await generateIcebreakerSuggestions({
-        currentUserInterests: ["Спорт", "Кофе", "Кино"],
-        matchedUserName: chat.name,
-        matchedUserInterests: chat.interests || [],
-        matchedUserBio: chat.bio || "",
-        mood: mood || "Friendly and polite"
-      });
-      setIcebreakers(res.suggestions);
-    } catch (e) {
-      setIcebreakers(language === 'RU' ? ["Привет! Как прошел твой день?", "Чем любишь заниматься в свободное время?", "Какой твой любимый фильм?"] : ["Hi! How was your day?", "What do you like doing in your free time?", "What's your favorite movie?"]);
-    } finally {
-      setLoadingIcebreakers(false);
-      if (mood) setShowThemeGrid(false);
-    }
   };
 
   const openChat = (chat: any) => {
@@ -252,13 +255,15 @@ function ChatsContent() {
             </p>
           </div>
           <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground" onClick={() => setIsVideoCall(true)}>
-              <Video size={18} />
-            </Button>
+            {videoCallsEnabled && (
+              <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground" onClick={() => setIsVideoCall(true)}>
+                <Video size={18} />
+              </Button>
+            )}
             <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
               <Phone size={18} />
             </Button>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
                     <MoreVertical size={18} />
@@ -328,65 +333,69 @@ function ChatsContent() {
         </main>
 
         <div className="p-4 bg-white border-t border-border shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] relative z-10">
-          <div className="flex items-center justify-between mb-3 px-1">
-             <button 
-               onClick={() => setShowThemeGrid(!showThemeGrid)}
-               className={cn(
-                 "flex items-center gap-2 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] transition-all active:scale-95",
-                 showThemeGrid ? "gradient-bg text-white shadow-lg shadow-primary/20" : "bg-primary/5 text-primary border border-primary/10 hover:bg-primary/10"
-               )}
-             >
-               <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? t('chats.close_themes') : t('chats.ai_themes')}
-             </button>
-             {!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">{language === 'RU' ? 'Листайте →' : 'Swipe →'}</p>
-             )}
-          </div>
+          {aiIcebreakersEnabled && (
+            <>
+              <div className="flex items-center justify-between mb-3 px-1">
+                <button 
+                  onClick={() => setShowThemeGrid(!showThemeGrid)}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] transition-all active:scale-95",
+                    showThemeGrid ? "gradient-bg text-white shadow-lg shadow-primary/20" : "bg-primary/5 text-primary border border-primary/10 hover:bg-primary/10"
+                  )}
+                >
+                  <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? t('chats.close_themes') : t('chats.ai_themes')}
+                </button>
+                {!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (
+                  <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">{language === 'RU' ? 'Листайте →' : 'Swipe →'}</p>
+                )}
+              </div>
 
-          <AnimatePresence>
-            {showThemeGrid && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="grid grid-cols-3 gap-2.5 mb-5 overflow-hidden"
-              >
-                {CHAT_THEMES.map((theme) => {
-                  const Icon = theme.icon;
-                  return (
-                    <button
-                      key={theme.id}
-                      onClick={() => loadIcebreakers(selectedChat, theme.mood)}
-                      className="flex flex-col items-center justify-center p-3.5 rounded-[1.5rem] bg-muted/40 border border-border/50 hover:border-primary/30 hover:bg-white hover:shadow-md transition-all group active:scale-95"
-                    >
-                      <Icon size={22} className={cn("mb-1.5 group-hover:scale-110 transition-transform", theme.color)} />
-                      <span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{language === 'RU' ? theme.label_ru : theme.label_en}</span>
-                    </button>
-                  )
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {!showThemeGrid && (
-            <div className="flex gap-2.5 overflow-x-auto no-scrollbar mb-5 h-10 items-center px-1">
-              {loadingIcebreakers ? (
-                <div className="flex gap-2">
-                  <div className="h-8 w-32 bg-muted animate-pulse rounded-full"></div>
-                  <div className="h-8 w-28 bg-muted animate-pulse rounded-full"></div>
-                </div>
-              ) : (
-                icebreakers.map((text, i) => (
-                  <button 
-                    key={i} 
-                    onClick={() => setInputValue(text)}
-                    className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95"
+              <AnimatePresence>
+                {showThemeGrid && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="grid grid-cols-3 gap-2.5 mb-5 overflow-hidden"
                   >
-                    {text}
-                  </button>
-                ))
+                    {CHAT_THEMES.map((theme) => {
+                      const Icon = theme.icon;
+                      return (
+                        <button
+                          key={theme.id}
+                          onClick={() => loadIcebreakers(selectedChat, theme.mood)}
+                          className="flex flex-col items-center justify-center p-3.5 rounded-[1.5rem] bg-muted/40 border border-border/50 hover:border-primary/30 hover:bg-white hover:shadow-md transition-all group active:scale-95"
+                        >
+                          <Icon size={22} className={cn("mb-1.5 group-hover:scale-110 transition-transform", theme.color)} />
+                          <span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{language === 'RU' ? theme.label_ru : theme.label_en}</span>
+                        </button>
+                      )
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {!showThemeGrid && (
+                <div className="flex gap-2.5 overflow-x-auto no-scrollbar mb-5 h-10 items-center px-1">
+                  {loadingIcebreakers ? (
+                    <div className="flex gap-2">
+                      <div className="h-8 w-32 bg-muted animate-pulse rounded-full"></div>
+                      <div className="h-8 w-28 bg-muted animate-pulse rounded-full"></div>
+                    </div>
+                  ) : (
+                    icebreakers.map((text, i) => (
+                      <button 
+                        key={i} 
+                        onClick={() => setInputValue(text)}
+                        className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95"
+                      >
+                        {text}
+                      </button>
+                    ))
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
 
           <div className="flex items-center gap-3">
