@@ -113,7 +113,8 @@ export default function ProfilePage() {
     try {
       const savedProfileData = localStorage.getItem('userProfile');
       if (savedProfileData) {
-        setProfile(prev => ({ ...prev, ...JSON.parse(savedProfileData) }));
+        const loadedProfile = JSON.parse(savedProfileData);
+        setProfile({ ...defaultProfile, ...loadedProfile });
       } else {
         setProfile(defaultProfile);
       }
