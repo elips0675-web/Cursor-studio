@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { MapPin, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/language-context";
+import { toast } from "@/hooks/use-toast";
 
 const ALL_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', distance: 2, match: 87, gender: 'female' },
@@ -84,6 +85,15 @@ export default function SearchPage() {
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);
+  };
+
+  const handleLike = () => {
+    if (!user) return;
+    toast({
+        title: language === 'RU' ? "Лайк!" : "Like!",
+        description: `${language === 'RU' ? 'Вы лайкнули' : 'You liked'} ${user.name}`,
+    });
+    paginate(1);
   };
 
   if (!user) {
@@ -178,13 +188,20 @@ export default function SearchPage() {
           </button>
         </div>
 
-        <Button 
-            onClick={() => router.push(`/user?id=${user.id}`)}
-            className="w-full max-w-xs h-14 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 active:scale-95 transition-all text-sm flex items-center gap-2"
-          >
-            <User size={20} />
-            {language === 'RU' ? "Посмотреть профиль" : "View Profile"}
-        </Button>
+        <div className="flex justify-center items-center gap-4 w-full px-4">
+          <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-2 border-muted bg-white hover:bg-muted text-muted-foreground transition-all active:scale-90 shadow-lg" onClick={() => paginate(1)}>
+              <X size={28} />
+          </Button>
+          <Button size="icon" className="w-16 h-16 rounded-full gradient-bg text-white shadow-lg shadow-primary/30 transition-all active:scale-90" onClick={handleLike}>
+              <Heart size={28} fill="currentColor" />
+          </Button>
+          <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 text-primary transition-all active:scale-90 shadow-lg" onClick={() => router.push(`/chats?matchId=${user.id}`)}>
+              <MessageCircle size={28} />
+          </Button>
+          <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-2 border-muted bg-white hover:bg-muted text-foreground transition-all active:scale-90 shadow-lg" onClick={() => router.push(`/user?id=${user.id}`)}>
+              <User size={28} />
+          </Button>
+        </div>
       </main>
       
       <BottomNav />
