@@ -43,8 +43,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import {
   Dialog,
@@ -261,12 +259,19 @@ export default function ProfilePage() {
               {photos.map((url, idx) => (
                 <div key={idx} onClick={() => openPhotoViewer(idx)} className="relative aspect-square rounded-2xl overflow-hidden bg-muted group shadow-sm border border-border/10 cursor-pointer">
                   <Image src={url} alt={`Photo ${idx}`} fill className="object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Maximize2 size={18} className="text-white" />
-                    <button onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} className="p-2 bg-white/20 backdrop-blur-md text-white rounded-full">
-                      <Trash2 size={16} />
-                    </button>
+                  
+                  {/* Overlay for Maximize (Center) */}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Maximize2 size={24} className="text-white/80 drop-shadow-md" />
                   </div>
+
+                  {/* Delete Button (Top-Right) */}
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} 
+                    className="absolute top-2 right-2 p-2 bg-black/40 backdrop-blur-md text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:scale-110 z-10"
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -284,11 +289,11 @@ export default function ProfilePage() {
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
-                <CarouselItem key={idx} className="pl-0 h-[80vh] flex items-center justify-center">
+                <div key={idx} className="flex-[0_0_100%] min-w-0 h-[80vh] flex items-center justify-center p-4">
                   <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden app-shadow">
                     <Image src={url} alt={`Gallery view ${idx}`} fill className="object-cover" />
                   </div>
-                </CarouselItem>
+                </div>
               ))}
             </CarouselContent>
           </Carousel>
