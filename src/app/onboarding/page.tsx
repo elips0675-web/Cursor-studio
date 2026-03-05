@@ -12,7 +12,8 @@ import {
   Navigation,
   Target,
   Stars,
-  Upload
+  Upload,
+  Languages
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,12 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { generateProfileBio } from "@/ai/flows/ai-generate-profile-bio";
@@ -58,7 +65,7 @@ const ZODIAC_SIGNS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(1);
   const totalSteps = 5;
@@ -283,7 +290,7 @@ export default function OnboardingPage() {
                     disabled={isDetectingLocation}
                     type="button"
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors active:scale-90"
-                    title="Detect City"
+                    title={t('onboarding.loc.detecting')}
                   >
                     <Navigation size={20} className={cn(isDetectingLocation && "animate-pulse")} fill={isDetectingLocation ? "currentColor" : "none"} />
                   </button>
@@ -447,9 +454,35 @@ export default function OnboardingPage() {
       </div>
 
       <header className="p-6 flex items-center justify-between h-20">
-        <Button variant="ghost" size="icon" onClick={prevStep} disabled={step === 1} className="rounded-full">
-          <ChevronLeft size={24} />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={prevStep} disabled={step === 1} className="rounded-full">
+            <ChevronLeft size={24} />
+          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="h-9 px-2.5 rounded-full bg-muted/50 flex items-center justify-center text-foreground hover:bg-muted transition-all active:scale-95 gap-1.5 border border-transparent">
+                <Languages size={15} className="text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-tighter">{language}</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[120px] bg-white">
+              <DropdownMenuItem 
+                onClick={() => setLanguage("RU")}
+                className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2"
+              >
+                Русский (RU)
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => setLanguage("EN")}
+                className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2"
+              >
+                English (EN)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
         <div className="flex gap-1.5">
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div 
