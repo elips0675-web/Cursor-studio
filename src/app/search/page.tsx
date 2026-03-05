@@ -51,7 +51,7 @@ function FallingHearts() {
             ease: "linear",
           }}
           style={{
-            left: `${Math.random() * 100}%`,
+            left: `${5 + Math.random() * 90}%`,
             transform: `rotate(${Math.random() * 60 - 30}deg)`,
           }}
         >
@@ -377,5 +377,7 @@ export default function SearchPage() {
     </>
   );
 }
+
+    
 
     
