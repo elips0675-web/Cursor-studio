@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { MessageCircle, Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote } from "lucide-react";
+import { MessageCircle, Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, X } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -10,6 +10,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-suggestions";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,6 +23,8 @@ const CHAT_THEMES = [
   { id: 'deep', label: 'Глубокое', icon: MessageSquareQuote, color: 'text-purple-500', mood: 'Deep, philosophical and meaningful questions' },
   { id: 'bold', label: 'Смело', icon: Zap, color: 'text-yellow-500', mood: 'Bold, confident and slightly flirty' },
 ];
+
+const QUICK_EMOJIS = ["😊", "😂", "😍", "👋", "👍", "❤️", "🔥", "✨", "🙌", "😎"];
 
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
@@ -139,6 +142,10 @@ function ChatsContent() {
     setShowThemeGrid(false);
     setIcebreakers([]);
     loadIcebreakers(chat);
+  };
+
+  const addEmoji = (emoji: string) => {
+    setInputValue(prev => prev + emoji);
   };
 
   if (selectedChat) {
@@ -272,7 +279,7 @@ function ChatsContent() {
                   <button 
                     key={i} 
                     onClick={() => setInputValue(text)}
-                    className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95 whitespace-nowrap"
+                    className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95"
                   >
                     {text}
                   </button>
@@ -290,9 +297,26 @@ function ChatsContent() {
                 placeholder="Ваше сообщение..." 
                 className="pr-12 h-14 bg-muted/50 border-0 rounded-3xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
               />
-              <button className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors p-1 rounded-full hover:bg-white active:scale-90">
-                <Smile size={24} />
-              </button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors p-1 rounded-full hover:bg-white active:scale-90">
+                    <Smile size={24} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full max-w-[280px] p-2 rounded-2xl border-0 shadow-2xl bg-white" side="top" align="end">
+                  <div className="grid grid-cols-5 gap-1">
+                    {QUICK_EMOJIS.map(emoji => (
+                      <button 
+                        key={emoji} 
+                        onClick={() => addEmoji(emoji)}
+                        className="w-10 h-10 flex items-center justify-center text-xl hover:bg-muted rounded-xl transition-all active:scale-90"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <Button 
               size="icon" 
