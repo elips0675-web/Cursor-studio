@@ -133,10 +133,10 @@ export function AppHeader() {
                             <Icon size={14} fill={note.type === 'like' ? 'currentColor' : 'none'} />
                           </div>
                           <div className="flex-1">
-                            <p className="text-[11px] font-bold leading-tight group-hover:text-primary transition-colors">
+                            <p className="text-[12px] font-bold leading-tight group-hover:text-primary transition-colors">
                               {note.text}
                             </p>
-                            <p className="text-[9px] text-muted-foreground font-medium mt-1 uppercase tracking-tighter">
+                            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tighter">
                               {note.time}
                             </p>
                           </div>
