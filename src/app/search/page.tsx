@@ -37,32 +37,35 @@ const ALL_USERS = [
 function HeartConfetti() {
   const hearts = Array.from({ length: 20 });
   return (
-    <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-hidden">
-      {hearts.map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{ y: "100%", x: 0, opacity: 1 }}
-          animate={{
-            y: -(Math.random() * 200 + 100),
-            x: (Math.random() - 0.5) * 500,
-            scale: Math.random() * 1.2 + 0.8,
-            opacity: [1, 1, 0],
-            rotate: (Math.random() - 0.5) * 540,
-          }}
-          transition={{
-            duration: Math.random() * 2 + 2.5,
-            ease: "easeOut",
-            delay: 0.2,
-          }}
-          className="absolute bottom-0"
-        >
-          <Heart
-            size={Math.random() * 25 + 15}
-            fill={i % 3 === 0 ? "#fe3c72" : i % 3 === 1 ? "#ff8e53" : "#ffc0cb"}
-            className="text-transparent drop-shadow-lg"
-          />
-        </motion.div>
-      ))}
+    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+        {hearts.map((_, i) => (
+            <motion.div
+                key={i}
+                initial={{ y: "100%", x: "50%", opacity: 1 }}
+                animate={{
+                    y: -(Math.random() * 400 + 200),
+                    x: (Math.random() - 0.5) * window.innerWidth,
+                    scale: Math.random() * 0.8 + 0.5,
+                    opacity: 0,
+                }}
+                transition={{
+                    duration: Math.random() * 2 + 3,
+                    ease: "easeOut",
+                }}
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: "50%",
+                }}
+            >
+                 <Heart
+                    size={Math.random() * 40 + 20}
+                    className="text-primary drop-shadow-lg"
+                    fill="currentColor"
+                    strokeWidth={0.5}
+                />
+            </motion.div>
+        ))}
     </div>
   );
 }
@@ -74,6 +77,7 @@ export default function SearchPage() {
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
+  const [exitDirection, setExitDirection] = useState(0);
 
   const [ageRange] = useState([18, 40]);
   const [maxDistance] = useState([50]);
@@ -93,25 +97,7 @@ export default function SearchPage() {
 
   const user = filteredUsers[index % filteredUsers.length];
 
-  const handleLike = async () => {
-    if (!user) return;
-    if (Math.random() > 0.6) {
-      setMatchUser(user);
-      getAiInsight(user);
-    } else {
-      setIndex(prev => prev + 1);
-    }
-  };
-
-  const handleSwipe = useCallback((direction: 'left' | 'right') => {
-    if (direction === 'right') {
-      handleLike();
-    } else {
-      setIndex(prev => prev + 1);
-    }
-  }, [user, filteredUsers, handleLike]);
-
-  const getAiInsight = async (targetUser: any) => {
+  const getAiInsight = useCallback(async (targetUser: any) => {
     setLoadingAi(true);
     try {
       const res = await generateMatchCompatibilityInsight({
@@ -124,6 +110,22 @@ export default function SearchPage() {
     } finally {
       setLoadingAi(false);
     }
+  }, [t]);
+
+  const handleSwipe = (direction: 'right' | 'left') => {
+    const swipedUser = filteredUsers[index % filteredUsers.length];
+    setExitDirection(direction === 'right' ? 1 : -1);
+    
+    if (direction === 'right') {
+      if (Math.random() > 0.6 && swipedUser) {
+        setMatchUser(swipedUser);
+        getAiInsight(swipedUser);
+      } else {
+        setIndex(prev => prev + 1);
+      }
+    } else {
+      setIndex(prev => prev + 1);
+    }
   };
 
   const handleStartChat = () => {
@@ -132,7 +134,6 @@ export default function SearchPage() {
 
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
-  const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
   const nopeOpacity = useTransform(x, [-100, -20], [1, 0]);
   const likeOpacity = useTransform(x, [20, 100], [0, 1]);
 
@@ -141,19 +142,32 @@ export default function SearchPage() {
       <AppHeader />
       <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
-          <AnimatePresence mode="popLayout">
-            {filteredUsers.length > 0 ? (
+          <AnimatePresence 
+            initial={false}
+            onExitComplete={() => setExitDirection(0)}
+          >
+            {filteredUsers.length > 0 && user ? (
               <motion.div 
-                key={user.id} 
-                style={{ x, rotate, opacity }}
+                key={index}
+                style={{ x, rotate }}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={(_, info) => {
-                  if (info.offset.x > 100) handleSwipe('right');
-                  else if (info.offset.x < -100) handleSwipe('left');
+                  if (info.offset.x > 100) {
+                    handleSwipe('right');
+                  } else if (info.offset.x < -100) {
+                    handleSwipe('left');
+                  }
                 }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-                whileDrag={{ scale: 1.05 }}
+                initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                animate={{ y: 0, opacity: 1, scale: 1, transition: { duration: 0.3 } }}
+                exit={{ 
+                  x: exitDirection * 500,
+                  opacity: 0,
+                  scale: 0.5,
+                  transition: { duration: 0.3, ease: 'easeIn' }
+                }}
+                whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
                 className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col border-4 border-white cursor-pointer"
               >
                 <div className="relative flex-1 select-none">
@@ -203,47 +217,34 @@ export default function SearchPage() {
         </div>
 
         <div className="flex items-center justify-around w-full max-w-md z-10 pb-4">
-          {/* Close/Nope Button */}
           <button 
             onClick={() => handleSwipe('left')} 
             disabled={filteredUsers.length === 0}
-            className="w-16 h-16 rounded-full bg-white text-red-500 flex items-center justify-center hover:bg-red-50 active:scale-90 transition-all app-shadow border border-border/20 group"
+            className="w-20 h-20 rounded-full bg-white text-red-500 flex items-center justify-center hover:bg-red-50 active:scale-90 transition-all app-shadow border border-border/20 group shadow-lg"
           >
-            <X size={28} />
+            <X size={32} strokeWidth={2.5} />
           </button>
           
-          {/* Like Button */}
           <button 
             disabled={filteredUsers.length === 0} 
             onClick={() => handleSwipe('right')} 
-            className="w-20 h-20 rounded-full gradient-bg text-white flex items-center justify-center active:scale-95 transition-all app-shadow shadow-primary/30 border-2 border-white/50 group"
+            className="w-24 h-24 rounded-full gradient-bg text-white flex items-center justify-center active:scale-95 transition-all app-shadow shadow-primary/30 border-4 border-white/50 group"
           >
-            <Heart size={36} fill="currentColor" />
+            <Heart size={44} fill="currentColor" />
           </button>
 
-          {/* DM Button */}
           <button 
             disabled={filteredUsers.length === 0}
             onClick={() => router.push(`/chats?matchId=${user.id}`)}
-            className="w-16 h-16 rounded-full bg-white text-green-500 flex items-center justify-center hover:bg-green-50 active:scale-90 transition-all app-shadow border border-border/20 group"
+            className="w-20 h-20 rounded-full bg-white text-green-500 flex items-center justify-center hover:bg-green-50 active:scale-90 transition-all app-shadow border border-border/20 group shadow-lg"
             title={language === 'RU' ? "Написать ЛС" : "Write DM"}
           >
-            <MessageCircle size={28} />
-          </button>
-
-          {/* Profile Button */}
-          <button 
-            disabled={filteredUsers.length === 0}
-            onClick={() => router.push(`/user?id=${user.id}`)}
-            className="w-16 h-16 rounded-full bg-white text-blue-500 flex items-center justify-center hover:bg-blue-50 active:scale-90 transition-all app-shadow border border-border/20 group"
-            title={language === 'RU' ? "Просмотр Профиля" : "View Profile"}
-          >
-            <User size={28} />
+            <MessageCircle size={32} strokeWidth={2.5} />
           </button>
         </div>
       </main>
 
-      <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
+      <Dialog open={!!matchUser} onOpenChange={(open) => { if (!open) { setMatchUser(null); setIndex(prev => prev + 1); }}}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
           <div className="relative">
             <HeartConfetti />
