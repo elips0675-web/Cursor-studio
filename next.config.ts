@@ -31,11 +31,18 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   // Оптимизация для мобильных устройств и PageSpeed
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', 'date-fns'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'date-fns', '@radix-ui/react-icons'],
   },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
+  },
+  poweredByHeader: false,
+  compress: true,
 };
 
 export default nextConfig;

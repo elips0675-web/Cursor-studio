@@ -4,7 +4,8 @@
 import { Bell, Languages, LogIn, ChevronLeft, Sparkles, Heart, MessageCircle, User, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, memo } from "react";
+import dynamic from 'next/dynamic';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,15 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useLanguage } from "@/context/language-context";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+
+// Динамическая загрузка контента уведомлений
+const PopoverContent = dynamic(() => import("@/components/ui/popover").then(mod => mod.PopoverContent));
+const ScrollArea = dynamic(() => import("@/components/ui/scroll-area").then(mod => mod.ScrollArea));
 
 const NOTIFICATIONS = [
   { id: 1, type: 'like', text: 'Анна поставила вам лайк!', time: '2 мин назад', icon: Heart, color: 'text-primary' },
@@ -65,7 +68,7 @@ export function AppHeader() {
       </div>
 
       <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-        <Link href="/">
+        <Link href="/" prefetch={false}>
           <h1 className="text-xl font-black font-headline gradient-text cursor-pointer tracking-tight">
             SwiftMatch
           </h1>
@@ -169,7 +172,7 @@ export function AppHeader() {
           size="sm" 
           className="text-[10px] font-black uppercase tracking-widest gap-1.5 text-muted-foreground hover:text-primary transition-colors h-9 px-2 ml-1"
         >
-          <Link href="/login">
+          <Link href="/login" prefetch={false}>
             <LogIn size={14} />
             <span className="hidden xs:block">{language === "RU" ? "Вход" : "Login"}</span>
           </Link>

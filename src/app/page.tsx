@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown, Cpu, User } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown, Cpu, User } from "lucide-react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
@@ -10,7 +10,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -61,7 +61,7 @@ const CAPITALS = [
 const ITEMS_PER_PAGE = 4;
 
 function HeartConfetti() {
-  const hearts = Array.from({ length: 20 });
+  const hearts = useMemo(() => Array.from({ length: 20 }), []);
   return (
     <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-hidden">
       {hearts.map((_, i) => (
@@ -92,6 +92,117 @@ function HeartConfetti() {
     </div>
   );
 }
+
+const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLike: () => void; priority?: boolean }) => {
+  const { t } = useLanguage();
+  return (
+    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
+      <Link href={`/user?id=${user.id}`} className="relative aspect-[4/3] bg-muted block overflow-hidden cursor-pointer">
+        <Image 
+          src={user.img} 
+          alt={user.name} 
+          fill 
+          sizes="(max-width: 768px) 50vw, 240px"
+          data-ai-hint={user.hint}
+          priority={priority}
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute top-1.5 right-1.5">
+             <Badge className="bg-primary text-white text-[8px] border-0 px-1.5 py-0.5 font-black uppercase shadow-lg">
+               {user.match}%
+             </Badge>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+          <p className="text-white font-bold text-[11px] leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
+          <div className="text-white/80 text-[8px] flex items-center gap-1 font-bold mt-0.5">
+            <MapPin size={8} /> {user.distance} км
+          </div>
+        </div>
+      </Link>
+      <div className="p-2 mt-auto">
+        <div className="grid grid-cols-2 gap-1.5">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
+          >
+            <Heart size={14} className="group-hover/heart:fill-current" />
+          </Button>
+          <Button 
+            asChild
+            variant="outline" 
+            size="sm" 
+            className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
+          >
+            <Link href={`/user?id=${user.id}`}>
+              <User size={14} />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+});
+FeaturedCard.displayName = "FeaturedCard";
+
+const ProfilePreviewCard = memo(({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) => {
+  const { t } = useLanguage();
+  return (
+    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
+      <Link href={`/user?id=${user.id}`} className="relative aspect-[16/10] bg-muted block overflow-hidden cursor-pointer">
+        <Image 
+          src={user.img} 
+          alt={user.name} 
+          fill 
+          sizes="(max-width: 768px) 50vw, 240px"
+          data-ai-hint={user.hint}
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        {user.online && (
+          <div className="absolute top-1.5 left-1.5">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
+          </div>
+        )}
+      </Link>
+      <div className="p-2 flex-1 flex flex-col justify-between">
+        <div className="mb-1.5">
+          <div className="flex justify-between items-center mb-0.5">
+            <span className="font-bold text-[11px] truncate pr-1 tracking-tight">{user.name}, {user.age}</span>
+            <span className="text-primary text-[9px] font-black">{user.match}%</span>
+          </div>
+          <div className="text-muted-foreground text-[8px] flex items-center gap-1 font-medium truncate">
+            <MapPin size={8} /> {user.distance} км
+          </div>
+        </div>
+
+        {showActions && (
+          <div className="grid grid-cols-2 gap-1.5 mt-auto">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
+            >
+              <Heart size={14} className="group-hover/heart:fill-current" />
+            </Button>
+             <Button 
+              asChild
+              variant="outline" 
+              size="sm" 
+              className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
+            >
+              <Link href={`/user?id=${user.id}`}>
+                <User size={14} />
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
+ProfilePreviewCard.displayName = "ProfilePreviewCard";
 
 export default function Home() {
   const router = useRouter();
@@ -162,7 +273,7 @@ export default function Home() {
       });
       setCompatibility(res.explanation);
     } catch (e) {
-      setCompatibility(t('match.insight_default') || "Вы отлично подходите друг другу!");
+      setCompatibility(t('match.insight_default') || "Вы отлично подходите друг будете!");
     } finally {
       setLoadingAi(false);
     }
@@ -340,115 +451,121 @@ export default function Home() {
         </div>
       </main>
 
-      <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
-        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
-          <div className="relative">
-            <HeartConfetti />
-            <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                <div className="flex items-center justify-center gap-0 relative">
-                    <motion.div 
-                        initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
-                        animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
-                        transition={{ type: "spring", damping: 12, delay: 0.2 }}
-                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
-                    >
-                        <Image 
-                            src={PlaceHolderImages[10].imageUrl} 
-                            alt="Вы" 
-                            fill 
-                            data-ai-hint={PlaceHolderImages[10].imageHint}
-                            className="object-cover" 
-                        />
-                    </motion.div>
-                    <motion.div 
-                        initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
-                        animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
-                        transition={{ type: "spring", damping: 12, delay: 0.3 }}
-                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
-                    >
-                        <Image 
-                            src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
-                            alt={matchUser?.name} 
-                            fill 
-                            data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
-                            className="object-cover" 
-                        />
-                    </motion.div>
+      <AnimatePresence>
+        {matchUser && (
+          <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
+            <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
+              <div className="relative">
+                <HeartConfetti />
+                <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                    <div className="flex items-center justify-center gap-0 relative">
+                        <motion.div 
+                            initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
+                            animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
+                            transition={{ type: "spring", damping: 12, delay: 0.2 }}
+                            className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
+                        >
+                            <Image 
+                                src={PlaceHolderImages[10].imageUrl} 
+                                alt="Вы" 
+                                fill 
+                                sizes="144px"
+                                data-ai-hint={PlaceHolderImages[10].imageHint}
+                                className="object-cover" 
+                            />
+                        </motion.div>
+                        <motion.div 
+                            initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
+                            animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
+                            transition={{ type: "spring", damping: 12, delay: 0.3 }}
+                            className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
+                        >
+                            <Image 
+                                src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
+                                alt={matchUser?.name} 
+                                fill 
+                                sizes="144px"
+                                data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
+                                className="object-cover" 
+                            />
+                        </motion.div>
+                    </div>
                 </div>
-            </div>
 
-            <div className="px-8 pt-8 pb-8 text-center">
-              <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
-                {t('match.title')}
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm mb-8 px-6 leading-relaxed font-medium">
-                {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}
-              </DialogDescription>
-              
-              {aiCompatibilityEnabled && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="relative p-6 rounded-[2.5rem] mb-8 text-left border border-primary/20 bg-gradient-to-br from-white via-primary/[0.02] to-orange-500/[0.02] shadow-xl shadow-primary/5 overflow-hidden group"
-                >
-                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
-                  <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl opacity-40"></div>
+                <div className="px-8 pt-8 pb-8 text-center">
+                  <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
+                    {t('match.title')}
+                  </DialogTitle>
+                  <DialogDescription className="text-muted-foreground text-sm mb-8 px-6 leading-relaxed font-medium">
+                    {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}
+                  </DialogDescription>
                   
-                  <div className="flex items-center justify-between mb-4 relative z-10">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                        <Cpu size={14} className="animate-pulse" />
-                      </div>
-                      <h4 className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{t('match.insight')}</h4>
-                    </div>
+                  {aiCompatibilityEnabled && (
                     <motion.div 
-                      animate={{ rotate: [0, 15, -15, 0] }}
-                      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="relative p-6 rounded-[2.5rem] mb-8 text-left border border-primary/20 bg-gradient-to-br from-white via-primary/[0.02] to-orange-500/[0.02] shadow-xl shadow-primary/5 overflow-hidden group"
                     >
-                      <Sparkles size={20} className="text-orange-400 opacity-60" />
-                    </motion.div>
-                  </div>
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
+                      <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl opacity-40"></div>
+                      
+                      <div className="flex items-center justify-between mb-4 relative z-10">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                            <Cpu size={14} className="animate-pulse" />
+                          </div>
+                          <h4 className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">{t('match.insight')}</h4>
+                        </div>
+                        <motion.div 
+                          animate={{ rotate: [0, 15, -15, 0] }}
+                          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                        >
+                          <Sparkles size={20} className="text-orange-400 opacity-60" />
+                        </motion.div>
+                      </div>
 
-                  {loadingAi ? (
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground py-2 relative z-10">
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                      <span className="animate-pulse font-bold uppercase tracking-widest text-[10px]">{t('home.searching')}</span>
-                    </div>
-                  ) : (
-                    <div className="relative z-10">
-                      <p className="text-[13px] leading-relaxed text-foreground/90 font-semibold italic border-l-4 border-primary/30 pl-4 py-1">
-                        "{compatibility}"
-                      </p>
-                    </div>
+                      {loadingAi ? (
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground py-2 relative z-10">
+                          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                          <span className="animate-pulse font-bold uppercase tracking-widest text-[10px]">{t('home.searching')}</span>
+                        </div>
+                      ) : (
+                        <div className="relative z-10">
+                          <p className="text-[13px] leading-relaxed text-foreground/90 font-semibold italic border-l-4 border-primary/30 pl-4 py-1">
+                            "{compatibility}"
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-2 right-4 text-primary/5 group-hover:text-primary/10 transition-colors">
+                        <Sparkles size={48} />
+                      </div>
+                    </motion.div>
                   )}
 
-                  <div className="absolute bottom-2 right-4 text-primary/5 group-hover:text-primary/10 transition-colors">
-                    <Sparkles size={48} />
+                  <div className="flex flex-col gap-4 w-full">
+                    <Button 
+                      onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} 
+                      className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-primary/30"
+                    >
+                      {t('button.write_first')}
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => setMatchUser(null)} 
+                      className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted transition-all uppercase tracking-[0.1em] text-[10px]"
+                    >
+                      {t('button.continue')}
+                    </Button>
                   </div>
-                </motion.div>
-              )}
-
-              <div className="flex flex-col gap-4 w-full">
-                <Button 
-                  onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} 
-                  className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-primary/30"
-                >
-                  {t('button.write_first')}
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setMatchUser(null)} 
-                  className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted transition-all uppercase tracking-[0.1em] text-[10px]"
-                >
-                  {t('button.continue')}
-                </Button>
+                </div>
               </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
 
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
         <DialogContent className="max-w-[340px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
@@ -531,112 +648,5 @@ export default function Home() {
 
       <BottomNav />
     </>
-  );
-}
-
-function FeaturedCard({ user, onLike, priority = false }: { user: any; onLike: () => void; priority?: boolean }) {
-  const { t } = useLanguage();
-  return (
-    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
-      <Link href={`/user?id=${user.id}`} className="relative aspect-[4/3] bg-muted block overflow-hidden cursor-pointer">
-        <Image 
-          src={user.img} 
-          alt={user.name} 
-          fill 
-          data-ai-hint={user.hint}
-          priority={priority}
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute top-1.5 right-1.5">
-             <Badge className="bg-primary text-white text-[8px] border-0 px-1.5 py-0.5 font-black uppercase shadow-lg">
-               {user.match}%
-             </Badge>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-          <p className="text-white font-bold text-[11px] leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
-          <div className="text-white/80 text-[8px] flex items-center gap-1 font-bold mt-0.5">
-            <MapPin size={8} /> {user.distance} км
-          </div>
-        </div>
-      </Link>
-      <div className="p-2 mt-auto">
-        <div className="grid grid-cols-2 gap-1.5">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
-          >
-            <Heart size={14} className="group-hover/heart:fill-current" />
-          </Button>
-          <Button 
-            asChild
-            variant="outline" 
-            size="sm" 
-            className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
-          >
-            <Link href={`/user?id=${user.id}`}>
-              <User size={14} />
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) {
-  const { t } = useLanguage();
-  return (
-    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
-      <Link href={`/user?id=${user.id}`} className="relative aspect-[16/10] bg-muted block overflow-hidden cursor-pointer">
-        <Image 
-          src={user.img} 
-          alt={user.name} 
-          fill 
-          data-ai-hint={user.hint}
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        {user.online && (
-          <div className="absolute top-1.5 left-1.5">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
-          </div>
-        )}
-      </Link>
-      <div className="p-2 flex-1 flex flex-col justify-between">
-        <div className="mb-1.5">
-          <div className="flex justify-between items-center mb-0.5">
-            <span className="font-bold text-[11px] truncate pr-1 tracking-tight">{user.name}, {user.age}</span>
-            <span className="text-primary text-[9px] font-black">{user.match}%</span>
-          </div>
-          <div className="text-muted-foreground text-[8px] flex items-center gap-1 font-medium truncate">
-            <MapPin size={8} /> {user.distance} км
-          </div>
-        </div>
-
-        {showActions && (
-          <div className="grid grid-cols-2 gap-1.5 mt-auto">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
-            >
-              <Heart size={14} className="group-hover/heart:fill-current" />
-            </Button>
-             <Button 
-              asChild
-              variant="outline" 
-              size="sm" 
-              className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
-            >
-              <Link href={`/user?id=${user.id}`}>
-                <User size={14} />
-              </Link>
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
