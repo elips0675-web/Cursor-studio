@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -88,7 +87,7 @@ export default function EditProfilePage() {
         if (!Array.isArray(loadedProfile.titles)) {
           loadedProfile.titles = [];
         }
-        setProfile(loadedProfile);
+        setProfile(prev => ({ ...prev, ...loadedProfile }));
       } catch(e) {
         console.error("Failed to parse profile from localStorage", e);
       }
@@ -191,7 +190,7 @@ export default function EditProfilePage() {
                 <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> AI Улучшить
               </button>
             </div>
-            <Textarea value={profile.bio} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
+            <Textarea value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
           </div>
 
           <div className="flex items-center gap-2">
@@ -202,17 +201,17 @@ export default function EditProfilePage() {
           <div className="space-y-4">
             <div className="space-y-1.5">
               <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Имя</Label>
-              <Input value={profile.name} onChange={e => setProfile({...profile, name: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
+              <Input value={profile.name || ''} onChange={e => setProfile({...profile, name: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Возраст</Label>
-                <Input type="number" value={profile.age} onChange={e => setProfile({...profile, age: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
+                <Input type="number" value={profile.age || ''} onChange={e => setProfile({...profile, age: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Рост</Label>
-                <Input type="number" value={profile.height} onChange={e => setProfile({...profile, height: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
+                <Input type="number" value={profile.height || ''} onChange={e => setProfile({...profile, height: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4" />
               </div>
             </div>
 
@@ -220,7 +219,7 @@ export default function EditProfilePage() {
               <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Город</Label>
               <div className="relative">
                 <MapPin size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" />
-                <Input value={profile.city} onChange={e => setProfile({...profile, city: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" />
+                <Input value={profile.city || ''} onChange={e => setProfile({...profile, city: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" />
               </div>
             </div>
             
@@ -228,14 +227,14 @@ export default function EditProfilePage() {
               <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Профессия</Label>
               <div className="relative">
                 <Briefcase size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" />
-                <Input value={profile.work} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" placeholder="Напр. Дизайнер" />
+                <Input value={profile.work || ''} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4" placeholder="Напр. Дизайнер" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
-                <Select value={profile.zodiac} onValueChange={(val) => setProfile({...profile, zodiac: val})}>
+                <Select value={profile.zodiac || ''} onValueChange={(val) => setProfile({...profile, zodiac: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {ZODIAC_SIGNS.map(sign => <SelectItem key={sign} value={sign} className="font-bold text-xs">{sign}</SelectItem>)}
@@ -244,7 +243,7 @@ export default function EditProfilePage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Цель</Label>
-                <Select value={profile.datingGoal} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
+                <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {DATING_GOALS.map(goal => <SelectItem key={goal} value={goal} className="font-bold text-xs">{goal}</SelectItem>)}
@@ -253,7 +252,7 @@ export default function EditProfilePage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
-                <Select value={profile.education} onValueChange={(val) => setProfile({...profile, education: val})}>
+                <Select value={profile.education || ''} onValueChange={(val) => setProfile({...profile, education: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {EDUCATION_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
@@ -262,7 +261,7 @@ export default function EditProfilePage() {
               </div>
                <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><Dog size={12}/> Питомцы</Label>
-                <Select value={profile.pets} onValueChange={(val) => setProfile({...profile, pets: val})}>
+                <Select value={profile.pets || ''} onValueChange={(val) => setProfile({...profile, pets: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {PET_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
@@ -271,7 +270,7 @@ export default function EditProfilePage() {
               </div>
                <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><Bed size={12}/> Режим сна</Label>
-                <Select value={profile.sleepSchedule} onValueChange={(val) => setProfile({...profile, sleepSchedule: val})}>
+                <Select value={profile.sleepSchedule || ''} onValueChange={(val) => setProfile({...profile, sleepSchedule: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {SLEEP_SCHEDULE_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
@@ -297,7 +296,7 @@ export default function EditProfilePage() {
             </div>
             <div className="flex flex-wrap gap-2">
               {ALL_TITLES.map(title => (
-                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={profile.titles?.some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", profile.titles?.some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
+                <Badge key={title.id} onClick={() => toggleTitle(title)} variant={(profile.titles || []).some(t => t.id === title.id) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight", (profile.titles || []).some(t => t.id === title.id) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground")}>{title.name}</Badge>
               ))}
             </div>
           </div>
