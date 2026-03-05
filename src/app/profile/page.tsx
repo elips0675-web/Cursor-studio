@@ -44,6 +44,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 import {
   Dialog,
@@ -315,13 +317,15 @@ export default function ProfilePage() {
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
-                <div key={idx} className="flex-[0_0_100%] min-w-0 h-[80vh] flex items-center justify-center p-4">
+                <CarouselItem key={idx} className="h-[80vh] flex items-center justify-center p-4 pl-4">
                   <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden app-shadow">
                     <Image src={url} alt={`Gallery view ${idx}`} fill className="object-cover" />
                   </div>
-                </div>
+                </CarouselItem>
               ))}
             </CarouselContent>
+            <CarouselPrevious className="left-4 bg-black/50 border-0 text-white hover:bg-black/70" />
+            <CarouselNext className="right-4 bg-black/50 border-0 text-white hover:bg-black/70" />
           </Carousel>
         </DialogContent>
       </Dialog>
