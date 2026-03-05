@@ -423,7 +423,7 @@ export default function Home() {
                         >
                             <Image 
                                 src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
-                                alt={matchUser?.name} 
+                                alt={matchUser?.name || "Matched user photo"} 
                                 fill 
                                 sizes="144px"
                                 data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}

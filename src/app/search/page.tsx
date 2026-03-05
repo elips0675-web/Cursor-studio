@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Cpu } from "lucide-react";
+import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Cpu, MoreVertical, Flag } from "lucide-react";
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import { useRouter } from "next/navigation";
@@ -22,6 +22,18 @@ const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Di
 const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
 const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
 const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
+const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
+const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+
+const DropdownMenu = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenu));
+const DropdownMenuContent = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuContent));
+const DropdownMenuItem = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuItem));
+const DropdownMenuTrigger = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuTrigger));
+
+const RadioGroup = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroup));
+const RadioGroupItem = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroupItem));
+const Label = dynamic(() => import("@/components/ui/label").then(mod => mod.Label));
+const Textarea = dynamic(() => import("@/components/ui/textarea").then(mod => mod.Textarea));
 
 const variants = {
   enter: (direction: number) => ({
@@ -43,18 +55,36 @@ const variants = {
   }),
 };
 
+const wrap = (min: number, max: number, v: number) => {
+  const rangeSize = max - min;
+  if (rangeSize <= 0) return 0;
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+};
+
+const REPORT_REASONS = [
+    'report.reason.spam',
+    'report.reason.abuse',
+    'report.reason.fake',
+    'report.reason.scam',
+    'report.reason.content'
+];
+
 export default function SearchPage() {
   const router = useRouter();
   const { t, language } = useLanguage();
 
   const [ageRange] = useState([18, 40]);
-  const [maxDistance] = useState([50]);
+  const [maxDistance] = useState([500]);
   const [selectedInterests] = useState<string[]>([]);
   const [selectedGender] = useState<string>('all');
 
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
+
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
 
   const filteredUsers = useMemo(() => {
     return ALL_DEMO_USERS.filter(user => {
@@ -69,13 +99,8 @@ export default function SearchPage() {
 
   const [[page, direction], setPage] = useState([0, 0]);
   
-  const wrap = (min: number, max: number, v: number) => {
-    const rangeSize = max - min;
-    return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
-  };
-
-  const userIndex = wrap(0, filteredUsers.length, page);
-  const user = filteredUsers[userIndex];
+  const userIndex = filteredUsers.length > 0 ? wrap(0, filteredUsers.length, page) : 0;
+  const user = filteredUsers.length > 0 ? filteredUsers[userIndex] : null;
 
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);
@@ -84,7 +109,19 @@ export default function SearchPage() {
   const handleNext = () => paginate(1);
   const handlePrev = () => paginate(-1);
 
+  const handleReportSubmit = () => {
+    if (!reportReason) {
+      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
+      return;
+    }
+    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user?.name}.` });
+    setIsReportDialogOpen(false);
+    setReportReason('');
+    setReportDescription('');
+  };
+
   const getAiInsight = async (targetUser: any) => {
+    if (!targetUser) return;
     setLoadingAi(true);
     try {
       const res = await generateMatchCompatibilityInsight({
@@ -144,7 +181,7 @@ export default function SearchPage() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 flex items-center justify-center gap-2">
             <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{userIndex + 1} / {filteredUsers.length}</Badge>
         </div>
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
@@ -185,10 +222,23 @@ export default function SearchPage() {
                   <div className="absolute top-4 left-4">
                      <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">{language === 'RU' ? 'Онлайн' : 'Online'}</Badge>
                   </div>
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
                      <Badge className="gradient-bg text-white border-0 px-3 py-1 font-bold shadow-lg">
                        {user.match}% {language === 'RU' ? 'совпадение' : 'match'}
                      </Badge>
+                     <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20 hover:bg-white/40">
+                                <MoreVertical size={16} />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="rounded-2xl border-0 shadow-2xl p-1.5 min-w-[160px] bg-white">
+                            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10">
+                                <Flag size={14} className="mr-2" />
+                                {t('button.report')}
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
                   </div>
 
                   <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -355,6 +405,36 @@ export default function SearchPage() {
           </Dialog>
         )}
       </AnimatePresence>
+
+      <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow">
+          <DialogHeader className="p-6 pb-4 text-left">
+              <DialogTitle className="flex items-center gap-2 font-black tracking-tight">
+                  <Flag size={20} className="text-destructive" />
+                  {t('report.title')}
+              </DialogTitle>
+              <DialogDescription className="pt-2">
+                  {t('report.description')}
+              </DialogDescription>
+          </DialogHeader>
+          <div className="px-6 space-y-4">
+              <RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">
+                  {REPORT_REASONS.map(reasonKey => (
+                      <div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg">
+                          <RadioGroupItem value={t(reasonKey)} id={`${reasonKey}_swipe`} />
+                          <Label htmlFor={`${reasonKey}_swipe`} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label>
+                      </div>
+                  ))}
+              </RadioGroup>
+              <Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" />
+          </div>
+          <DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl">
+              <Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button>
+              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <BottomNav />
     </>
   );
