@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Sparkles, 
@@ -47,12 +47,7 @@ const ZODIAC_SIGNS = [
   "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"
 ];
 
-export default function EditProfilePage() {
-  const router = useRouter();
-  const [isGeneratingBio, setIsGeneratingBio] = useState(false);
-  const [mainPhoto, setMainPhoto] = useState(PlaceHolderImages[0].imageUrl);
-
-  const [profile, setProfile] = useState({
+const defaultProfile = {
     name: "Анна",
     age: 24,
     city: "Москва",
@@ -61,11 +56,32 @@ export default function EditProfilePage() {
     zodiac: "Лев",
     bio: "Люблю закаты, хороший кофе и интересные разговоры.",
     interests: ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Собаки", "Сова"]
-  });
+};
+
+export default function EditProfilePage() {
+  const router = useRouter();
+  const [isGeneratingBio, setIsGeneratingBio] = useState(false);
+  const [mainPhoto, setMainPhoto] = useState(PlaceHolderImages[0].imageUrl);
+  const [profile, setProfile] = useState(defaultProfile);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile));
+    }
+    const savedGallery = localStorage.getItem('userProfileGallery');
+    if (savedGallery) {
+      const photos = JSON.parse(savedGallery);
+      if (photos.length > 0) {
+        setMainPhoto(photos[0]);
+      }
+    }
+  }, []);
 
   const handleChangeMainPhoto = () => {
     const randomIdx = Math.floor(Math.random() * PlaceHolderImages.length);
-    setMainPhoto(PlaceHolderImages[randomIdx].imageUrl);
+    const newPhotoUrl = PlaceHolderImages[randomIdx].imageUrl;
+    setMainPhoto(newPhotoUrl);
     toast({ title: "Фото обновлено" });
   };
 
@@ -83,6 +99,17 @@ export default function EditProfilePage() {
   };
 
   const handleSave = () => {
+    localStorage.setItem('userProfile', JSON.stringify(profile));
+    
+    const savedGallery = localStorage.getItem('userProfileGallery');
+    let gallery = savedGallery ? JSON.parse(savedGallery) : [];
+    if (gallery.length > 0) {
+      gallery[0] = mainPhoto;
+    } else {
+      gallery = [mainPhoto];
+    }
+    localStorage.setItem('userProfileGallery', JSON.stringify(gallery));
+
     toast({ title: "Профиль сохранен" });
     router.push("/profile");
   };

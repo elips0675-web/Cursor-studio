@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   Settings, 
   MapPin, 
@@ -70,7 +70,7 @@ export default function ProfilePage() {
   const { t, language } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const [profile] = useState({
+  const defaultProfile = {
     name: "Анна",
     age: 24,
     city: t('profile.city'),
@@ -82,7 +82,9 @@ export default function ProfilePage() {
     interests: language === 'RU' 
       ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Собаки", "Рост: 172 см", "Сова"]
       : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art", "Dogs", "Height: 172 cm", "Night owl"]
-  });
+  };
+
+  const [profile, setProfile] = useState(defaultProfile);
 
   const [photos, setPhotos] = useState([
     PlaceHolderImages[0].imageUrl,
@@ -94,6 +96,32 @@ export default function ProfilePage() {
 
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('userProfile');
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile));
+    } else {
+        setProfile({
+            name: "Анна",
+            age: 24,
+            city: t('profile.city'),
+            datingGoal: t('profile.goal_value'),
+            zodiac: language === 'RU' ? "Лев" : "Leo",
+            bio: language === 'RU' 
+              ? "Люблю закаты, хороший кофе и интересные разговоры. Ищу человека, с которым можно разделить эти моменты."
+              : "I love sunsets, good coffee, and interesting conversations. Looking for someone to share these moments with.",
+            interests: language === 'RU' 
+              ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство", "Собаки", "Рост: 172 см", "Сова"]
+              : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art", "Dogs", "Height: 172 cm", "Night owl"]
+        });
+    }
+    
+    const savedPhotos = localStorage.getItem('userProfileGallery');
+    if (savedPhotos) {
+      setPhotos(JSON.parse(savedPhotos));
+    }
+  }, [language, t]);
 
   const handleTriggerFileInput = () => {
     fileInputRef.current?.click();
@@ -113,14 +141,15 @@ export default function ProfilePage() {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotos(prev => [...prev, reader.result as string]);
+        const newPhotos = [...photos, reader.result as string];
+        setPhotos(newPhotos);
+        localStorage.setItem('userProfileGallery', JSON.stringify(newPhotos));
         toast({
           title: language === 'RU' ? "Фото добавлено" : "Photo added",
           description: language === 'RU' ? "Ваша галерея обновлена." : "Your gallery has been updated.",
         });
       };
       reader.readAsDataURL(file);
-      // Сбрасываем значение input, чтобы можно было выбрать тот же файл снова
       e.target.value = '';
     }
   };
@@ -134,7 +163,9 @@ export default function ProfilePage() {
       });
       return;
     }
-    setPhotos(prev => prev.filter((_, i) => i !== index));
+    const newPhotos = photos.filter((_, i) => i !== index);
+    setPhotos(newPhotos);
+    localStorage.setItem('userProfileGallery', JSON.stringify(newPhotos));
     toast({
       title: language === 'RU' ? "Фото удалено" : "Photo deleted",
     });
@@ -146,24 +177,36 @@ export default function ProfilePage() {
   };
 
   const interestMap: Record<string, React.ElementType> = {
-    [t('Фотография')]: Camera,
-    [t('Путешествия')]: Globe,
-    [t('Кофе')]: Coffee,
-    [t('Музыка')]: Music,
-    [t('Спорт')]: Dumbbell,
-    [t('Искусство')]: Palette,
-    [t('Кино')]: Film,
-    [t('Йога')]: Flower2,
-    [t('Бизнес')]: Briefcase,
-    [t('Игры')]: Gamepad2,
-    [t('Собаки')]: Dog,
-    [t('Кошки')]: Dog,
-    [t('Сова')]: Moon,
-    [t('Жаворонок')]: Sun,
+    "Фотография": Camera,
+    "Путешествия": Globe,
+    "Кофе": Coffee,
+    "Музыка": Music,
+    "Спорт": Dumbbell,
+    "Искусство": Palette,
+    "Кино": Film,
+    "Йога": Flower2,
+    "Бизнес": Briefcase,
+    "Игры": Gamepad2,
+    "Собаки": Dog,
+    "Кошки": Dog,
+    "Сова": Moon,
+    "Жаворонок": Sun,
+    "Photography": Camera,
+    "Travel": Globe,
+    "Sports": Dumbbell,
+    "Art": Palette,
+    "Movies": Film,
+    "Yoga": Flower2,
+    "Business": Briefcase,
+    "Gaming": Gamepad2,
+    "Dogs": Dog,
+    "Cats": Dog,
+    "Night owl": Moon,
+    "Early bird": Sun,
   };
 
-  const heightInfo = profile.interests.find(i => i.startsWith(language === 'RU' ? "Рост:" : "Height:"));
-  const allOtherInterests = profile.interests.filter(i => !i.startsWith(language === 'RU' ? "Рост:" : "Height:"));
+  const heightInfo = profile.interests.find(i => i.startsWith("Рост:") || i.startsWith("Height:"));
+  const allOtherInterests = profile.interests.filter(i => !(i.startsWith("Рост:") || i.startsWith("Height:")));
   
   return (
     <>
@@ -181,7 +224,7 @@ export default function ProfilePage() {
               <div 
                 className="relative w-32 h-32 rounded-[2.5rem] border-[6px] border-white app-shadow overflow-hidden bg-muted"
               >
-                <Image src={photos[0]} alt={profile.name} fill className="object-cover" priority />
+                <Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt={profile.name} fill className="object-cover" priority />
               </div>
               <Link 
                 href="/profile/edit" 
@@ -196,7 +239,7 @@ export default function ProfilePage() {
                 {profile.name}, {profile.age} <CheckCircle2 size={20} className="text-primary" fill="currentColor" />
               </h3>
               <p className="text-muted-foreground text-[10px] font-black flex items-center justify-center gap-1.5 uppercase tracking-widest opacity-80">
-                <MapPin size={12} className="text-primary" /> {t('profile.city')}
+                <MapPin size={12} className="text-primary" /> {profile.city}
               </p>
             </div>
           </div>
@@ -231,7 +274,7 @@ export default function ProfilePage() {
                 </Badge>
                 {heightInfo && (
                   <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">
-                    <Ruler size={12} /> {heightInfo.replace(language === 'RU' ? "Рост: " : "Height: ", "")}
+                    <Ruler size={12} /> {heightInfo.replace("Рост: ", "").replace("Height: ", "")}
                   </Badge>
                 )}
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-2 px-3.5 font-bold text-[10px] rounded-xl shadow-sm">

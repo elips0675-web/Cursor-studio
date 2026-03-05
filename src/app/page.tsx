@@ -300,14 +300,19 @@ export default function Home() {
 
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 bg-transparent p-0 shadow-none app-shadow">
-          <div className="absolute inset-0 rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 rounded-3xl overflow-hidden -z-10">
             <div className="w-full h-full bg-white"></div>
             <div className="absolute top-0 left-0 right-0 h-56 gradient-bg"></div>
           </div>
           
-          <HeartConfetti />
+          <div className="absolute inset-0 pointer-events-none z-0">
+             <HeartConfetti />
+          </div>
           
-          <div className="relative z-30">
+          <div className="relative z-10">
+             <Button variant="ghost" size="icon" onClick={() => setMatchUser(null)} className="absolute top-6 right-6 z-50 rounded-full bg-black/20 backdrop-blur-sm text-white hover:bg-black/40 transition-all h-10 w-10">
+                <X size={20} />
+            </Button>
             <div className="relative h-56 flex items-center justify-center p-6">
               <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
               
@@ -346,7 +351,7 @@ export default function Home() {
               <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
             </div>
 
-            <div className="px-8 pt-8 pb-8 text-center">
+            <div className="px-8 pt-8 pb-8 text-center bg-white rounded-b-3xl">
               <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
                 {t('match.title')}
               </DialogTitle>
@@ -614,4 +619,5 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
     
 
     
+
 
