@@ -174,60 +174,60 @@ export default function Home() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-y-auto px-4 pt-6 pb-24 bg-[#f8f9fb]">
-        <div className="text-center mb-8">
-          <Badge variant="secondary" className="mb-3 bg-primary/10 text-primary border-0 gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
-            <Flame size={12} fill="currentColor" /> Популярное сейчас
+        <div className="text-center mb-6">
+          <Badge variant="secondary" className="mb-2 bg-primary/10 text-primary border-0 gap-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest">
+            <Flame size={10} fill="currentColor" /> Популярное сейчас
           </Badge>
-          <h2 className="text-2xl font-black font-headline mb-2 leading-tight tracking-tight text-foreground">
+          <h2 className="text-xl font-black font-headline mb-1 leading-tight tracking-tight text-foreground">
             Твой идеальный <br />
             <span className="gradient-text">мэтч</span> ждет тебя
           </h2>
-          <p className="text-muted-foreground text-xs font-medium">Знакомься, общайся и находи любовь</p>
+          <p className="text-muted-foreground text-[10px] font-medium">Знакомься, общайся и находи любовь</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-10">
+        <div className="grid grid-cols-2 gap-2 mb-8">
           <Button 
             asChild
-            className="h-12 rounded-2xl gradient-bg text-white font-black text-sm app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
+            className="h-10 rounded-xl gradient-bg text-white font-black text-xs app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
           >
             <Link href="/search">
-              <Search size={18} className="stroke-[3px]" /> Свайпы
+              <Search size={14} className="stroke-[3px]" /> Свайпы
             </Link>
           </Button>
           <Button 
             onClick={() => setIsFilterDialogOpen(true)}
-            className="h-12 rounded-2xl bg-white border-2 border-primary text-primary font-black text-sm app-shadow hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
+            className="h-10 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs app-shadow hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
           >
-            <Zap size={18} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> Автопоиск
+            <Zap size={14} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> Автопоиск
           </Button>
         </div>
 
-        <section className="mb-10">
-          <div className="flex justify-between items-center mb-4 px-1">
-            <div className="flex items-center gap-2">
-              <Trophy size={18} className="text-primary" />
-              <h5 className="font-black text-lg font-headline tracking-tight">Топ недели</h5>
+        <section className="mb-8">
+          <div className="flex justify-between items-center mb-3 px-1">
+            <div className="flex items-center gap-1.5">
+              <Trophy size={16} className="text-primary" />
+              <h5 className="font-black text-base font-headline tracking-tight">Топ недели</h5>
             </div>
-            <Button asChild variant="ghost" className="text-primary font-bold uppercase tracking-widest text-[10px] h-auto p-0 hover:bg-transparent">
+            <Button asChild variant="ghost" className="text-primary font-bold uppercase tracking-widest text-[9px] h-auto p-0 hover:bg-transparent">
                <Link href="/search">Все</Link>
             </Button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {ALL_DEMO_USERS.slice(0, 4).map((u) => (
               <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} />
             ))}
           </div>
         </section>
 
-        <section className="scroll-mt-6 mb-10">
-          <div className="flex justify-between items-end mb-4 px-1">
-            <div className="flex items-center gap-2">
-              <Sparkles size={18} className="text-primary" />
-              <h5 className="font-black text-lg font-headline tracking-tight">Рекомендуем</h5>
+        <section className="scroll-mt-6 mb-8">
+          <div className="flex justify-between items-end mb-3 px-1">
+            <div className="flex items-center gap-1.5">
+              <Sparkles size={16} className="text-primary" />
+              <h5 className="font-black text-base font-headline tracking-tight">Рекомендуем</h5>
             </div>
-            <Badge variant="outline" className="text-[9px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
+            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {ALL_DEMO_USERS.slice(6, 10).map((u) => (
               <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
             ))}
@@ -236,35 +236,35 @@ export default function Home() {
 
         <div ref={resultsRef} className="scroll-mt-24">
           {isAutoSearching && (
-            <div className="py-12 flex flex-col items-center justify-center space-y-4">
-              <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest animate-pulse">Ищем лучших для вас...</p>
+            <div className="py-10 flex flex-col items-center justify-center space-y-3">
+              <div className="w-10 h-10 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest animate-pulse">Ищем лучших для вас...</p>
             </div>
           )}
 
           {showResults && (
-            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12 px-1">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Zap size={18} className="text-primary fill-current" />
+            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10 px-1">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1.5">
+                  <Zap size={16} className="text-primary fill-current" />
                   <div>
-                    <h5 className="font-black text-lg font-headline tracking-tight">Результаты</h5>
-                    <p className="text-[9px] text-primary font-bold uppercase tracking-wider">Найдено: {searchResults.length}</p>
+                    <h5 className="font-black text-base font-headline tracking-tight">Результаты</h5>
+                    <p className="text-[8px] text-primary font-bold uppercase tracking-wider">Найдено: {searchResults.length}</p>
                   </div>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setShowResults(false)}
-                  className="text-muted-foreground text-[9px] font-bold uppercase"
+                  className="text-muted-foreground text-[8px] font-bold uppercase"
                 >
                   Очистить
                 </Button>
               </div>
               
               {searchResults.length > 0 ? (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
                     {paginatedResults.map((u) => (
                       <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
                     ))}
@@ -274,19 +274,19 @@ export default function Home() {
                     <Button 
                       onClick={handleLoadMore}
                       variant="outline"
-                      className="w-full h-12 rounded-2xl border-2 border-primary/20 text-primary font-black uppercase tracking-widest text-[10px] bg-white hover:bg-primary/5 transition-all shadow-sm flex items-center justify-center gap-2"
+                      className="w-full h-10 rounded-xl border-2 border-primary/20 text-primary font-black uppercase tracking-widest text-[9px] bg-white hover:bg-primary/5 transition-all shadow-sm flex items-center justify-center gap-2"
                     >
-                      Показать еще <ChevronDown size={14} />
+                      Показать еще <ChevronDown size={12} />
                     </Button>
                   )}
                 </div>
               ) : (
-                <div className="bg-white rounded-[2rem] p-8 text-center app-shadow border border-dashed border-muted/50">
-                  <p className="text-xs text-muted-foreground font-medium mb-4 leading-tight">По вашим параметрам пока никого нет.</p>
+                <div className="bg-white rounded-[1.5rem] p-6 text-center app-shadow border border-dashed border-muted/50">
+                  <p className="text-[10px] text-muted-foreground font-medium mb-3 leading-tight">По вашим параметрам пока никого нет.</p>
                   <Button 
                     variant="outline" 
                     onClick={() => setIsFilterDialogOpen(true)}
-                    className="rounded-full text-[9px] font-black uppercase tracking-widest h-9 px-6"
+                    className="rounded-full text-[8px] font-black uppercase tracking-widest h-8 px-4"
                   >
                     Изменить фильтры
                   </Button>
@@ -472,8 +472,8 @@ export default function Home() {
 
 function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
   return (
-    <div className="bg-white rounded-[1.25rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
-      <Link href={`/user?id=${user.id}`} className="relative aspect-[3/4] bg-muted block overflow-hidden cursor-pointer">
+    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
+      <Link href={`/user?id=${user.id}`} className="relative aspect-[4/5] bg-muted block overflow-hidden cursor-pointer">
         <Image 
           src={user.img} 
           alt={user.name} 
@@ -481,36 +481,36 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
           data-ai-hint={user.hint}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-2 right-2">
-             <Badge className="bg-primary text-white text-[9px] border-0 px-2 py-0.5 font-black uppercase shadow-lg">
+        <div className="absolute top-1.5 right-1.5">
+             <Badge className="bg-primary text-white text-[8px] border-0 px-1.5 py-0.5 font-black uppercase shadow-lg">
                {user.match}%
              </Badge>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-          <p className="text-white font-bold text-sm leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
-          <div className="text-white/80 text-[10px] flex items-center gap-1 font-bold mt-0.5">
-            <MapPin size={10} /> {user.distance} км
+        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+          <p className="text-white font-bold text-[11px] leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
+          <div className="text-white/80 text-[8px] flex items-center gap-1 font-bold mt-0.5">
+            <MapPin size={8} /> {user.distance} км
           </div>
         </div>
       </Link>
-      <div className="p-3 mt-auto">
-        <div className="grid grid-cols-2 gap-2">
+      <div className="p-2 mt-auto">
+        <div className="grid grid-cols-2 gap-1.5">
           <Button 
             variant="outline" 
             size="sm" 
-            className="h-10 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
+            className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
           >
-            <Heart size={16} className="group-hover/heart:fill-current" />
+            <Heart size={14} className="group-hover/heart:fill-current" />
           </Button>
           <Button 
             asChild
             variant="outline" 
             size="sm" 
-            className="h-10 rounded-xl border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
+            className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
           >
             <Link href={`/chats?matchId=${user.id}`}>
-              <MessageCircle size={16} />
+              <MessageCircle size={14} />
             </Link>
           </Button>
         </div>
@@ -521,7 +521,7 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
 
 function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) {
   return (
-    <div className="bg-white rounded-[1.25rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
+    <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
         <Image 
           src={user.img} 
@@ -531,40 +531,40 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {user.online && (
-          <div className="absolute top-2 left-2">
-            <span className="flex h-2 w-2 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
+          <div className="absolute top-1.5 left-1.5">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
           </div>
         )}
       </Link>
-      <div className="p-3 flex-1 flex flex-col justify-between">
-        <div className="mb-2">
+      <div className="p-2 flex-1 flex flex-col justify-between">
+        <div className="mb-1.5">
           <div className="flex justify-between items-center mb-0.5">
-            <span className="font-bold text-sm truncate pr-1 tracking-tight">{user.name}, {user.age}</span>
-            <span className="text-primary text-[10px] font-black">{user.match}%</span>
+            <span className="font-bold text-[11px] truncate pr-1 tracking-tight">{user.name}, {user.age}</span>
+            <span className="text-primary text-[9px] font-black">{user.match}%</span>
           </div>
-          <div className="text-muted-foreground text-[10px] flex items-center gap-1 font-medium truncate">
-            <MapPin size={10} /> {user.distance} км
+          <div className="text-muted-foreground text-[8px] flex items-center gap-1 font-medium truncate">
+            <MapPin size={8} /> {user.distance} км
           </div>
         </div>
 
         {showActions && (
-          <div className="grid grid-cols-2 gap-2 mt-auto">
+          <div className="grid grid-cols-2 gap-1.5 mt-auto">
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-10 rounded-xl border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
+              className="h-8 rounded-lg border-primary/20 text-primary hover:bg-primary/5 active:scale-95 transition-all group/heart shadow-sm"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onLike(); }}
             >
-              <Heart size={16} className="group-hover/heart:fill-current" />
+              <Heart size={14} className="group-hover/heart:fill-current" />
             </Button>
             <Button 
               asChild
               variant="outline" 
               size="sm" 
-              className="h-10 rounded-xl border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
+              className="h-8 rounded-lg border-muted bg-muted/30 text-foreground hover:bg-muted/50 active:scale-95 transition-all shadow-sm"
             >
               <Link href={`/chats?matchId=${user.id}`}>
-                <MessageCircle size={16} />
+                <MessageCircle size={14} />
               </Link>
             </Button>
           </div>
