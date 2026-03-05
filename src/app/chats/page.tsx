@@ -2,7 +2,28 @@
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
-import { MessageCircle, Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, X } from "lucide-react";
+import { 
+  MessageCircle, 
+  Search, 
+  ChevronLeft, 
+  Send, 
+  MoreVertical, 
+  Sparkles, 
+  Smile, 
+  Heart, 
+  Laugh, 
+  Compass, 
+  Coffee, 
+  Zap, 
+  MessageSquareQuote, 
+  X,
+  Flame,
+  Star,
+  Ghost,
+  Rocket,
+  Crown,
+  Music
+} from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -26,7 +47,18 @@ const CHAT_THEMES = [
   { id: 'bold', label_ru: 'Смело', label_en: 'Bold', icon: Zap, color: 'text-yellow-500', mood: 'Bold, confident and slightly flirty' },
 ];
 
-const QUICK_EMOJIS = ["😊", "😂", "😍", "👋", "👍", "❤️", "🔥", "✨", "🙌", "😎"];
+const QUICK_REACTIONS = [
+  { id: 'heart', icon: Heart, color: 'text-red-500', label: '❤️' },
+  { id: 'flame', icon: Flame, color: 'text-orange-500', label: '🔥' },
+  { id: 'zap', icon: Zap, color: 'text-yellow-400', label: '⚡' },
+  { id: 'star', icon: Star, color: 'text-yellow-500', label: '⭐' },
+  { id: 'smile', icon: Smile, color: 'text-green-500', label: '😊' },
+  { id: 'laugh', icon: Laugh, color: 'text-orange-400', label: '😂' },
+  { id: 'ghost', icon: Ghost, color: 'text-purple-400', label: '👻' },
+  { id: 'rocket', icon: Rocket, color: 'text-blue-500', label: '🚀' },
+  { id: 'crown', icon: Crown, color: 'text-amber-500', label: '👑' },
+  { id: 'music', icon: Music, color: 'text-pink-400', label: '🎵' },
+];
 
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', img: PlaceHolderImages[0].imageUrl, last: 'Привет! Как дела? 😊', time: '2 мин', unread: 2, online: true, interests: ['Фотография', 'Путешествия', 'Кофе'], bio: 'Люблю закаты и интересные разговоры.' },
@@ -91,18 +123,19 @@ function ChatsContent() {
     }
   }, [matchId, language]);
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = (textOverride?: string) => {
+    const textToSend = textOverride || inputValue;
+    if (!textToSend.trim()) return;
 
     const newMessage = {
       id: Date.now(),
-      text: inputValue,
+      text: textToSend,
       sender: "me",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
     setMessages([...messages, newMessage]);
-    setInputValue("");
+    if (!textOverride) setInputValue("");
     setShowThemeGrid(false);
 
     setTimeout(() => {
@@ -145,10 +178,6 @@ function ChatsContent() {
     setShowThemeGrid(false);
     setIcebreakers([]);
     loadIcebreakers(chat);
-  };
-
-  const addEmoji = (emoji: string) => {
-    setInputValue(prev => prev + emoji);
   };
 
   if (selectedChat) {
@@ -296,36 +325,39 @@ function ChatsContent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder={t('chats.placeholder')} 
-                className="pr-12 h-14 bg-muted/50 border-0 rounded-3xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
+                className="pr-12 h-11 bg-muted/50 border-0 rounded-3xl focus-visible:ring-primary/20 font-medium px-6 text-sm placeholder:text-muted-foreground/60 transition-all focus:bg-muted"
               />
               <Popover>
                 <PopoverTrigger asChild>
                   <button className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors p-1 rounded-full hover:bg-white active:scale-90">
-                    <Smile size={24} />
+                    <Smile size={20} />
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-full max-w-[280px] p-2 rounded-2xl border-0 shadow-2xl bg-white" side="top" align="end">
                   <div className="grid grid-cols-5 gap-1">
-                    {QUICK_EMOJIS.map(emoji => (
-                      <button 
-                        key={emoji} 
-                        onClick={() => addEmoji(emoji)}
-                        className="w-10 h-10 flex items-center justify-center text-xl hover:bg-muted rounded-xl transition-all active:scale-90"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
+                    {QUICK_REACTIONS.map(reaction => {
+                      const ReactionIcon = reaction.icon;
+                      return (
+                        <button 
+                          key={reaction.id} 
+                          onClick={() => handleSendMessage(reaction.label)}
+                          className="w-10 h-10 flex items-center justify-center hover:bg-muted rounded-xl transition-all active:scale-90"
+                        >
+                          <ReactionIcon size={24} className={reaction.color} />
+                        </button>
+                      );
+                    })}
                   </div>
                 </PopoverContent>
               </Popover>
             </div>
             <Button 
               size="icon" 
-              onClick={handleSendMessage}
+              onClick={() => handleSendMessage()}
               disabled={!inputValue.trim()}
-              className="h-14 w-14 rounded-[1.5rem] gradient-bg text-white shadow-xl shadow-primary/20 transition-all active:scale-90 disabled:opacity-40 flex-shrink-0"
+              className="h-11 w-11 rounded-2xl gradient-bg text-white shadow-xl shadow-primary/20 transition-all active:scale-90 disabled:opacity-40 flex-shrink-0"
             >
-              <Send size={22} className="ml-1" />
+              <Send size={18} className="ml-0.5" />
             </Button>
           </div>
         </div>
