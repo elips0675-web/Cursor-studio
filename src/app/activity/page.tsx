@@ -121,7 +121,7 @@ export default function ActivityPage() {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowAd(true)}
-              className="w-full h-12 rounded-2xl border-2 border-dashed border-primary/20 text-primary font-black text-[10px] uppercase tracking-[0.15em] gap-3 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center shadow-sm group"
+              className="w-full h-12 rounded-2xl border-2 border-dashed border-primary/20 text-primary font-black text-[11px] uppercase tracking-[0.15em] gap-3 bg-primary/5 hover:bg-primary/10 transition-all flex items-center justify-center shadow-sm group"
             >
               <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <Play size={10} className="ml-0.5 fill-primary text-primary" />
@@ -356,7 +356,7 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
       
       <div className="flex-1 min-w-0 pr-1">
         <div className="flex justify-between items-start">
-          <p className="text-[9px] leading-snug text-foreground/90 font-medium">
+          <p className="text-[11px] leading-snug text-foreground/90 font-medium">
             {item.blurred ? (
               <span><span className="font-black text-primary">{t('profile.someone')}</span> {getMessage()}</span>
             ) : (
@@ -372,14 +372,14 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
             </div>
           )}
         </div>
-        <p className="text-[7px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-0.5">
+        <p className="text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-0.5">
           {item.time.replace('мин назад', language === 'RU' ? 'мин назад' : 'min ago').replace('час назад', language === 'RU' ? 'час назад' : 'hour ago').replace('дня назад', language === 'RU' ? 'дня назад' : 'days ago')}
         </p>
         
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
-            className="text-[6px] font-black text-primary flex items-center gap-1 mt-0.5 bg-primary/5 px-1.5 py-0.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-widest shadow-sm border border-primary/10"
+            className="text-[8px] font-black text-primary flex items-center gap-1 mt-0.5 bg-primary/5 px-1.5 py-0.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-widest shadow-sm border border-primary/10"
           >
             <Sparkles size={6} className="animate-pulse" /> {language === 'RU' ? 'Раскрыть' : 'Reveal'}
           </button>
