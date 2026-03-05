@@ -111,7 +111,7 @@ export default function EditProfilePage() {
         <h1 className="text-lg font-black font-headline tracking-tight">Изменить профиль</h1>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 space-y-5 pb-24">
+      <main className="flex-1 overflow-y-auto p-4 space-y-5 pb-6">
         {/* Photo Section */}
         <div className="flex flex-col items-center gap-2">
           <div className="relative group">
