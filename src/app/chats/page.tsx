@@ -53,6 +53,7 @@ import { generateIcebreakerSuggestions } from "@/ai/flows/ai-chat-icebreaker-sug
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { toast } from "@/hooks/use-toast";
+import { VideoCallDialog } from "@/components/video-call";
 
 const CHAT_THEMES = [
   { id: 'romantic', label_ru: 'Романтика', label_en: 'Romantic', icon: Heart, color: 'text-pink-500', mood: 'Romantic, sweet and poetic' },
@@ -120,6 +121,7 @@ function ChatsContent() {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
+  const [isVideoCall, setIsVideoCall] = useState(false);
 
   const handleReportSubmit = () => {
     if (!reportReason) {
@@ -250,11 +252,11 @@ function ChatsContent() {
             </p>
           </div>
           <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
-              <Phone size={18} />
+            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground" onClick={() => setIsVideoCall(true)}>
+              <Video size={18} />
             </Button>
             <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
-              <Video size={18} />
+              <Phone size={18} />
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -465,7 +467,14 @@ function ChatsContent() {
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-
+        
+        {selectedChat && (
+          <VideoCallDialog 
+            open={isVideoCall}
+            onOpenChange={setIsVideoCall}
+            user={selectedChat}
+          />
+        )}
       </div>
     );
   }
