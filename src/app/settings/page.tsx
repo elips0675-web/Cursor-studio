@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -117,8 +116,8 @@ export default function SettingsPage() {
         <div className="space-y-3 pt-8 mt-auto">
             <Button 
                 onClick={handleLogout}
-                className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0">
-                <LogOut size={18} className="mr-2" /> Выйти
+                className="w-full h-12 rounded-full gradient-bg text-white font-black uppercase tracking-wider shadow-lg shadow-primary/20 active:scale-95 transition-all border-0">
+                <LogOut size={16} className="mr-2" /> Выйти
             </Button>
             <Button 
                 variant="ghost" 
