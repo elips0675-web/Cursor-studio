@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useState, useMemo, memo } from "react";
-import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Cpu, MoreVertical, Flag } from "lucide-react";
+import { useState, useMemo, memo, useCallback } from "react";
+import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Cpu, MoreVertical, Flag, Sparkles } from "lucide-react";
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import { useRouter } from "next/navigation";
@@ -55,12 +55,6 @@ const variants = {
   }),
 };
 
-const wrap = (min: number, max: number, v: number) => {
-  const rangeSize = max - min;
-  if (rangeSize <= 0) return 0;
-  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
-};
-
 const REPORT_REASONS = [
     'report.reason.spam',
     'report.reason.abuse',
@@ -73,11 +67,8 @@ export default function SearchPage() {
   const router = useRouter();
   const { t, language } = useLanguage();
 
-  const [ageRange] = useState([18, 40]);
-  const [maxDistance] = useState([500]);
-  const [selectedInterests] = useState<string[]>([]);
-  const [selectedGender] = useState<string>('all');
-
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
@@ -86,39 +77,22 @@ export default function SearchPage() {
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
 
-  const filteredUsers = useMemo(() => {
-    return ALL_DEMO_USERS.filter(user => {
-      const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
-      const matchesDistance = user.distance <= maxDistance[0];
-      const matchesInterests = selectedInterests.length === 0 || 
-        user.interests.some(interest => selectedInterests.includes(interest));
-      const matchesGender = selectedGender === 'all' || user.gender === selectedGender;
-      return matchesAge && matchesDistance && matchesInterests && matchesGender;
-    });
-  }, [ageRange, maxDistance, selectedInterests, selectedGender]);
-
-  const [[page, direction], setPage] = useState([0, 0]);
+  // Используем демо-данные. В реальности здесь будет фильтрация из БД.
+  const filteredUsers = useMemo(() => ALL_DEMO_USERS, []);
   
-  const userIndex = filteredUsers.length > 0 ? wrap(0, filteredUsers.length, page) : 0;
-  const user = filteredUsers.length > 0 ? filteredUsers[userIndex] : null;
+  const user = currentIndex < filteredUsers.length ? filteredUsers[currentIndex] : null;
 
-  const paginate = (newDirection: number) => {
-    setPage([page + newDirection, newDirection]);
-  };
+  const handleNext = useCallback(() => {
+    setDirection(1);
+    setCurrentIndex(prev => prev + 1);
+  }, []);
 
-  const handleNext = () => paginate(1);
-  const handlePrev = () => paginate(-1);
-
-  const handleReportSubmit = () => {
-    if (!reportReason) {
-      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
-      return;
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) {
+      setDirection(-1);
+      setCurrentIndex(prev => prev - 1);
     }
-    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user?.name}.` });
-    setIsReportDialogOpen(false);
-    setReportReason('');
-    setReportDescription('');
-  };
+  }, [currentIndex]);
 
   const getAiInsight = async (targetUser: any) => {
     if (!targetUser) return;
@@ -161,20 +135,48 @@ export default function SearchPage() {
     }
   };
 
+  const handleReportSubmit = () => {
+    if (!reportReason) {
+      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
+      return;
+    }
+    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user?.name}.` });
+    setIsReportDialogOpen(false);
+    setReportReason('');
+    setReportDescription('');
+  };
+
   if (!user) {
     return (
         <>
             <AppHeader />
             <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center justify-center relative bg-[#f8f9fb]">
-                 <div className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted shadow-inner">
-                    <User size={32} className="text-muted-foreground mb-4" />
-                    <h4 className="text-lg font-bold uppercase tracking-tight">{language === 'RU' ? 'Никого не нашли' : 'No one found'}</h4>
-                    <p className="text-xs text-muted-foreground mt-2">{language === 'RU' ? 'Попробуйте изменить фильтры' : 'Try changing your filters'}</p>
-                </div>
+                 <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted shadow-inner"
+                 >
+                    <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+                        <Sparkles size={40} className="text-muted-foreground opacity-40" />
+                    </div>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-foreground">
+                        {language === 'RU' ? 'Анкеты закончились' : 'No more profiles'}
+                    </h4>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-[200px] font-medium leading-relaxed">
+                        {language === 'RU' ? 'Вы просмотрели всех людей поблизости. Заходите позже!' : 'You have seen everyone nearby. Come back later!'}
+                    </p>
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setCurrentIndex(0)}
+                        className="mt-8 rounded-full border-2 px-8 font-black uppercase text-[10px] tracking-widest h-12"
+                    >
+                        {language === 'RU' ? 'Начать заново' : 'Start over'}
+                    </Button>
+                </motion.div>
             </main>
             <BottomNav />
         </>
-    )
+    );
   }
 
   return (
@@ -182,22 +184,25 @@ export default function SearchPage() {
       <AppHeader />
       <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
         <div className="text-center mb-4 flex items-center justify-center gap-2">
-            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{userIndex + 1} / {filteredUsers.length}</Badge>
+            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">
+                {currentIndex + 1} / {filteredUsers.length}
+            </Badge>
         </div>
+        
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
           <Button
             variant="ghost"
             size="icon"
             onClick={handlePrev}
-            className="absolute left-[-10px] sm:left-[-16px] top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white/50 backdrop-blur-sm text-foreground shadow-md hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed"
-            disabled={filteredUsers.length <= 1}
+            className="absolute left-[-10px] sm:left-[-16px] top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white/50 backdrop-blur-sm text-foreground shadow-md hover:bg-white disabled:opacity-0 disabled:cursor-default transition-all"
+            disabled={currentIndex === 0}
           >
             <ChevronLeft size={24} />
           </Button>
 
-          <AnimatePresence initial={false} custom={direction}>
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
             <motion.div
-              key={page}
+              key={user.id}
               custom={direction}
               variants={variants}
               initial="enter"
@@ -220,7 +225,9 @@ export default function SearchPage() {
                     priority
                   />
                   <div className="absolute top-4 left-4">
-                     <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">{language === 'RU' ? 'Онлайн' : 'Online'}</Badge>
+                     <Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">
+                        {language === 'RU' ? 'Онлайн' : 'Online'}
+                     </Badge>
                   </div>
                   <div className="absolute top-4 right-4 flex items-center gap-2">
                      <Badge className="gradient-bg text-white border-0 px-3 py-1 font-bold shadow-lg">
@@ -262,8 +269,7 @@ export default function SearchPage() {
             variant="ghost"
             size="icon"
             onClick={handleNext}
-            className="absolute right-[-10px] sm:right-[-16px] top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white/50 backdrop-blur-sm text-foreground shadow-md hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed"
-            disabled={filteredUsers.length <= 1}
+            className="absolute right-[-10px] sm:right-[-16px] top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-white/50 backdrop-blur-sm text-foreground shadow-md hover:bg-white transition-all"
           >
             <ChevronRight size={24} />
           </Button>
@@ -292,7 +298,7 @@ export default function SearchPage() {
           <Dialog open={!!matchUser} onOpenChange={(open) => {
             if (!open) {
                 setMatchUser(null);
-                handleNext();
+                setTimeout(handleNext, 100);
             }
           }}>
             <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
@@ -386,14 +392,14 @@ export default function SearchPage() {
 
                   <div className="flex flex-col gap-4 w-full">
                     <Button 
-                      onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} 
+                      onClick={() => matchUser?.id && router.push(`/chats?matchId=${matchUser.id}`)} 
                       className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-primary/30"
                     >
                       {t('button.write_first')}
                     </Button>
                     <Button 
                       variant="ghost" 
-                      onClick={() => { setMatchUser(null); handleNext(); }} 
+                      onClick={() => { setMatchUser(null); setTimeout(handleNext, 100); }} 
                       className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted transition-all uppercase tracking-[0.1em] text-[10px]"
                     >
                       {t('button.continue')}
