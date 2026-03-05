@@ -211,8 +211,8 @@ export default function SearchPage() {
                 whileDrag={{ scale: 1.05 }}
                 className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col cursor-grab active:cursor-grabbing border-4 border-white"
               >
-                {/* Photo section - INCREASED height proportion */}
-                <div className="relative flex-[4] pointer-events-none select-none">
+                {/* Photo section - INCREASED height proportion to 6/1 */}
+                <div className="relative flex-[6] pointer-events-none select-none">
                   <Image 
                     src={user.img} 
                     alt={user.name} 
@@ -232,7 +232,7 @@ export default function SearchPage() {
                   <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent"></div>
                   
                   {/* Floating Info Over Photo */}
-                  <div className="absolute bottom-6 left-6 right-6 text-white text-left pointer-events-none">
+                  <div className="absolute bottom-8 left-6 right-6 text-white text-left pointer-events-none">
                     <h3 className="text-3xl font-black font-headline mb-1 drop-shadow-md">{user.name}, {user.age}</h3>
                     <p className="text-white/90 text-xs flex items-center gap-1 font-bold drop-shadow-sm">
                       <MapPin size={14} className="text-white" /> {user.distance} км от вас
@@ -240,15 +240,15 @@ export default function SearchPage() {
                   </div>
                 </div>
                 
-                {/* Compact Info Section */}
-                <div className="p-5 bg-white flex flex-col justify-start relative -mt-4 rounded-t-[2.5rem] shadow-2xl pointer-events-none select-none min-h-[140px]">
-                  <div className="flex flex-wrap gap-1.5 mb-3">
+                {/* Compact Info Section - Smaller to allow taller photo */}
+                <div className="p-5 bg-white flex flex-col justify-start relative -mt-6 rounded-t-[2.5rem] shadow-2xl pointer-events-none select-none min-h-[100px]">
+                  <div className="flex flex-wrap gap-1.5 mb-2">
                     {user.interests.slice(0, 3).map(i => (
-                      <span key={i} className="px-2.5 py-1 bg-primary/5 text-primary text-[8px] rounded-full font-black uppercase tracking-widest border border-primary/10">{i}</span>
+                      <span key={i} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] rounded-full font-black uppercase tracking-widest border border-primary/10">{i}</span>
                     ))}
                   </div>
                   
-                  <p className="text-muted-foreground text-[11px] leading-tight italic px-1 line-clamp-2">
+                  <p className="text-muted-foreground text-[10px] leading-tight italic px-1 line-clamp-1">
                     "{user.bio}"
                   </p>
                 </div>
@@ -273,25 +273,25 @@ export default function SearchPage() {
           </AnimatePresence>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center justify-center gap-6 z-10">
+        {/* Action Buttons - MADE SMALLER */}
+        <div className="flex items-center justify-center gap-5 z-10">
           <button 
             onClick={() => setIndex(prev => prev + 1)}
-            className="w-14 h-14 rounded-full bg-white text-muted-foreground flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow border border-border/40"
+            className="w-12 h-12 rounded-full bg-white text-muted-foreground flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow border border-border/40"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
           <button 
             disabled={filteredUsers.length === 0}
             onClick={handleLike}
-            className="w-20 h-20 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center hover:scale-110 active:scale-95 transition-all app-shadow disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-16 h-16 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center hover:scale-110 active:scale-95 transition-all app-shadow disabled:opacity-50 disabled:cursor-not-allowed group"
           >
-            <Heart size={36} fill="currentColor" className="group-hover:animate-pulse" />
+            <Heart size={28} fill="currentColor" className="group-hover:animate-pulse" />
           </button>
           <button 
-            className="w-14 h-14 rounded-full bg-white text-yellow-500 flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow border border-border/40"
+            className="w-12 h-12 rounded-full bg-white text-yellow-500 flex items-center justify-center hover:bg-muted active:scale-90 transition-all app-shadow border border-border/40"
           >
-            <Sparkles size={24} />
+            <Sparkles size={20} />
           </button>
         </div>
       </main>
