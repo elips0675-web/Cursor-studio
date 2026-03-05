@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -266,7 +265,7 @@ function ChatsContent() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white">
                 <DropdownMenuItem
-                    onSelect={() => setIsReportDialogOpen(true)}
+                    onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }}
                     className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
                     <Flag size={14} className="mr-2" />
