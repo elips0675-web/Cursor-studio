@@ -98,19 +98,19 @@ export default function ActivityPage() {
           <TabsList className="flex w-full bg-transparent h-auto p-0 gap-3 border-0 shadow-none">
             <TabsTrigger 
               value="all" 
-              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
+              className="flex-1 h-12 rounded-[2.5rem] text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.all')}
             </TabsTrigger>
             <TabsTrigger 
               value="likes" 
-              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
+              className="flex-1 h-12 rounded-[2.5rem] text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.likes')}
             </TabsTrigger>
             <TabsTrigger 
               value="visits" 
-              className="flex-1 h-12 rounded-[2.5rem] text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
+              className="flex-1 h-12 rounded-[2.5rem] text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 bg-white border border-border/50 text-muted-foreground data-[state=active]:gradient-bg data-[state=active]:!text-white data-[state=active]:border-0 data-[state=active]:shadow-xl data-[state=active]:shadow-primary/30"
             >
               {t('activity.visits')}
             </TabsTrigger>
@@ -327,36 +327,36 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer group relative overflow-hidden h-[64px]",
+      "flex items-center gap-3 p-3 rounded-2xl transition-all cursor-pointer group relative overflow-hidden h-[68px]",
       item.seen ? "bg-white/40 opacity-70" : "bg-white app-shadow hover:translate-y-[-1px] border border-white"
     )}>
       {!item.seen && (
-        <div className="absolute top-0 left-0 w-1 h-full gradient-bg opacity-40"></div>
+        <div className="absolute top-0 left-0 w-1.5 h-full gradient-bg opacity-40"></div>
       )}
       
       <div className="relative flex-shrink-0">
         <div className={cn(
-          "w-10 h-10 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-all duration-500",
+          "w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-all duration-500",
           item.blurred && "blur-[6px] grayscale opacity-60 scale-95"
         )}>
           <Image src={item.img} alt={item.user} fill className="object-cover" />
           {item.blurred && (
              <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                <Sparkles className="text-white/40" size={12} />
+                <Sparkles className="text-white/40" size={14} />
              </div>
           )}
         </div>
         <div className={cn(
-          "absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
+          "absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20",
           getBgColor()
         )}>
           {getIcon()}
         </div>
       </div>
       
-      <div className="flex-1 min-w-0 pr-1">
+      <div className="flex-1 min-w-0 pr-1 ml-1">
         <div className="flex justify-between items-start">
-          <p className="text-[11px] leading-snug text-foreground/90 font-medium">
+          <p className="text-[12px] leading-snug text-foreground/90 font-semibold">
             {item.blurred ? (
               <span><span className="font-black text-primary">{t('profile.someone')}</span> {getMessage()}</span>
             ) : (
@@ -366,27 +366,27 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
             )}
           </p>
           {!item.seen && (
-            <div className="relative flex h-1 w-1 mt-0.5 ml-1 flex-shrink-0">
+            <div className="relative flex h-1.5 w-1.5 mt-0.5 ml-1 flex-shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1 w-1 bg-primary"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
             </div>
           )}
         </div>
-        <p className="text-[9px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-0.5">
+        <p className="text-[10px] text-muted-foreground font-black tracking-widest uppercase opacity-40 mt-1">
           {item.time.replace('мин назад', language === 'RU' ? 'мин назад' : 'min ago').replace('час назад', language === 'RU' ? 'час назад' : 'hour ago').replace('дня назад', language === 'RU' ? 'дня назад' : 'days ago')}
         </p>
         
         {item.blurred && (
           <button 
             onClick={(e) => { e.stopPropagation(); onUnlock(); }}
-            className="text-[8px] font-black text-primary flex items-center gap-1 mt-0.5 bg-primary/5 px-1.5 py-0.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-widest shadow-sm border border-primary/10"
+            className="text-[9px] font-black text-primary flex items-center gap-1 mt-1 bg-primary/5 px-2 py-0.5 rounded-full w-fit hover:bg-primary/10 transition-all uppercase tracking-widest shadow-sm border border-primary/10"
           >
-            <Sparkles size={6} className="animate-pulse" /> {language === 'RU' ? 'Раскрыть' : 'Reveal'}
+            <Sparkles size={8} className="animate-pulse" /> {language === 'RU' ? 'Раскрыть' : 'Reveal'}
           </button>
         )}
       </div>
 
-      <ChevronRight size={10} className="text-muted-foreground/20 group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={3} />
+      <ChevronRight size={12} className="text-muted-foreground/30 group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" strokeWidth={3} />
     </div>
   );
 }
