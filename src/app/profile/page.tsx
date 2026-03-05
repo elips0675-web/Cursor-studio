@@ -151,6 +151,9 @@ export default function ProfilePage() {
     !lifestyleKeywords.some(key => i.includes(key))
   );
 
+  // Extract height specifically for top display
+  const heightInfo = profile.interests.find(i => i.includes("Рост:"));
+
   return (
     <>
       <main className="flex-1 overflow-y-auto pb-24 bg-[#f8f9fb]">
@@ -193,7 +196,20 @@ export default function ProfilePage() {
               <p className="text-muted-foreground text-[10px] font-bold flex items-center justify-center gap-1.5 uppercase tracking-wider opacity-60">
                 <MapPin size={12} className="text-primary" /> {profile.city}
               </p>
-              <div className="flex flex-wrap justify-center gap-1.5 mt-1">
+              
+              {/* Quick Info: Zodiac and Height */}
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1 py-1 px-2 font-bold text-[9px] rounded-lg shadow-sm">
+                  <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
+                </Badge>
+                {heightInfo && (
+                  <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1 py-1 px-2 font-bold text-[9px] rounded-lg shadow-sm">
+                    <Ruler size={10} /> {heightInfo.replace("Рост: ", "")}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-1.5">
                 <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-1 px-3 font-black text-[9px] rounded-full uppercase tracking-widest">
                   <Target size={12} /> {profile.datingGoal}
                 </Badge>
@@ -254,10 +270,8 @@ export default function ProfilePage() {
             <div className="space-y-3.5">
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 mb-1">Стиль жизни</p>
               <div className="flex flex-wrap gap-1.5">
-                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-1.5 px-3 font-bold text-[9px] rounded-lg shadow-sm">
-                  <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
-                </Badge>
-                {lifestyleDetails.map((detail) => {
+                {/* We can still keep these here for detailed view or just show other lifestyle details */}
+                {lifestyleDetails.filter(d => !d.includes("Рост:")).map((detail) => {
                   const mapItem = interestMap.find(m => detail.includes(m.label));
                   const Icon = mapItem?.icon || Star;
                   return (
@@ -266,6 +280,10 @@ export default function ProfilePage() {
                     </Badge>
                   );
                 })}
+                {/* Fallback to show something if only height was there */}
+                {lifestyleDetails.filter(d => !d.includes("Рост:")).length === 0 && (
+                  <span className="text-[9px] text-muted-foreground italic ml-1">Другие детали не указаны</span>
+                )}
               </div>
 
               <div className="h-px bg-muted/50 w-full" />
