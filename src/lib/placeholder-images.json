@@ -1,70 +1,70 @@
 {
   "placeholderImages": [
     {
-      "id": "user-anna",
-      "description": "Attractive young woman smiling",
-      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzcyNTc4MzM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "woman smiling"
+      "id": "anna",
+      "description": "Портрет улыбающейся девушки",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_1/600/800",
+      "imageHint": "woman smile"
     },
     {
-      "id": "user-maxim",
-      "description": "Stylish young man looking away",
-      "imageUrl": "https://picsum.photos/seed/maxim/400/600",
+      "id": "maxim",
+      "description": "Уверенный мужчина",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_2/600/800",
       "imageHint": "man portrait"
     },
     {
-      "id": "user-elena",
-      "description": "Young woman in a library",
-      "imageUrl": "https://picsum.photos/seed/elena/400/600",
-      "imageHint": "woman library"
+      "id": "elena",
+      "description": "Девушка в парке",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_3/600/800",
+      "imageHint": "woman nature"
     },
     {
-      "id": "user-dmitry",
-      "description": "Man in a business suit",
-      "imageUrl": "https://picsum.photos/seed/dmitry/400/600",
-      "imageHint": "man business"
+      "id": "dmitry",
+      "description": "Мужчина в костюме",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_4/600/800",
+      "imageHint": "man style"
     },
     {
-      "id": "user-sophia",
-      "description": "Woman playing guitar",
-      "imageUrl": "https://picsum.photos/seed/sophia/400/600",
+      "id": "sophia",
+      "description": "Девушка с гитарой",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_5/600/800",
       "imageHint": "woman music"
     },
     {
-      "id": "user-artem",
-      "description": "Young man with gaming headset",
-      "imageUrl": "https://picsum.photos/seed/artem/400/600",
-      "imageHint": "man gaming"
+      "id": "artem",
+      "description": "Парень геймер",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_6/600/800",
+      "imageHint": "man cool"
     },
     {
-      "id": "user-maria",
-      "description": "Woman doing yoga",
-      "imageUrl": "https://picsum.photos/seed/maria/400/600",
+      "id": "maria",
+      "description": "Девушка занимается йогой",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_7/600/800",
       "imageHint": "woman yoga"
     },
     {
-      "id": "user-ivan",
-      "description": "Man with professional camera",
-      "imageUrl": "https://picsum.photos/seed/ivan/400/600",
-      "imageHint": "man photography"
+      "id": "ivan",
+      "description": "Путешественник в горах",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_8/600/800",
+      "imageHint": "man travel"
     },
     {
-      "id": "user-ksenia",
-      "description": "Woman in fashionable clothes",
-      "imageUrl": "https://picsum.photos/seed/ksenia/400/600",
+      "id": "ksenia",
+      "description": "Модная девушка на улице",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_9/600/800",
       "imageHint": "woman fashion"
     },
     {
-      "id": "user-nikita",
-      "description": "Man in a museum",
-      "imageUrl": "https://picsum.photos/seed/nikita/400/600",
-      "imageHint": "man history"
+      "id": "nikita",
+      "description": "Мужчина в интерьере",
+      "imageUrl": "https://picsum.photos/seed/dating_vibe_10/600/800",
+      "imageHint": "man urban"
     },
     {
-      "id": "user-avatar-main",
-      "description": "Current user profile avatar",
-      "imageUrl": "https://picsum.photos/seed/me/200/200",
-      "imageHint": "selfie portrait"
+      "id": "me",
+      "description": "Селфи текущего пользователя",
+      "imageUrl": "https://picsum.photos/seed/my_vibe_2024/600/600",
+      "imageHint": "selfie face"
     }
   ]
 }
