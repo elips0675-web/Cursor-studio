@@ -2,69 +2,69 @@
   "placeholderImages": [
     {
       "id": "anna",
-      "description": "Портрет улыбающейся девушки",
-      "imageUrl": "https://picsum.photos/seed/person_anna_99/600/800",
+      "description": "Анна - Молодая девушка",
+      "imageUrl": "https://picsum.photos/seed/person_anna_v2/600/800",
       "imageHint": "woman portrait"
     },
     {
       "id": "maxim",
-      "description": "Уверенный мужчина",
-      "imageUrl": "https://picsum.photos/seed/person_maxim_88/600/800",
+      "description": "Максим - Молодой человек",
+      "imageUrl": "https://picsum.photos/seed/person_maxim_v2/600/800",
       "imageHint": "man portrait"
     },
     {
       "id": "elena",
-      "description": "Девушка на фоне города",
-      "imageUrl": "https://picsum.photos/seed/person_elena_77/600/800",
-      "imageHint": "woman urban"
+      "description": "Елена - Девушка в городе",
+      "imageUrl": "https://picsum.photos/seed/person_elena_v2/600/800",
+      "imageHint": "woman fashion"
     },
     {
       "id": "dmitry",
-      "description": "Мужчина в повседневной одежде",
-      "imageUrl": "https://picsum.photos/seed/person_dmitry_66/600/800",
-      "imageHint": "man casual"
+      "description": "Дмитрий - Деловой мужчина",
+      "imageUrl": "https://picsum.photos/seed/person_dmitry_v2/600/800",
+      "imageHint": "man professional"
     },
     {
       "id": "sophia",
-      "description": "Девушка в кафе",
-      "imageUrl": "https://picsum.photos/seed/person_sophia_55/600/800",
-      "imageHint": "woman cafe"
+      "description": "София - Творческая личность",
+      "imageUrl": "https://picsum.photos/seed/person_sophia_v2/600/800",
+      "imageHint": "woman artist"
     },
     {
       "id": "artem",
-      "description": "Парень в спортивном стиле",
-      "imageUrl": "https://picsum.photos/seed/person_artem_44/600/800",
-      "imageHint": "man sport"
+      "description": "Артем - Спортивный парень",
+      "imageUrl": "https://picsum.photos/seed/person_artem_v2/600/800",
+      "imageHint": "man fitness"
     },
     {
       "id": "maria",
-      "description": "Стильная девушка",
-      "imageUrl": "https://picsum.photos/seed/person_maria_33/600/800",
-      "imageHint": "woman style"
+      "description": "Мария - Улыбающаяся девушка",
+      "imageUrl": "https://picsum.photos/seed/person_maria_v2/600/800",
+      "imageHint": "woman smiling"
     },
     {
       "id": "ivan",
-      "description": "Мужчина на природе",
-      "imageUrl": "https://picsum.photos/seed/person_ivan_22/600/800",
+      "description": "Иван - Мужчина на природе",
+      "imageUrl": "https://picsum.photos/seed/person_ivan_v2/600/800",
       "imageHint": "man nature"
     },
     {
       "id": "ksenia",
-      "description": "Элегантная девушка",
-      "imageUrl": "https://picsum.photos/seed/person_ksenia_11/600/800",
-      "imageHint": "woman elegant"
+      "description": "Ксения - Стильная девушка",
+      "imageUrl": "https://picsum.photos/seed/person_ksenia_v2/600/800",
+      "imageHint": "woman style"
     },
     {
       "id": "nikita",
-      "description": "Молодой человек",
-      "imageUrl": "https://picsum.photos/seed/person_nikita_00/600/800",
-      "imageHint": "man young"
+      "description": "Никита - Молодой интеллектуал",
+      "imageUrl": "https://picsum.photos/seed/person_nikita_v2/600/800",
+      "imageHint": "man intellectual"
     },
     {
       "id": "me",
-      "description": "Селфи пользователя",
-      "imageUrl": "https://picsum.photos/seed/person_me_vibe/600/600",
-      "imageHint": "person face"
+      "description": "Фотография профиля",
+      "imageUrl": "https://picsum.photos/seed/person_me_v3/600/600",
+      "imageHint": "person portrait"
     }
   ]
 }

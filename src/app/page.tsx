@@ -26,23 +26,21 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
 
-// Консистентный список из 10 демо-пользователей
 const ALL_DEMO_USERS = [
-  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
-  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, online: true, distance: 5, match: 92, city: 'Питер', zodiac: 'Овен', interests: ['Спорт', 'IT'], bio: 'Ищу компанию для пробежек и обсуждения технологий.' },
-  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, online: false, distance: 3, match: 81, city: 'Москва', zodiac: 'Рыбы', interests: ['Искусство', 'Книги'], bio: 'Ищу кого-то, кто любит музеи и долгие прогулки.' },
-  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, online: false, distance: 12, match: 75, city: 'Казань', zodiac: 'Телец', interests: ['Бизнес', 'Авто'], bio: 'Ценю время и качественный отдых.' },
-  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, online: true, distance: 7, match: 88, city: 'Москва', zodiac: 'Дева', interests: ['Музыка', 'Гитара'], bio: 'Мечтаю собрать свою группу и объехать мир.' },
-  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, online: true, distance: 4, match: 69, city: 'Питер', zodiac: 'Близнецы', interests: ['Игры', 'Аниме'], bio: 'Давай поиграем вместе или посмотрим сериал.' },
-  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, online: true, distance: 1, match: 94, city: 'Москва', zodiac: 'Скорпион', interests: ['Йога', 'Природа'], bio: 'Люблю готовить полезную еду и ходить в походы.' },
-  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, online: false, distance: 15, match: 72, city: 'Сочи', zodiac: 'Стрелец', interests: ['Горы', 'Фотография'], bio: 'Пейзажный фотограф в поисках приключений.' },
-  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, online: true, distance: 6, match: 83, city: 'Москва', zodiac: 'Козерог', interests: ['Мода', 'Дизайн'], bio: 'Жизнь слишком коротка, чтобы носить скучную одежат.' },
-  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, online: false, distance: 9, match: 77, city: 'Питер', zodiac: 'Водолей', interests: ['Наука', 'История'], bio: 'Люблю узнавать что-то новое каждый день.' }
+  { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
+  { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, hint: PlaceHolderImages[1].imageHint, online: true, distance: 5, match: 92, city: 'Питер', zodiac: 'Овен', interests: ['Спорт', 'IT'], bio: 'Ищу компанию для пробежек и обсуждения технологий.' },
+  { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, hint: PlaceHolderImages[2].imageHint, online: false, distance: 3, match: 81, city: 'Москва', zodiac: 'Рыбы', interests: ['Искусство', 'Книги'], bio: 'Ищу кого-то, кто любит музеи и долгие прогулки.' },
+  { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, hint: PlaceHolderImages[3].imageHint, online: false, distance: 12, match: 75, city: 'Казань', zodiac: 'Телец', interests: ['Бизнес', 'Авто'], bio: 'Ценю время и качественный отдых.' },
+  { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, hint: PlaceHolderImages[4].imageHint, online: true, distance: 7, match: 88, city: 'Москва', zodiac: 'Дева', interests: ['Музыка', 'Гитара'], bio: 'Мечтаю собрать свою группу и объехать мир.' },
+  { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, hint: PlaceHolderImages[5].imageHint, online: true, distance: 4, match: 69, city: 'Питер', zodiac: 'Близнецы', interests: ['Игры', 'Аниме'], bio: 'Давай поиграем вместе или посмотрим сериал.' },
+  { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, hint: PlaceHolderImages[6].imageHint, online: true, distance: 1, match: 94, city: 'Москва', zodiac: 'Скорпион', interests: ['Йога', 'Природа'], bio: 'Люблю готовить полезную еду и ходить в походы.' },
+  { id: 8, name: 'Иван', age: 27, img: PlaceHolderImages[7].imageUrl, hint: PlaceHolderImages[7].imageHint, online: false, distance: 15, match: 72, city: 'Сочи', zodiac: 'Стрелец', interests: ['Горы', 'Фотография'], bio: 'Пейзажный фотограф в поисках приключений.' },
+  { id: 9, name: 'Ксения', age: 23, img: PlaceHolderImages[8].imageUrl, hint: PlaceHolderImages[8].imageHint, online: true, distance: 6, match: 83, city: 'Москва', zodiac: 'Козерог', interests: ['Мода', 'Дизайн'], bio: 'Жизнь слишком коротка, чтобы носить скучную одежду.' },
+  { id: 10, name: 'Никита', age: 30, img: PlaceHolderImages[9].imageUrl, hint: PlaceHolderImages[9].imageHint, online: false, distance: 9, match: 77, city: 'Питер', zodiac: 'Водолей', interests: ['Наука', 'История'], bio: 'Люблю узнавать что-то новое каждый день.' }
 ];
 
 const INTEREST_OPTIONS = ["Фотография", "Спорт", "Музыка", "Кофе", "IT", "Искусство", "Бизнес", "Путешествия"];
 
-// Компонент "Салют из сердец" (SwiftMatch1 Style - Centered)
 function HeartConfetti() {
   const hearts = Array.from({ length: 45 });
   return (
@@ -83,12 +81,10 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   
-  // Match States
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
 
-  // Filter States
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [ageRange, setAgeRange] = useState([18, 40]);
   const [selectedCity, setSelectedCity] = useState("Все");
@@ -127,7 +123,6 @@ export default function Home() {
       description: `Вы лайкнули ${user.name}`,
     });
 
-    // 30% шанс совпадения
     if (Math.random() > 0.7) {
       setMatchUser(user);
       getAiInsight(user);
@@ -169,7 +164,6 @@ export default function Home() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-y-auto px-4 pt-6 pb-24 bg-[#f8f9fb]">
-        {/* Hero Section */}
         <div className="text-center mb-8">
           <Badge variant="secondary" className="mb-3 bg-primary/10 text-primary border-0 gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
             <Flame size={12} fill="currentColor" /> Популярное сейчас
@@ -181,7 +175,6 @@ export default function Home() {
           <p className="text-muted-foreground text-xs font-medium">Знакомься, общайся и находи любовь</p>
         </div>
 
-        {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-10">
           <Button 
             asChild
@@ -199,7 +192,6 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Featured Users */}
         <section className="mb-10">
           <div className="flex justify-between items-center mb-4 px-1">
             <div className="flex items-center gap-2">
@@ -217,7 +209,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Recommended Section */}
         <section className="scroll-mt-6 mb-10">
           <div className="flex justify-between items-end mb-4 px-1">
             <div className="flex items-center gap-2">
@@ -233,7 +224,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Auto-Search Results Section */}
         <div ref={resultsRef} className="scroll-mt-24">
           {isAutoSearching && (
             <div className="py-12 flex flex-col items-center justify-center space-y-4">
@@ -285,7 +275,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Match Dialog */}
       <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
         <DialogContent className="max-w-[360px] rounded-[2.5rem] border-0 bg-white p-0 overflow-hidden app-shadow">
           <HeartConfetti />
@@ -300,10 +289,22 @@ export default function Home() {
           <div className="px-6 py-8 text-center -mt-12 bg-white rounded-t-[2.5rem] relative">
             <div className="flex items-center justify-center gap-0 mb-6 relative">
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-4 bg-muted">
-                  <Image src={PlaceHolderImages[10].imageUrl} alt="Вы" fill className="object-cover" />
+                  <Image 
+                    src={PlaceHolderImages[10].imageUrl} 
+                    alt="Вы" 
+                    fill 
+                    data-ai-hint={PlaceHolderImages[10].imageHint}
+                    className="object-cover" 
+                  />
                </div>
                <div className="w-24 h-24 rounded-full border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
-                  <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name} fill className="object-cover" />
+                  <Image 
+                    src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
+                    alt={matchUser?.name} 
+                    fill 
+                    data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
+                    className="object-cover" 
+                  />
                </div>
             </div>
 
@@ -343,7 +344,6 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      {/* Filter Dialog */}
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
         <DialogContent className="max-w-[380px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
           <DialogHeader className="p-8 bg-muted/30 pb-4">
@@ -357,7 +357,6 @@ export default function Home() {
           </DialogHeader>
 
           <div className="p-8 space-y-8 overflow-y-auto max-h-[60vh] no-scrollbar">
-            {/* Interests */}
             <div className="space-y-4">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Интересы</label>
               <div className="flex flex-wrap gap-2">
@@ -379,7 +378,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Age */}
             <div className="space-y-4">
               <div className="flex justify-between items-center px-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Возраст</label>
@@ -395,7 +393,6 @@ export default function Home() {
               />
             </div>
 
-            {/* City */}
             <div className="space-y-3">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Город</label>
               <div className="grid grid-cols-2 gap-2">
@@ -444,6 +441,7 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
           src={user.img} 
           alt={user.name} 
           fill 
+          data-ai-hint={user.hint}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-2 right-2">
@@ -492,6 +490,7 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
           src={user.img} 
           alt={user.name} 
           fill 
+          data-ai-hint={user.hint}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {user.online && (
