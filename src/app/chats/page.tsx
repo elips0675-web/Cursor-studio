@@ -22,7 +22,9 @@ import {
   Ghost,
   Rocket,
   Crown,
-  Music
+  Music,
+  Phone,
+  Video
 } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -201,9 +203,17 @@ function ChatsContent() {
               {selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline')}
             </p>
           </div>
-          <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground">
-            <MoreVertical size={20} />
-          </Button>
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
+              <Phone size={20} />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
+              <Video size={20} />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50 hover:text-foreground">
+              <MoreVertical size={20} />
+            </Button>
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-5 space-y-5">
