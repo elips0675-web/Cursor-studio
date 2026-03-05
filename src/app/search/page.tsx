@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Heart, MapPin, Sparkles, X, MessageCircle, Cpu } from "lucide-react";
+import { Heart, MapPin, Sparkles, X, User, Cpu } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
@@ -37,7 +37,7 @@ const ALL_USERS = [
 function HeartConfetti() {
   const hearts = Array.from({ length: 20 });
   return (
-    <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-hidden">
       {hearts.map((_, i) => (
         <motion.div
           key={i}
@@ -130,10 +130,6 @@ export default function SearchPage() {
     if (matchUser) router.push(`/chats?matchId=${matchUser.id}`);
   };
 
-  const handleDirectMessage = () => {
-    if (user) router.push(`/chats?matchId=${user.id}`);
-  };
-
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
   const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
@@ -142,13 +138,6 @@ export default function SearchPage() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
-        <div className="flex items-center justify-center w-full max-w-sm mb-4 z-10">
-          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl flex items-center gap-2 text-[11px] text-primary font-bold border border-primary/5 shadow-md">
-            <Sparkles size={14} />
-            <span>{filteredUsers.length} {t('swipes.nearby')}</span>
-          </div>
-        </div>
-
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
           <AnimatePresence mode="popLayout">
             {filteredUsers.length > 0 ? (
@@ -161,7 +150,6 @@ export default function SearchPage() {
                   if (info.offset.x > 100) handleSwipe('right');
                   else if (info.offset.x < -100) handleSwipe('left');
                 }}
-                onTap={() => router.push(`/user?id=${user.id}`)}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 whileDrag={{ scale: 1.05 }}
                 className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col border-4 border-white cursor-pointer"
@@ -226,66 +214,54 @@ export default function SearchPage() {
 
           <button 
             disabled={filteredUsers.length === 0}
-            onClick={handleDirectMessage}
+            onClick={() => router.push(`/user?id=${user.id}`)}
             className="w-14 h-14 rounded-full bg-white text-blue-500 flex items-center justify-center hover:bg-blue-50 active:scale-90 transition-all app-shadow border border-blue-100 group"
-            title={language === 'RU' ? "Личные сообщения" : "Direct messages"}
+            title={language === 'RU' ? "Просмотр Профиля" : "View Profile"}
           >
-            <MessageCircle size={24} className="group-hover:scale-110 transition-transform" />
+            <User size={24} className="group-hover:scale-110 transition-transform" />
           </button>
         </div>
       </main>
 
-      <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
-        <DialogContent className="max-w-[400px] rounded-3xl border-0 bg-transparent p-0 shadow-none app-shadow">
-          <div className="absolute inset-0 rounded-3xl overflow-hidden -z-10">
-            <div className="w-full h-full bg-white"></div>
-            <div className="absolute top-0 left-0 right-0 h-56 gradient-bg"></div>
-          </div>
-
-          <div className="absolute inset-0 pointer-events-none z-0">
-             <HeartConfetti />
-          </div>
-          
-          <div className="relative z-10">
-            <div className="relative h-56 flex items-center justify-center p-6">
-              <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-              
-              <div className="flex items-center justify-center gap-0 relative">
-                  <motion.div 
-                      initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
-                      animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
-                      transition={{ type: "spring", damping: 12, delay: 0.2 }}
-                      className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
-                  >
-                      <Image 
-                          src={PlaceHolderImages[10].imageUrl} 
-                          alt="Вы" 
-                          fill 
-                          data-ai-hint={PlaceHolderImages[10].imageHint}
-                          className="object-cover" 
-                      />
-                  </motion.div>
-                  <motion.div 
-                      initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
-                      animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
-                      transition={{ type: "spring", damping: 12, delay: 0.3 }}
-                      className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
-                  >
-                      <Image 
-                          src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
-                          alt={matchUser?.name} 
-                          fill 
-                          data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
-                          className="object-cover" 
-                      />
-                  </motion.div>
-              </div>
-
-              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+      <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
+          <div className="relative">
+            <HeartConfetti />
+            <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                <div className="flex items-center justify-center gap-0 relative">
+                    <motion.div 
+                        initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
+                        animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
+                        transition={{ type: "spring", damping: 12, delay: 0.2 }}
+                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
+                    >
+                        <Image 
+                            src={PlaceHolderImages[10].imageUrl} 
+                            alt="Вы" 
+                            fill 
+                            data-ai-hint={PlaceHolderImages[10].imageHint}
+                            className="object-cover" 
+                        />
+                    </motion.div>
+                    <motion.div 
+                        initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
+                        animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
+                        transition={{ type: "spring", damping: 12, delay: 0.3 }}
+                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
+                    >
+                        <Image 
+                            src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
+                            alt={matchUser?.name} 
+                            fill 
+                            data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
+                            className="object-cover" 
+                        />
+                    </motion.div>
+                </div>
             </div>
 
-            <div className="px-8 pt-8 pb-8 text-center bg-white rounded-b-3xl">
+            <div className="px-8 pt-8 pb-8 text-center">
               <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
                 {t('match.title')}
               </DialogTitle>
@@ -339,7 +315,7 @@ export default function SearchPage() {
                 <Button onClick={handleStartChat} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
                   {t('button.write_first')}
                 </Button>
-                <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full h-12 rounded-full text-muted-foreground font-black uppercase tracking-[0.1em] text-[10px] hover:bg-muted transition-all">
+                <Button variant="ghost" onClick={() => {setMatchUser(null); setIndex(prev => prev + 1);}} className="w-full h-12 rounded-full text-muted-foreground font-black uppercase tracking-[0.1em] text-[10px] hover:bg-muted transition-all">
                   {t('button.continue')}
                 </Button>
               </div>

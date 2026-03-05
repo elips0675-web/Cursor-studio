@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown, Cpu } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, SlidersHorizontal, Check, MessageCircle, Sparkles, X, Trophy, ChevronDown, Cpu, User } from "lucide-react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
@@ -45,7 +45,7 @@ const ITEMS_PER_PAGE = 4;
 function HeartConfetti() {
   const hearts = Array.from({ length: 20 });
   return (
-    <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-hidden">
       {hearts.map((_, i) => (
         <motion.div
           key={i}
@@ -226,7 +226,7 @@ export default function Home() {
               <Sparkles size={16} className="text-primary" />
               <h5 className="font-black text-base font-headline tracking-tight">{t('home.recommend')}</h5>
             </div>
-            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{t('home.nearby')}</Badge>
+            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{ALL_DEMO_USERS.length} {t('home.nearby')}</Badge>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {ALL_DEMO_USERS.slice(6, 10).map((u) => (
@@ -298,57 +298,45 @@ export default function Home() {
         </div>
       </main>
 
-      <Dialog open={!!matchUser} onOpenChange={() => setMatchUser(null)}>
-        <DialogContent className="max-w-[400px] rounded-3xl border-0 bg-transparent p-0 shadow-none app-shadow">
-          <div className="absolute inset-0 rounded-3xl overflow-hidden -z-10">
-            <div className="w-full h-full bg-white"></div>
-            <div className="absolute top-0 left-0 right-0 h-56 gradient-bg"></div>
-          </div>
-          
-          <div className="absolute inset-0 pointer-events-none z-0">
-             <HeartConfetti />
-          </div>
-          
-          <div className="relative z-10">
-            <div className="relative h-56 flex items-center justify-center p-6">
-              <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-              
-              <div className="flex items-center justify-center gap-0 relative">
-                  <motion.div 
-                      initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
-                      animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
-                      transition={{ type: "spring", damping: 12, delay: 0.2 }}
-                      className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
-                  >
-                      <Image 
-                          src={PlaceHolderImages[10].imageUrl} 
-                          alt="Вы" 
-                          fill 
-                          data-ai-hint={PlaceHolderImages[10].imageHint}
-                          className="object-cover" 
-                      />
-                  </motion.div>
-                  <motion.div 
-                      initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
-                      animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
-                      transition={{ type: "spring", damping: 12, delay: 0.3 }}
-                      className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
-                  >
-                      <Image 
-                          src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
-                          alt={matchUser?.name} 
-                          fill 
-                          data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
-                          className="object-cover" 
-                      />
-                  </motion.div>
-              </div>
-
-              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-              <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+      <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
+          <div className="relative">
+            <HeartConfetti />
+            <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                <div className="flex items-center justify-center gap-0 relative">
+                    <motion.div 
+                        initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }}
+                        animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }}
+                        transition={{ type: "spring", damping: 12, delay: 0.2 }}
+                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"
+                    >
+                        <Image 
+                            src={PlaceHolderImages[10].imageUrl} 
+                            alt="Вы" 
+                            fill 
+                            data-ai-hint={PlaceHolderImages[10].imageHint}
+                            className="object-cover" 
+                        />
+                    </motion.div>
+                    <motion.div 
+                        initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }}
+                        animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }}
+                        transition={{ type: "spring", damping: 12, delay: 0.3 }}
+                        className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"
+                    >
+                        <Image 
+                            src={matchUser?.img || PlaceHolderImages[0].imageUrl} 
+                            alt={matchUser?.name} 
+                            fill 
+                            data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint}
+                            className="object-cover" 
+                        />
+                    </motion.div>
+                </div>
             </div>
 
-            <div className="px-8 pt-8 pb-8 text-center bg-white rounded-b-3xl">
+            <div className="px-8 pt-8 pb-8 text-center">
               <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">
                 {t('match.title')}
               </DialogTitle>
@@ -616,6 +604,7 @@ function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; 
     
 
     
+
 
 
 
