@@ -6,6 +6,7 @@ import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -55,6 +56,7 @@ export function VideoCallDialog({ open, onOpenChange, user }: { open: boolean, o
         )}
         onInteractOutside={(e) => e.preventDefault()}
       >
+        <DialogTitle className="sr-only">Video call with {user?.name}</DialogTitle>
         <motion.div 
           layout 
           className="relative w-full h-full rounded-3xl overflow-hidden bg-gray-900 flex items-center justify-center"
