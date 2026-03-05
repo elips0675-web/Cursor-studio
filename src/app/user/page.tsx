@@ -68,7 +68,9 @@ const ALL_DEMO_USERS = [
 const ZodiacIcon = ({ sign }: { sign: string }) => {
   const signs: Record<string, string> = {
     "Овен": "♈", "Телец": "♉", "Близнецы": "♊", "Рак": "♋", "Лев": "♌", "Дева": "♍",
-    "Весы": "♎", "Скорпион": "♏", "Стрелец": "♐", "Козерог": "♑", "Водолей": "♒", "Рыбы": "♓"
+    "Весы": "♎", "Скорпион": "♏", "Стрелец": "♐", "Козерог": "♑", "Водолей": "♒", "Рыбы": "♓",
+    "Aries": "♈", "Taurus": "♉", "Gemini": "♊", "Cancer": "♋", "Leo": "♌", "Virgo": "♍",
+    "Libra": "♎", "Scorpio": "♏", "Sagittarius": "♐", "Capricorn": "♑", "Aquarius": "♒", "Pisces": "♓"
   };
   return <span className="text-xl leading-none">{signs[sign] || "✨"}</span>;
 };
@@ -86,21 +88,32 @@ const interestIcons: Record<string, any> = {
   "Игры": Gamepad2,
   "IT": Sparkles,
   "Книги": Star,
-  "Природа": Sun
+  "Природа": Sun,
+  "Photography": Camera,
+  "Travel": Globe,
+  "Coffee": Coffee,
+  "Music": Music,
+  "Sports": Dumbbell,
+  "Art": Palette,
+  "Movies": Film,
+  "Yoga": Flower2,
+  "Business": Briefcase,
+  "Gaming": Gamepad2,
+  "Books": Star,
+  "Nature": Sun
 };
 
 function UserProfileContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const userId = searchParams.get('id');
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const user = ALL_DEMO_USERS.find(u => u.id === Number(userId)) || ALL_DEMO_USERS[0];
   
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
-  // Генерируем "галерею" для демо
   const photos = [
     user.img,
     PlaceHolderImages[Math.floor(Math.random() * 10)].imageUrl,
@@ -108,7 +121,7 @@ function UserProfileContent() {
   ];
 
   const handleLike = () => {
-    toast({ title: `Вы лайкнули ${user.name}!` });
+    toast({ title: language === 'RU' ? `Вы лайкнули ${user.name}!` : `You liked ${user.name}!` });
   };
 
   return (
@@ -123,7 +136,7 @@ function UserProfileContent() {
             <ChevronLeft size={24} />
           </Button>
           <Badge className="bg-white/20 backdrop-blur-md text-white border-white/20 px-3 py-1 font-black uppercase text-[9px] tracking-widest">
-            {user.match}% Совпадение
+            {user.match}% {language === 'RU' ? 'Совпадение' : 'Match'}
           </Badge>
       </header>
 
@@ -139,7 +152,7 @@ function UserProfileContent() {
                 </h3>
              </div>
              <p className="text-muted-foreground text-sm font-bold flex items-center gap-1.5 uppercase tracking-widest">
-                <MapPin size={14} className="text-primary" /> {user.city} • {user.distance} км от вас
+                <MapPin size={14} className="text-primary" /> {language === 'RU' ? user.city : 'Moscow'} • {user.distance} км {language === 'RU' ? 'от вас' : 'from you'}
              </p>
           </div>
         </div>
@@ -150,17 +163,17 @@ function UserProfileContent() {
               <ZodiacIcon sign={user.zodiac} /> {user.zodiac}
             </Badge>
             <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-2 px-4 font-bold text-[11px] rounded-xl shadow-sm whitespace-nowrap">
-              <Ruler size={14} /> {user.height} см
+              <Ruler size={14} /> {user.height} {language === 'RU' ? 'см' : 'cm'}
             </Badge>
             <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-2 px-4 font-bold text-[11px] rounded-xl shadow-sm whitespace-nowrap">
-              <Target size={14} /> {user.goal}
+              <Target size={14} /> {language === 'RU' ? user.goal : 'Serious relations'}
             </Badge>
           </div>
 
           <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles size={16} className="text-primary" />
-              <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">О себе</h4>
+              <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
             </div>
             <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
               "{user.bio}"
@@ -170,7 +183,7 @@ function UserProfileContent() {
           <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4">
             <div className="flex items-center gap-2">
                <Star size={16} className="text-primary" />
-               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Интересы</h4>
+               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4>
             </div>
             <div className="flex flex-wrap gap-2">
               {user.interests.map((interest) => {
@@ -187,7 +200,7 @@ function UserProfileContent() {
           <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4">
             <div className="flex items-center gap-2">
                <Camera size={16} className="text-primary" />
-               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Галерея</h4>
+               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
@@ -214,7 +227,7 @@ function UserProfileContent() {
             onClick={handleLike}
             className="flex-1 h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all"
           >
-            Лайкнуть <Heart size={20} fill="currentColor" />
+            {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
           <Button 
             asChild

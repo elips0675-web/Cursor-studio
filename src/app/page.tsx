@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibility-insight";
+import { useLanguage } from "@/context/language-context";
 
 const ALL_DEMO_USERS = [
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Кофе'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
@@ -76,6 +77,7 @@ function HeartConfetti() {
 
 export default function Home() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isAutoSearching, setIsAutoSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -117,7 +119,7 @@ export default function Home() {
       });
       setCompatibility(res.explanation);
     } catch (e) {
-      setCompatibility("Вы отлично подходите друг другу! Общие интересы станут отличным началом разговора.");
+      setCompatibility(t('match.insight_default') || "Вы отлично подходите друг другу!");
     } finally {
       setLoadingAi(false);
     }
@@ -176,13 +178,12 @@ export default function Home() {
       <main className="flex-1 overflow-y-auto px-4 pt-6 pb-24 bg-[#f8f9fb]">
         <div className="text-center mb-6">
           <Badge variant="secondary" className="mb-2 bg-primary/10 text-primary border-0 gap-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest">
-            <Flame size={10} fill="currentColor" /> Популярное сейчас
+            <Flame size={10} fill="currentColor" /> {t('home.popular')}
           </Badge>
           <h2 className="text-xl font-black font-headline mb-1 leading-tight tracking-tight text-foreground">
-            Твой идеальный <br />
-            <span className="gradient-text">мэтч</span> ждет тебя
+            {t('home.headline')}
           </h2>
-          <p className="text-muted-foreground text-[10px] font-medium">Знакомься, общайся и находи любовь</p>
+          <p className="text-muted-foreground text-[10px] font-medium">{t('home.subheadline')}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-8">
@@ -191,14 +192,14 @@ export default function Home() {
             className="h-10 rounded-xl gradient-bg text-white font-black text-xs app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
           >
             <Link href="/search">
-              <Search size={14} className="stroke-[3px]" /> Свайпы
+              <Search size={14} className="stroke-[3px]" /> {t('nav.swipes')}
             </Link>
           </Button>
           <Button 
             onClick={() => setIsFilterDialogOpen(true)}
             className="h-10 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs app-shadow hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
           >
-            <Zap size={14} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> Автопоиск
+            <Zap size={14} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> {t('button.autosearch')}
           </Button>
         </div>
 
@@ -206,10 +207,10 @@ export default function Home() {
           <div className="flex justify-between items-center mb-3 px-1">
             <div className="flex items-center gap-1.5">
               <Trophy size={16} className="text-primary" />
-              <h5 className="font-black text-base font-headline tracking-tight">Топ недели</h5>
+              <h5 className="font-black text-base font-headline tracking-tight">{t('home.top_week')}</h5>
             </div>
             <Button asChild variant="ghost" className="text-primary font-bold uppercase tracking-widest text-[9px] h-auto p-0 hover:bg-transparent">
-               <Link href="/search">Все</Link>
+               <Link href="/search">{t('button.close')}</Link>
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -223,9 +224,9 @@ export default function Home() {
           <div className="flex justify-between items-end mb-3 px-1">
             <div className="flex items-center gap-1.5">
               <Sparkles size={16} className="text-primary" />
-              <h5 className="font-black text-base font-headline tracking-tight">Рекомендуем</h5>
+              <h5 className="font-black text-base font-headline tracking-tight">{t('home.recommend')}</h5>
             </div>
-            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">Рядом</Badge>
+            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">{t('home.nearby')}</Badge>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {ALL_DEMO_USERS.slice(6, 10).map((u) => (
@@ -238,7 +239,7 @@ export default function Home() {
           {isAutoSearching && (
             <div className="py-10 flex flex-col items-center justify-center space-y-3">
               <div className="w-10 h-10 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest animate-pulse">Ищем лучших для вас...</p>
+              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest animate-pulse">{t('home.searching')}</p>
             </div>
           )}
 
@@ -248,8 +249,8 @@ export default function Home() {
                 <div className="flex items-center gap-1.5">
                   <Zap size={16} className="text-primary fill-current" />
                   <div>
-                    <h5 className="font-black text-base font-headline tracking-tight">Результаты</h5>
-                    <p className="text-[8px] text-primary font-bold uppercase tracking-wider">Найдено: {searchResults.length}</p>
+                    <h5 className="font-black text-base font-headline tracking-tight">{t('home.results')}</h5>
+                    <p className="text-[8px] text-primary font-bold uppercase tracking-wider">{searchResults.length}</p>
                   </div>
                 </div>
                 <Button 
@@ -258,7 +259,7 @@ export default function Home() {
                   onClick={() => setShowResults(false)}
                   className="text-muted-foreground text-[8px] font-bold uppercase"
                 >
-                  Очистить
+                  {t('button.close')}
                 </Button>
               </div>
               
@@ -276,19 +277,19 @@ export default function Home() {
                       variant="outline"
                       className="w-full h-10 rounded-xl border-2 border-primary/20 text-primary font-black uppercase tracking-widest text-[9px] bg-white hover:bg-primary/5 transition-all shadow-sm flex items-center justify-center gap-2"
                     >
-                      Показать еще <ChevronDown size={12} />
+                      {t('button.load_more')} <ChevronDown size={12} />
                     </Button>
                   )}
                 </div>
               ) : (
                 <div className="bg-white rounded-[1.5rem] p-6 text-center app-shadow border border-dashed border-muted/50">
-                  <p className="text-[10px] text-muted-foreground font-medium mb-3 leading-tight">По вашим параметрам пока никого нет.</p>
+                  <p className="text-[10px] text-muted-foreground font-medium mb-3 leading-tight">{t('home.no_results')}</p>
                   <Button 
                     variant="outline" 
                     onClick={() => setIsFilterDialogOpen(true)}
                     className="rounded-full text-[8px] font-black uppercase tracking-widest h-8 px-4"
                   >
-                    Изменить фильтры
+                    {t('button.filters')}
                   </Button>
                 </div>
               )}
@@ -345,9 +346,9 @@ export default function Home() {
                </motion.div>
             </div>
 
-            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">Это совпадение!</DialogTitle>
+            <DialogTitle className="text-2xl font-black font-headline mb-2 gradient-text uppercase tracking-tight">{t('match.title')}</DialogTitle>
             <DialogDescription className="text-muted-foreground text-sm mb-6 px-4 leading-relaxed font-medium">
-              Вы с <span className="font-bold text-foreground">{matchUser?.name}</span> понравились друг другу. Не заставляйте ждать!
+              {t('match.desc')}
             </DialogDescription>
             
             <div className="bg-primary/5 p-5 rounded-[2rem] mb-8 text-left border border-primary/10 relative overflow-hidden group shadow-inner">
@@ -355,12 +356,12 @@ export default function Home() {
                 <Sparkles size={32} />
               </div>
               <h4 className="text-[10px] font-black text-primary mb-2 flex items-center gap-1 uppercase tracking-widest">
-                <Sparkles size={12} /> AI Инсайт
+                <Sparkles size={12} /> {t('match.insight')}
               </h4>
               {loadingAi ? (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
                   <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  Анализируем ваши общие интересы...
+                  ...
                 </div>
               ) : (
                 <p className="text-[11px] leading-relaxed text-foreground/80 italic font-medium relative z-10 pr-4">
@@ -371,10 +372,10 @@ export default function Home() {
 
             <div className="flex flex-col gap-3 w-full">
               <Button onClick={() => router.push(`/chats?matchId=${matchUser.id}`)} className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.15em] text-[11px]">
-                Написать первым
+                {t('button.write_first')}
               </Button>
               <Button variant="ghost" onClick={() => setMatchUser(null)} className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted shadow-sm uppercase tracking-[0.1em] text-[10px]">
-                Продолжить поиск
+                {t('button.continue')}
               </Button>
             </div>
           </div>
@@ -388,14 +389,14 @@ export default function Home() {
               <div className="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center text-white shadow-lg">
                 <Zap size={20} fill="currentColor" />
               </div>
-              <DialogTitle className="text-2xl font-black font-headline tracking-tight">Автопоиск</DialogTitle>
+              <DialogTitle className="text-2xl font-black font-headline tracking-tight">{t('button.autosearch')}</DialogTitle>
             </div>
-            <p className="text-xs text-muted-foreground font-medium">Настройте идеальный подбор</p>
+            <p className="text-xs text-muted-foreground font-medium">{t('button.filters')}</p>
           </DialogHeader>
 
           <div className="p-8 space-y-8 overflow-y-auto max-h-[60vh] no-scrollbar">
             <div className="space-y-4">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Интересы</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.interests')}</label>
               <div className="flex flex-wrap gap-2">
                 {INTEREST_OPTIONS.map(interest => (
                   <Badge 
@@ -417,7 +418,7 @@ export default function Home() {
 
             <div className="space-y-4">
               <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Возраст</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{t('edit.age')}</label>
                 <span className="text-xs font-black text-primary">{ageRange[0]} - {ageRange[1]}</span>
               </div>
               <Slider 
@@ -431,7 +432,7 @@ export default function Home() {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Город</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.city')}</label>
               <div className="grid grid-cols-2 gap-2">
                 {["Все", "Москва", "Питер", "Казань", "Сочи"].map(city => (
                   <button
@@ -459,7 +460,7 @@ export default function Home() {
               }}
               className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0"
             >
-              Запустить поиск
+              {t('button.autosearch')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -471,6 +472,7 @@ export default function Home() {
 }
 
 function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-square bg-muted block overflow-hidden cursor-pointer">
@@ -520,6 +522,7 @@ function FeaturedCard({ user, onLike }: { user: any; onLike: () => void }) {
 }
 
 function ProfilePreviewCard({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-[4/3] bg-muted block overflow-hidden cursor-pointer">
