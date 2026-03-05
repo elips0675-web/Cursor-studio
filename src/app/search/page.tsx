@@ -161,11 +161,12 @@ export default function SearchPage() {
                   if (info.offset.x > 100) handleSwipe('right');
                   else if (info.offset.x < -100) handleSwipe('left');
                 }}
+                onTap={() => router.push(`/user?id=${user.id}`)}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 whileDrag={{ scale: 1.05 }}
-                className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col border-4 border-white"
+                className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col border-4 border-white cursor-pointer"
               >
-                <div className="relative flex-1 pointer-events-none select-none">
+                <div className="relative flex-1 select-none">
                   <Image 
                     src={user.img} 
                     alt={user.name} 
@@ -353,7 +354,3 @@ export default function SearchPage() {
     </>
   );
 }
-
-    
-
-    
