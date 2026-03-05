@@ -104,170 +104,155 @@ export default function EditProfilePage() {
 
   return (
     <div className="flex flex-col min-h-svh bg-[#f8f9fb]">
-      <header className="flex items-center gap-3 px-4 py-4 border-b border-border sticky top-0 bg-white/95 backdrop-blur-md z-20">
-        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full hover:bg-muted">
-          <ChevronLeft size={24} />
+      <header className="flex items-center gap-3 px-4 py-3 border-b border-border sticky top-0 bg-white/95 backdrop-blur-md z-20">
+        <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full h-9 w-9">
+          <ChevronLeft size={20} />
         </Button>
-        <h1 className="text-xl font-black font-headline tracking-tight">Редактировать профиль</h1>
+        <h1 className="text-lg font-black font-headline tracking-tight">Изменить профиль</h1>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-5 space-y-8 pb-24">
+      <main className="flex-1 overflow-y-auto p-4 space-y-5 pb-24">
         {/* Photo Section */}
-        <div className="flex flex-col items-center gap-4 mt-2">
+        <div className="flex flex-col items-center gap-2">
           <div className="relative group">
-            <div className="w-32 h-32 rounded-[2.5rem] border-4 border-white overflow-hidden relative shadow-xl transform transition-transform group-hover:scale-[1.02]">
+            <div className="w-28 h-28 rounded-[2rem] border-4 border-white overflow-hidden relative shadow-lg transform transition-transform group-hover:scale-[1.02]">
               <Image src={PlaceHolderImages[0].imageUrl} alt="Profile" fill className="object-cover" />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-[2px]">
-                <Camera className="text-white" size={24} />
+                <Camera className="text-white" size={20} />
               </div>
             </div>
-            <button className="absolute bottom-0 right-0 bg-primary text-white p-2.5 rounded-2xl shadow-lg border-2 border-white active:scale-90 transition-transform">
-              <Camera size={16} />
+            <button className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-xl shadow-md border-2 border-white active:scale-90 transition-transform">
+              <Camera size={14} />
             </button>
           </div>
-          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.15em]">Главное фото</p>
+          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Главное фото</p>
         </div>
 
-        {/* Main Data Card with Shadow */}
-        <div className="bg-white rounded-[2.5rem] p-8 app-shadow space-y-8 border border-border/40">
+        {/* Main Data Card */}
+        <div className="bg-white rounded-[2rem] p-6 app-shadow space-y-5 border border-border/40">
           
-          {/* Section Heading */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-              <User size={16} />
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <User size={14} />
             </div>
-            <h3 className="font-black text-xs uppercase tracking-widest">Основная информация</h3>
+            <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Основные данные</h3>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Имя</Label>
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Имя</Label>
               <Input 
                 value={profile.name} 
                 onChange={e => setProfile({...profile, name: e.target.value})}
-                className="rounded-2xl bg-muted/30 border-0 h-14 focus-visible:ring-primary/20 font-bold px-5"
+                className="rounded-xl bg-muted/30 border-0 h-11 focus-visible:ring-primary/20 font-bold px-4"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Возраст</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Возраст</Label>
                 <Input 
                   type="number"
                   value={profile.age} 
                   onChange={e => setProfile({...profile, age: parseInt(e.target.value) || 0})}
-                  className="rounded-2xl bg-muted/30 border-0 h-14 focus-visible:ring-primary/20 font-bold px-5"
+                  className="rounded-xl bg-muted/30 border-0 h-11 focus-visible:ring-primary/20 font-bold px-4"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Рост (см)</Label>
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Рост</Label>
                 <Input 
                   type="number"
                   value={profile.height} 
                   onChange={e => setProfile({...profile, height: parseInt(e.target.value) || 0})}
-                  className="rounded-2xl bg-muted/30 border-0 h-14 focus-visible:ring-primary/20 font-bold px-5"
+                  className="rounded-xl bg-muted/30 border-0 h-11 focus-visible:ring-primary/20 font-bold px-4"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Город</Label>
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Город</Label>
               <div className="relative">
-                <MapPin size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-primary/60" />
+                <MapPin size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" />
                 <Input 
                   value={profile.city} 
                   onChange={e => setProfile({...profile, city: e.target.value})}
-                  className="rounded-2xl bg-muted/30 border-0 h-14 focus-visible:ring-primary/20 font-bold pl-12 pr-5"
+                  className="rounded-xl bg-muted/30 border-0 h-11 focus-visible:ring-primary/20 font-bold pl-10 pr-4"
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
+                <Select value={profile.zodiac} onValueChange={(val) => setProfile({...profile, zodiac: val})}>
+                  <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 focus:ring-primary/20 font-bold px-4">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {ZODIAC_SIGNS.map(sign => (
+                      <SelectItem key={sign} value={sign} className="font-bold text-xs">{sign}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Цель</Label>
+                <Select value={profile.datingGoal} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
+                  <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 focus:ring-primary/20 font-bold px-4">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {DATING_GOALS.map(goal => (
+                      <SelectItem key={goal} value={goal} className="font-bold text-xs">{goal}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
 
-          <div className="h-px bg-muted" />
-
-          {/* Dating Section */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
-              <Target size={16} />
-            </div>
-            <h3 className="font-black text-xs uppercase tracking-widest">Знакомства</h3>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Знак зодиака</Label>
-              <Select 
-                value={profile.zodiac} 
-                onValueChange={(val) => setProfile({...profile, zodiac: val})}
-              >
-                <SelectTrigger className="rounded-2xl bg-muted/30 border-0 h-14 focus:ring-primary/20 font-bold px-5">
-                  <SelectValue placeholder="Знак" />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl border-0 shadow-2xl max-h-[250px]">
-                  {ZODIAC_SIGNS.map(sign => (
-                    <SelectItem key={sign} value={sign} className="font-bold text-sm rounded-xl py-3 cursor-pointer">{sign}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Цель</Label>
-              <Select 
-                value={profile.datingGoal} 
-                onValueChange={(val) => setProfile({...profile, datingGoal: val})}
-              >
-                <SelectTrigger className="rounded-2xl bg-muted/30 border-0 h-14 focus:ring-primary/20 font-bold px-5">
-                  <SelectValue placeholder="Цель" />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl border-0 shadow-2xl max-h-[250px]">
-                  {DATING_GOALS.map(goal => (
-                    <SelectItem key={goal} value={goal} className="font-bold text-sm rounded-xl py-3 cursor-pointer">{goal}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="h-px bg-muted" />
+          <div className="h-px bg-muted/60" />
 
           {/* AI Bio Section */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center px-1">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                  <Info size={16} />
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Info size={14} />
                 </div>
-                <h3 className="font-black text-xs uppercase tracking-widest">О себе</h3>
+                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">О себе</h3>
               </div>
               <button 
                 onClick={handleGenerateBio}
                 disabled={isGeneratingBio}
-                className="text-[10px] font-black text-primary flex items-center gap-1.5 hover:underline disabled:opacity-50 uppercase tracking-tight bg-primary/5 px-3 py-1.5 rounded-full"
+                className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-tight bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors"
               >
-                <Sparkles size={12} className={isGeneratingBio ? "animate-spin" : ""} /> {isGeneratingBio ? "Улучшаем..." : "AI Улучшить"}
+                <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> AI Улучшить
               </button>
             </div>
             <Textarea 
               value={profile.bio} 
               onChange={e => setProfile({...profile, bio: e.target.value})}
-              placeholder="Расскажите о себе что-нибудь интересное..."
-              className="rounded-[1.75rem] bg-muted/30 border-0 min-h-[160px] text-sm resize-none focus-visible:ring-primary/20 leading-relaxed font-medium p-6"
+              placeholder="Расскажите о себе..."
+              className="rounded-2xl bg-muted/30 border-0 min-h-[100px] text-xs resize-none focus-visible:ring-primary/20 leading-relaxed font-medium p-4"
             />
           </div>
 
+          <div className="h-px bg-muted/60" />
+
           {/* Interests Section */}
-          <div className="space-y-4">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Интересы и стиль жизни</Label>
-            <div className="flex flex-wrap gap-2.5">
+          <div className="space-y-3">
+            <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
+            <div className="flex flex-wrap gap-2">
               {INTEREST_OPTIONS.map(interest => (
                 <Badge 
                   key={interest}
                   onClick={() => toggleInterest(interest)}
                   variant={profile.interests.includes(interest) ? "default" : "secondary"}
                   className={cn(
-                    "cursor-pointer px-4 py-2.5 rounded-xl transition-all border-0 font-bold text-[9px] uppercase tracking-tight shadow-sm",
+                    "cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight",
                     profile.interests.includes(interest) 
-                      ? "gradient-bg text-white shadow-md scale-105" 
+                      ? "gradient-bg text-white shadow-md" 
                       : "bg-muted text-muted-foreground hover:bg-border"
                   )}
                 >
@@ -280,8 +265,8 @@ export default function EditProfilePage() {
 
         {/* Action Button */}
         <div className="pt-2">
-          <Button onClick={handleSave} className="w-full h-16 rounded-[2rem] gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-[0.98] transition-all border-0 text-base">
-            Сохранить изменения
+          <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-[0.98] transition-all border-0">
+            Сохранить
           </Button>
         </div>
       </main>
