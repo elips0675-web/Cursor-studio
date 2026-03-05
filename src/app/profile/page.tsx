@@ -154,8 +154,8 @@ export default function ProfilePage() {
   return (
     <>
       <main className="flex-1 overflow-y-auto pb-24 bg-[#f8f9fb]">
-        {/* Profile Header Background */}
-        <div className="h-24 gradient-bg relative shadow-md">
+        {/* Profile Header Background - SMALLER */}
+        <div className="h-28 gradient-bg relative shadow-md">
           <div className="absolute top-4 left-6 text-white text-xl font-black uppercase tracking-tighter opacity-80">SwiftMatch</div>
           <Link 
             href="/settings"
@@ -204,7 +204,7 @@ export default function ProfilePage() {
           <div className="flex justify-center gap-3 mb-6">
             <Button 
               asChild
-              className="rounded-xl gradient-bg text-white h-12 px-6 font-black uppercase text-[10px] tracking-widest app-shadow active:scale-95 transition-all border-0 flex-1"
+              className="rounded-xl gradient-bg text-white h-12 px-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/30 active:scale-95 transition-all border-0"
             >
               <Link href="/profile/edit">
                 <Edit2 size={14} className="mr-2" /> Изменить
@@ -219,49 +219,49 @@ export default function ProfilePage() {
             </Button>
           </div>
 
-          {/* Stats Bar */}
-          <div className="bg-white rounded-[1.75rem] p-4 app-shadow border border-border/40 mb-6">
+          {/* Stats Bar - COMPACT */}
+          <div className="bg-white rounded-[1.75rem] p-3 app-shadow border border-border/40 mb-5">
             <div className="grid grid-cols-2">
               <div className="text-center">
-                <div className="text-xl font-black text-primary">128</div>
-                <div className="text-[9px] text-muted-foreground uppercase font-black tracking-[0.15em] mt-0.5">Лайков</div>
+                <div className="text-lg font-black text-primary leading-none">128</div>
+                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-[0.1em] mt-1">Лайков</div>
               </div>
               <div className="text-center border-l border-border/50">
-                <div className="text-xl font-black text-primary">45</div>
-                <div className="text-[9px] text-muted-foreground uppercase font-black tracking-[0.15em] mt-0.5">Мэтчей</div>
+                <div className="text-lg font-black text-primary leading-none">45</div>
+                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-[0.1em] mt-1">Мэтчей</div>
               </div>
             </div>
           </div>
 
-          {/* About Section */}
-          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles size={14} className="text-primary" />
-              <h4 className="font-black text-[9px] uppercase tracking-[0.15em] text-muted-foreground">О себе</h4>
+          {/* About Section - COMPACT */}
+          <div className="bg-white rounded-[1.75rem] p-5 app-shadow border border-border/40 mb-5 text-left">
+            <div className="flex items-center gap-2 mb-2.5">
+              <Sparkles size={12} className="text-primary" />
+              <h4 className="font-black text-[8px] uppercase tracking-[0.1em] text-muted-foreground">О себе</h4>
             </div>
-            <p className="text-xs text-foreground/80 leading-relaxed font-medium">
+            <p className="text-[11px] text-foreground/80 leading-snug font-medium">
               {profile.bio}
             </p>
           </div>
 
-          {/* Interests & Lifestyle Section */}
-          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left">
-            <div className="flex items-center gap-2 mb-4">
-              <Heart size={14} className="text-primary" />
-              <h4 className="font-black text-[9px] uppercase tracking-[0.15em] text-muted-foreground">Интересы и стиль жизни</h4>
+          {/* Interests & Lifestyle Section - COMPACT */}
+          <div className="bg-white rounded-[1.75rem] p-5 app-shadow border border-border/40 mb-5 text-left">
+            <div className="flex items-center gap-2 mb-3.5">
+              <Heart size={12} className="text-primary" />
+              <h4 className="font-black text-[8px] uppercase tracking-[0.1em] text-muted-foreground">Интересы и стиль жизни</h4>
             </div>
             
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg shadow-sm">
+            <div className="space-y-3.5">
+              <div className="flex flex-wrap gap-1.5">
+                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-1.5 px-3 font-bold text-[9px] rounded-lg shadow-sm">
                   <ZodiacIcon sign={profile.zodiac} /> {profile.zodiac}
                 </Badge>
                 {lifestyleDetails.map((detail) => {
                   const mapItem = interestMap.find(m => detail.includes(m.label));
                   const Icon = mapItem?.icon || Star;
                   return (
-                    <Badge key={detail} variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg shadow-sm">
-                      <Icon size={14} /> {detail}
+                    <Badge key={detail} variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-1.5 px-3 font-bold text-[9px] rounded-lg shadow-sm">
+                      <Icon size={12} /> {detail}
                     </Badge>
                   );
                 })}
@@ -269,13 +269,13 @@ export default function ProfilePage() {
 
               <div className="h-px bg-muted/50 w-full" />
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {generalInterests.map((interest) => {
                   const mapItem = interestMap.find(m => interest.includes(m.label));
                   const Icon = mapItem?.icon || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[10px] rounded-lg hover:bg-muted transition-colors shadow-sm">
-                      <Icon size={14} className="text-primary" /> {interest}
+                    <Badge key={interest} variant="secondary" className="bg-[#f5f7fa] text-foreground/80 border-0 gap-1.5 py-1.5 px-3 font-bold text-[9px] rounded-lg hover:bg-muted transition-colors shadow-sm">
+                      <Icon size={12} className="text-primary" /> {interest}
                     </Badge>
                   );
                 })}
@@ -330,7 +330,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Premium CTA - SLIGHTLY SMALLER PADDING */}
+          {/* Premium CTA */}
           <div className="gradient-bg rounded-[2.5rem] p-8 text-white text-center app-shadow mb-12 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
               <Star size={80} fill="currentColor" />
