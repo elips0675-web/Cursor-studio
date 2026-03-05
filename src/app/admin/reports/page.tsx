@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -58,6 +61,8 @@ const REPORTS_DATA = [
 
 
 export default function AdminReportsPage() {
+  const router = useRouter();
+
   return (
     <Card>
       <CardHeader>
@@ -112,7 +117,7 @@ export default function AdminReportsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                        <DropdownMenuItem>Просмотреть жалобу</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push(`/user?id=${report.reportedUser.id}`)}>Просмотреть профиль</DropdownMenuItem>
                         <DropdownMenuItem>Заблокировать</DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive">Удалить пользователя</DropdownMenuItem>
                       </DropdownMenuContent>
