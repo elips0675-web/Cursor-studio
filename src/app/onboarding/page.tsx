@@ -31,8 +31,7 @@ const INTEREST_OPTIONS = [
 
 const GENDER_OPTIONS = [
   { id: 'male', label: 'Мужчина' },
-  { id: 'female', label: 'Женщина' },
-  { id: 'other', label: 'Другое' }
+  { id: 'female', label: 'Женщина' }
 ];
 
 export default function OnboardingPage() {
@@ -268,7 +267,7 @@ export default function OnboardingPage() {
         ></div>
       </div>
 
-      <header className="p-6 flex items-center justify-between">
+      <header className="p-6 flex items-center justify-between h-20">
         <Button variant="ghost" size="icon" onClick={prevStep} disabled={step === 1} className="rounded-full">
           <ChevronLeft size={24} />
         </Button>
@@ -284,9 +283,8 @@ export default function OnboardingPage() {
           ))}
         </div>
         <Button 
-          variant="ghost" 
           onClick={skipStep}
-          className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+          className="rounded-2xl gradient-bg text-white h-10 px-6 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all border-0"
         >
           Пропустить
         </Button>
