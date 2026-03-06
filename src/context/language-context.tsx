@@ -44,7 +44,7 @@ const translations = {
     // Profile
     'profile.edit': 'Изменить',
     'profile.about': 'О себе',
-    'profile.lifestyle': 'Стиль жизни',
+    'profile.lifestyle': 'Данные',
     'profile.interests': 'Интересы',
     'profile.gallery': 'Галерея',
     'profile.add': 'Добавить',
@@ -258,7 +258,7 @@ const translations = {
     // Profile
     'profile.edit': 'Edit',
     'profile.about': 'About Me',
-    'profile.lifestyle': 'Lifestyle',
+    'profile.lifestyle': 'Data',
     'profile.interests': 'Interests',
     'profile.gallery': 'Gallery',
     'profile.add': 'Add',
