@@ -7,6 +7,7 @@ import { LanguageProvider } from '@/context/language-context';
 import { Poppins, Quicksand } from 'next/font/google';
 import { AppContainer } from '@/components/layout/app-container';
 import { FeatureFlagsProvider } from '@/context/feature-flags-context';
+import { CookieConsent } from '@/components/shared/cookie-consent';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -55,7 +56,6 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
-        {/* Preconnect для CDN ресурсов для ускорения загрузки фото */}
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="dns-prefetch" href="https://picsum.photos" />
         <link rel="preconnect" href="https://images.unsplash.com" />
@@ -66,6 +66,7 @@ export default function RootLayout({
             <FeatureFlagsProvider>
               <AppContainer>
                 {children}
+                <CookieConsent />
               </AppContainer>
               <Toaster />
             </FeatureFlagsProvider>

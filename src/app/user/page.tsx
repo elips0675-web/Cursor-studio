@@ -45,10 +45,7 @@ import {
   GraduationCap,
   User,
   Info,
-  Trophy,
-  Users,
-  Crown,
-  Compass
+  Trophy
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,7 +63,6 @@ import { useFeatureFlags } from "@/context/feature-flags-context";
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 import { ZodiacIcon } from "@/components/shared/zodiac-icon";
 
-// Динамические импорты для тяжелых UI
 const Carousel = dynamic(() => import("@/components/ui/carousel").then(mod => mod.Carousel));
 const CarouselContent = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselContent));
 const CarouselItem = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselItem));
@@ -89,45 +85,10 @@ const Textarea = dynamic(() => import("@/components/ui/textarea").then(mod => mo
 const HeartConfetti = dynamic(() => import("@/components/animations/heart-confetti").then(mod => mod.HeartConfetti), { ssr: false });
 
 const interestIcons: Record<string, any> = {
-    "Фотография": Camera,
-    "Путешествия": Globe,
-    "Кофе": Coffee,
-    "Музыка": Music,
-    "Спорт": Dumbbell,
-    "Искусство": Palette,
-    "Кино": Film,
-    "Йога": Flower2,
-    "Бизнес": Briefcase,
-    "Игры": Gamepad2,
-    "IT технологии": Cpu,
-    "Рыбалка": Anchor,
-    "Туризм": Map,
-    "Садоводство": Sprout,
-    "Чтение": BookOpen,
-    "Книги": BookOpen,
-    "Рукоделие": Scissors,
-    "Наука": FlaskConical,
-    "Авто": Car,
-    "Животные": Dog,
-    "Кулинария": ChefHat,
-    "Творчество": Brush,
-    "Природа": Sun,
-    "Собаки": Dog,
-    "Кошки": Dog,
-    "IT": Cpu,
-    "Дизайн": Palette,
-    "Горы": Mountain,
-    "Мода": Sparkles,
-    "Вино": Wine,
+    "Фотография": Camera, "Путешествия": Globe, "Кофе": Coffee, "Музыка": Music, "Спорт": Dumbbell, "Искусство": Palette, "Кино": Film, "Йога": Flower2, "Бизнес": Briefcase, "Игры": Gamepad2, "IT технологии": Cpu, "Рыбалка": Anchor, "Туризм": Map, "Садоводство": Sprout, "Чтение": BookOpen, "Книги": BookOpen, "Рукоделие": Scissors, "Наука": FlaskConical, "Авто": Car, "Животные": Dog, "Кулинария": ChefHat, "Творчество": Brush, "Природа": Sun, "Собаки": Dog, "Кошки": Dog, "IT": Cpu, "Дизайн": Palette, "Горы": Mountain, "Мода": Sparkles, "Вино": Wine,
 };
 
-const REPORT_REASONS = [
-    'report.reason.spam',
-    'report.reason.abuse',
-    'report.reason.fake',
-    'report.reason.scam',
-    'report.reason.content'
-];
+const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
 
 function UserProfileContent() {
   const searchParams = useSearchParams();
@@ -209,8 +170,6 @@ function UserProfileContent() {
     </div>
   );
 
-  const interestIconsMap: Record<string, any> = { ...interestIcons };
-
   return (
     <div className="flex flex-col min-h-svh bg-[#f8f9fb]">
       <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-50 p-4 flex items-center justify-between">
@@ -260,7 +219,6 @@ function UserProfileContent() {
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
-            {/* Achievements Section */}
             {earnedTitles.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4></div>
@@ -276,7 +234,6 @@ function UserProfileContent() {
 
             <div className="h-px bg-border/50"></div>
 
-            {/* О себе */}
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Info size={16} className="text-primary" />
@@ -289,16 +246,15 @@ function UserProfileContent() {
 
             <div className="h-px bg-border/50"></div>
 
-            {/* Данные */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                  <User size={16} className="text-primary" />
                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+                <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} className="col-span-2" />
                 <LifestyleItem label={t('profile.label.zodiac')} value={user.zodiac} icon={user.zodiac} />
                 <LifestyleItem label={t('profile.label.height')} value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} icon={Ruler} />
-                <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} className="col-span-2" />
                 <LifestyleItem label={t('profile.label.education')} value={language === 'RU' ? 'Высшее' : 'Higher'} icon={GraduationCap} />
                 <LifestyleItem label={t('profile.label.job')} value={language === 'RU' ? 'Дизайнер' : 'Designer'} icon={Briefcase} />
               </div>
@@ -306,7 +262,6 @@ function UserProfileContent() {
 
             <div className="h-px bg-border/50"></div>
 
-            {/* Интересы */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                  <Star size={16} className="text-primary" />
@@ -314,7 +269,7 @@ function UserProfileContent() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {user.interests.map((interest) => {
-                  const Icon = interestIconsMap[interest] || Heart;
+                  const Icon = interestIcons[interest] || Heart;
                   return (
                     <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70">
                       <Icon size={14} className="text-primary" /> {interest}

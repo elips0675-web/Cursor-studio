@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { 
-  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Dog, Ruler, Moon, Sun, Target, Sparkles, Heart, Upload, Info, User, GraduationCap, Bed, Trophy, Users, Crown, Compass
+  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Dog, Ruler, Moon, Sun, Target, Sparkles, Heart, Upload, Info, User, GraduationCap, Bed, Trophy, RotateCcw, Zap
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,7 +43,7 @@ export default function ProfilePage() {
     pets: "Есть собака",
     sleepSchedule: "Сова",
     datingGoal: t('profile.goal_value'),
-    match: 87, // High match for demo purposes
+    match: 87,
     zodiac: language === 'RU' ? "Лев" : "Leo",
     bio: language === 'RU' 
       ? "Люблю закаты, хороший кофе и интересные разговоры. Ищу человека, с которым можно разделить эти моменты."
@@ -60,9 +60,7 @@ export default function ProfilePage() {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
-  // Mock stats for achievements
   const stats = { likes: 124, matches: 15 };
-
   const earnedTitles = useMemo(() => getUserTitles(profile, language), [profile, language]);
 
   useEffect(() => {
@@ -110,6 +108,13 @@ export default function ProfilePage() {
     toast({ title: language === 'RU' ? "Фото удалено" : "Photo deleted" });
   };
 
+  const handleBoost = () => {
+    toast({
+      title: language === 'RU' ? "Буст активирован! 🔥" : "Boost activated! 🔥",
+      description: language === 'RU' ? "Ваш профиль увидят в 10 раз больше людей." : "10x more people will see your profile now.",
+    });
+  };
+
   const openPhotoViewer = (index: number) => { setActivePhotoIndex(index); setIsViewerOpen(true); };
 
   const interestIconsMap: Record<string, any> = {
@@ -147,20 +152,26 @@ export default function ProfilePage() {
               <p className="text-muted-foreground text-[10px] font-black flex items-center justify-center gap-1.5 uppercase tracking-widest opacity-80"><MapPin size={12} className="text-primary" /> {profile.city}</p>
             </div>
             
-            <div className="flex justify-center gap-8 mt-6">
-              <div className="text-center">
-                <p className="text-xl font-black tracking-tight">{stats.likes}</p>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.likes')}</p>
+            <div className="grid grid-cols-3 gap-2 mt-6 max-w-sm mx-auto">
+              <div className="bg-white rounded-2xl p-3 shadow-sm border border-border/40">
+                <p className="text-lg font-black tracking-tight">{stats.likes}</p>
+                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.likes')}</p>
               </div>
-              <div className="text-center">
-                <p className="text-xl font-black tracking-tight">{stats.matches}</p>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.matches')}</p>
+              <div className="bg-white rounded-2xl p-3 shadow-sm border border-border/40">
+                <p className="text-lg font-black tracking-tight">{stats.matches}</p>
+                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.matches')}</p>
               </div>
+              <button 
+                onClick={handleBoost}
+                className="gradient-bg rounded-2xl p-3 shadow-lg shadow-primary/20 text-white flex flex-col items-center justify-center group active:scale-95 transition-all"
+              >
+                <Zap size={18} className="animate-pulse" fill="currentColor" />
+                <p className="text-[8px] font-black uppercase tracking-widest mt-1">Boost</p>
+              </button>
             </div>
           </div>
           
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
-            {/* Achievements Section */}
             {earnedTitles.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Мое звание</h4></div>
@@ -186,9 +197,9 @@ export default function ProfilePage() {
             <div>
               <div className="flex items-center gap-2 mb-4"><User size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4></div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+                <LifestyleItem label={t('profile.label.goal')} value={profile.datingGoal} icon={Target} className="col-span-2" />
                 <LifestyleItem label={t('profile.label.zodiac')} value={profile.zodiac} icon={profile.zodiac} />
                 {profile.height && <LifestyleItem label={t('profile.label.height')} value={`${profile.height} см`} icon={Ruler} />}
-                <LifestyleItem label={t('profile.label.goal')} value={profile.datingGoal} icon={Target} className="col-span-2" />
                 {profile.education && <LifestyleItem label={t('profile.label.education')} value={profile.education} icon={GraduationCap} />}
                 {profile.work && <LifestyleItem label={t('profile.label.job')} value={profile.work} icon={Briefcase} />}
                 {profile.pets && <LifestyleItem label={t('profile.label.pets')} value={profile.pets} icon={Dog} />}
