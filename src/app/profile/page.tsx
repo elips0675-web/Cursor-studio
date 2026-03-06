@@ -165,7 +165,7 @@ export default function ProfilePage() {
         </div>
       </main>
       <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-        <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center [&>button]:hidden">
+        <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center">
           <DialogTitle className="sr-only">Viewer</DialogTitle>
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
@@ -180,6 +180,17 @@ export default function ProfilePage() {
             <CarouselPrevious className="left-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
             <CarouselNext className="right-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
           </Carousel>
+          
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={() => setIsViewerOpen(false)}
+              className="w-14 h-14 rounded-full bg-black/20 backdrop-blur-md border-white/20 text-white hover:bg-black/40 transition-all active:scale-90 shadow-2xl"
+            >
+              <X size={28} />
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
       <BottomNav />
