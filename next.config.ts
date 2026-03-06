@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 3600, // Кэширование оптимизированных фото на 1 час
     remotePatterns: [
       {
         protocol: 'https',
@@ -55,10 +55,12 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-separator',
       '@radix-ui/react-slider',
       '@radix-ui/react-switch',
-      '@radix-ui/react-tooltip'
+      '@radix-ui/react-tooltip',
+      'embla-carousel-react'
     ],
   },
   compiler: {
+    // Удаление консоли в продакшене для уменьшения веса бандла
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
   },
   reactStrictMode: true,

@@ -49,6 +49,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        {/* Preconnect для CDN ресурсов */}
+        <link rel="preconnect" href="https://picsum.photos" />
+        <link rel="dns-prefetch" href="https://picsum.photos" />
+      </head>
       <body className={`${quicksand.variable} ${poppins.variable} font-body antialiased selection:bg-primary/20`}>
         <LanguageProvider>
           <FirebaseClientProvider>
