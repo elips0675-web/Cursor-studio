@@ -111,7 +111,7 @@ const translations = {
     // Chats
     'chats.title': 'Сообщения',
     'chats.subtitle': 'Твои диалоги',
-    'chats.search': 'Поиск по чатам...',
+    'chats.search': 'Поиск по чатам и группам...',
     'chats.online': 'В сети',
     'chats.offline': 'Был(а) недавно',
     'chats.today': 'Сегодня',
@@ -119,6 +119,7 @@ const translations = {
     'chats.ai_themes': 'Темы ответов AI',
     'chats.close_themes': 'Закрыть темы',
     'chats.placeholder': 'Ваше сообщение...',
+    'chats.members': 'участников',
     // Home / Search
     'home.popular': 'Популярное сейчас',
     'home.headline': 'Твой идеальный мэтч ждет тебя',
@@ -405,7 +406,7 @@ const translations = {
     // Chats
     'chats.title': 'Messages',
     'chats.subtitle': 'Your dialogs',
-    'chats.search': 'Search chats...',
+    'chats.search': 'Search chats and groups...',
     'chats.online': 'Online',
     'chats.offline': 'Was recently',
     'chats.today': 'Today',
@@ -413,6 +414,7 @@ const translations = {
     'chats.ai_themes': 'AI Reply Themes',
     'chats.close_themes': 'Close themes',
     'chats.placeholder': 'Your message...',
+    'chats.members': 'members',
     // Home / Search
     'home.popular': 'Popular now',
     'home.headline': 'Your ideal match is waiting',

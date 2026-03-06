@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { 
-  Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, Flame, Star, Ghost, Rocket, Crown, Music, Phone, Video, Flag, Check, CheckCheck, Info
+  Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, Flame, Star, Ghost, Rocket, Crown, Music, Phone, Video, Flag, Check, CheckCheck, Info, Users
 } from "lucide-react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -89,14 +88,30 @@ function ChatsContent() {
   const [isVideoCall, setIsVideoCall] = useState(false);
   const [isVoiceCall, setIsVoiceCall] = useState(false);
 
-  // Optimized Search Logic
+  const allChats = useMemo(() => {
+    const userChats = ALL_DEMO_USERS.map(u => ({ ...u, type: 'user' as const, lastMessage: language === 'RU' ? 'Привет!' : 'Hi!', time: u.id % 2 === 0 ? "10:30" : (language === 'RU' ? 'Вчера' : 'Yesterday') }));
+
+    const groupChats = GROUP_CATEGORIES.flatMap(category => 
+      category.subgroups.map(subgroup => ({
+        ...subgroup,
+        id: subgroup.id,
+        img: category.img,
+        hint: category.hint,
+        type: 'group' as const,
+        lastMessage: `${subgroup.online} ${t('chats.online')}`,
+        time: `${subgroup.members} ${t('chats.members')}`
+      }))
+    );
+    return [...userChats, ...groupChats];
+  }, [language, t]);
+
   const filteredChats = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return ALL_DEMO_USERS;
-    return ALL_DEMO_USERS.filter(chat => 
+    if (!query) return allChats.filter(chat => chat.type === 'user');
+    return allChats.filter(chat => 
       chat.name.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [searchQuery, allChats]);
 
   const handleReportSubmit = () => {
     if (!reportReason) { toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') }); return; }
@@ -122,7 +137,7 @@ function ChatsContent() {
     if (matchId) {
       const id = parseInt(matchId);
       const chat = ALL_DEMO_USERS.find(u => u.id === id);
-      if (chat) { setSelectedChat(chat); setMessages([{ id: Date.now(), text: language === 'RU' ? "Привет! Это совпадение, рад(а) знакомству! 😊" : "Hi! It's a match, glad to meet you! 😊", sender: "me", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]); loadIcebreakers(chat); }
+      if (chat) { setSelectedChat({ ...chat, type: 'user' }); setMessages([{ id: Date.now(), text: language === 'RU' ? "Привет! Это совпадение, рад(а) знакомству! 😊" : "Hi! It's a match, glad to meet you! 😊", sender: "me", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]); loadIcebreakers(chat); }
     } else if (groupId) {
         const id = parseInt(groupId);
         let groupData: any = null;
@@ -139,7 +154,7 @@ function ChatsContent() {
         }
 
         if (groupData) {
-            const chatData = { ...groupData, online: groupData.online > 0 };
+            const chatData = { ...groupData, type: 'group' };
             setSelectedChat(chatData);
             setMessages(INITIAL_GROUP_MESSAGES);
             setIcebreakers([]);
@@ -163,7 +178,7 @@ function ChatsContent() {
     const newMessage = { id: Date.now(), text: textToSend, sender: "me", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
     setMessages([...messages, newMessage]); if (!textOverride) setInputValue(""); setShowThemeGrid(false);
     
-    if (groupId) {
+    if (selectedChat?.type === 'group') {
         // Simulate a reply from another group member
         setTimeout(() => {
             setIsTyping(true);
@@ -180,25 +195,37 @@ function ChatsContent() {
     }
   };
 
-  const openChat = (chat: any) => { setSelectedChat(chat); setMessages(INITIAL_MESSAGES); setShowThemeGrid(false); setIcebreakers([]); loadIcebreakers(chat); };
+  const openChat = (chat: any) => { 
+    setSelectedChat(chat);
+    if(chat.type === 'group') {
+      setMessages(INITIAL_GROUP_MESSAGES);
+      setShowThemeGrid(false);
+      setIcebreakers([]);
+    } else {
+      setMessages(INITIAL_MESSAGES);
+      setShowThemeGrid(false);
+      setIcebreakers([]);
+      loadIcebreakers(chat); 
+    }
+  };
 
   if (selectedChat) {
+    const isGroupChat = selectedChat.type === 'group';
     return (
       <div className="flex flex-col h-svh bg-[#f8f9fb]">
         <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50">
           <Button variant="ghost" size="icon" onClick={() => setSelectedChat(null)} className="rounded-full hover:bg-muted/50"><ChevronLeft size={24} /></Button>
-          <div className="relative"><div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm"><Image src={selectedChat.img} alt={selectedChat.name} fill sizes="40px" className="object-cover" /></div>{selectedChat.online && !groupId && <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2ecc71] border-2 border-white rounded-full shadow-sm"></span>}</div>
-          <div className="flex-1 min-w-0"><h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3><p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{groupId ? `${selectedChat.members} ${language === 'RU' ? 'участников' : 'members'}, ${selectedChat.online} ${t('chats.online')}` : (selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline'))}</p></div>
-          <div className="flex items-center">{!groupId && videoCallsEnabled && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVideoCall(true)}><Video size={18} /></Button>}{!groupId && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVoiceCall(true)}><Phone size={18} /></Button>}<DropdownMenu modal={false}><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50"><MoreVertical size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white"><DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"><Flag size={14} className="mr-2" />{t('button.report')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+          <div className="relative"><div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm"><Image src={selectedChat.img} alt={selectedChat.name} fill sizes="40px" className="object-cover" /></div>{selectedChat.online && !isGroupChat && <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2ecc71] border-2 border-white rounded-full shadow-sm"></span>}</div>
+          <div className="flex-1 min-w-0"><h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3><p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{isGroupChat ? `${selectedChat.members} ${t('chats.members')}, ${selectedChat.online} ${t('chats.online')}` : (selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline'))}</p></div>
+          <div className="flex items-center">{!isGroupChat && videoCallsEnabled && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVideoCall(true)}><Video size={18} /></Button>}{!isGroupChat && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVoiceCall(true)}><Phone size={18} /></Button>}<DropdownMenu modal={false}><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50"><MoreVertical size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white"><DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"><Flag size={14} className="mr-2" />{t('button.report')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 space-y-2"><div className="text-center my-2"><Badge variant="secondary" className="bg-white/50 text-[9px] text-muted-foreground border-0 font-black uppercase tracking-widest px-2.5 py-0.5">{t('chats.today')}</Badge></div><AnimatePresence>{messages.map((msg: any) => (<motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} key={msg.id} className={cn("flex flex-col max-w-[80%]", msg.sender === "me" ? "ml-auto items-end" : "items-start")}><div className={cn("px-3 py-2 rounded-lg text-sm shadow-sm font-medium leading-snug", msg.sender === "me" ? "gradient-bg text-white rounded-br-none shadow-primary/10" : "bg-white text-foreground rounded-bl-none border border-border/40")}>{groupId && msg.sender === 'other' && msg.senderName && (<p className="text-xs font-black text-primary/80 mb-1">{msg.senderName}</p>)}{msg.text}</div><span className="text-[9px] text-muted-foreground mt-1.5 px-1 font-bold uppercase tracking-tighter opacity-60">{msg.time}</span></motion.div>))}</AnimatePresence>{isTyping && (<motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-1.5 text-muted-foreground"><div className="flex gap-1 bg-white px-3 py-2.5 rounded-lg border border-border/40 shadow-sm rounded-bl-none"><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]"></span></div><span className="text-[9px] font-bold uppercase tracking-widest">{t('chats.typing')}</span></motion.div>)}<div ref={messagesEndRef} /></main>
+        <main className="flex-1 overflow-y-auto p-4 space-y-2"><div className="text-center my-2"><Badge variant="secondary" className="bg-white/50 text-[9px] text-muted-foreground border-0 font-black uppercase tracking-widest px-2.5 py-0.5">{t('chats.today')}</Badge></div><AnimatePresence>{messages.map((msg: any) => (<motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} key={msg.id} className={cn("flex flex-col max-w-[80%]", msg.sender === "me" ? "ml-auto items-end" : "items-start")}><div className={cn("px-3 py-2 rounded-lg text-sm shadow-sm font-medium leading-snug", msg.sender === "me" ? "gradient-bg text-white rounded-br-none shadow-primary/10" : "bg-white text-foreground rounded-bl-none border border-border/40")}>{isGroupChat && msg.sender === 'other' && msg.senderName && (<p className="text-xs font-black text-primary/80 mb-1">{msg.senderName}</p>)}{msg.text}</div><span className="text-[9px] text-muted-foreground mt-1.5 px-1 font-bold uppercase tracking-tighter opacity-60">{msg.time}</span></motion.div>))}</AnimatePresence>{isTyping && (<motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-1.5 text-muted-foreground"><div className="flex gap-1 bg-white px-3 py-2.5 rounded-lg border border-border/40 shadow-sm rounded-bl-none"><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]"></span></div><span className="text-[9px] font-bold uppercase tracking-widest">{t('chats.typing')}</span></motion.div>)}<div ref={messagesEndRef} /></main>
         <div className="p-4 bg-white border-t border-border shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] relative z-10">
-          {!groupId && aiIcebreakersEnabled && (<><div className="flex items-center justify-between mb-3 px-1"><button onClick={() => setShowThemeGrid(!showThemeGrid)} className={cn("flex items-center gap-2 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] transition-all", showThemeGrid ? "gradient-bg text-white shadow-lg shadow-primary/20" : "bg-primary/5 text-primary border border-primary/10")}> <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? t('chats.close_themes') : t('chats.ai_themes')} </button>{!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (<p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">{language === 'RU' ? 'Листайте →' : 'Swipe →'}</p>)}</div><AnimatePresence>{showThemeGrid && (<motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-3 gap-2.5 mb-5 overflow-hidden">{CHAT_THEMES.map((theme) => { const Icon = theme.icon; return (<button key={theme.id} onClick={() => loadIcebreakers(selectedChat, theme.mood)} className="flex flex-col items-center justify-center p-3.5 rounded-[1.5rem] bg-muted/40 border border-border/50 transition-all group active:scale-95"><Icon size={22} className={cn("mb-1.5 group-hover:scale-110", theme.color)} /><span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{language === 'RU' ? theme.label_ru : theme.label_en}</span></button>) })}</motion.div>)}</AnimatePresence>{!showThemeGrid && (<div className="flex gap-2.5 overflow-x-auto no-scrollbar mb-5 h-10 items-center px-1">{loadingIcebreakers ? (<div className="flex gap-2"><div className="h-8 w-32 bg-muted animate-pulse rounded-full"></div><div className="h-8 w-28 bg-muted animate-pulse rounded-full"></div></div>) : (icebreakers.map((text, i) => (<button key={i} onClick={() => setInputValue(text)} className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95">{text}</button>)))}</div>)}</>)}
+          {!isGroupChat && aiIcebreakersEnabled && (<><div className="flex items-center justify-between mb-3 px-1"><button onClick={() => setShowThemeGrid(!showThemeGrid)} className={cn("flex items-center gap-2 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] transition-all", showThemeGrid ? "gradient-bg text-white shadow-lg shadow-primary/20" : "bg-primary/5 text-primary border border-primary/10")}> <Sparkles size={14} className={cn(loadingIcebreakers && "animate-spin")} /> {showThemeGrid ? t('chats.close_themes') : t('chats.ai_themes')} </button>{!showThemeGrid && icebreakers.length > 0 && !loadingIcebreakers && (<p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40 italic">{language === 'RU' ? 'Листайте →' : 'Swipe →'}</p>)}</div><AnimatePresence>{showThemeGrid && (<motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="grid grid-cols-3 gap-2.5 mb-5 overflow-hidden">{CHAT_THEMES.map((theme) => { const Icon = theme.icon; return (<button key={theme.id} onClick={() => loadIcebreakers(selectedChat, theme.mood)} className="flex flex-col items-center justify-center p-3.5 rounded-[1.5rem] bg-muted/40 border border-border/50 transition-all group active:scale-95"><Icon size={22} className={cn("mb-1.5 group-hover:scale-110", theme.color)} /><span className="text-[9px] font-black uppercase tracking-tighter text-foreground/70">{language === 'RU' ? theme.label_ru : theme.label_en}</span></button>) })}</motion.div>)}</AnimatePresence>{!showThemeGrid && (<div className="flex gap-2.5 overflow-x-auto no-scrollbar mb-5 h-10 items-center px-1">{loadingIcebreakers ? (<div className="flex gap-2"><div className="h-8 w-32 bg-muted animate-pulse rounded-full"></div><div className="h-8 w-28 bg-muted animate-pulse rounded-full"></div></div>) : (icebreakers.map((text, i) => (<button key={i} onClick={() => setInputValue(text)} className="whitespace-nowrap px-4 py-2 bg-white hover:bg-muted transition-all text-[11px] font-bold rounded-full text-foreground/80 border border-border/60 shadow-sm active:scale-95">{text}</button>)))}</div>)}</>)}
           <div className="flex items-center gap-3"><div className="flex-1 relative group"><Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()} placeholder={t('chats.placeholder')} className="pr-12 h-11 bg-muted/50 border-0 rounded-2xl font-medium px-6 text-sm" /><Popover><PopoverTrigger asChild><button className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"><Smile size={20} /></button></PopoverTrigger><PopoverContent className="w-full max-w-[280px] p-2 rounded-2xl border-0 shadow-2xl bg-white" side="top" align="end"><div className="grid grid-cols-5 gap-1">{QUICK_REACTIONS.map(reaction => { const ReactionIcon = reaction.icon; return (<button key={reaction.id} onClick={() => handleSendMessage(reaction.label)} className="w-10 h-10 flex items-center justify-center hover:bg-muted rounded-xl transition-all active:scale-90"><ReactionIcon size={24} className={reaction.color} /></button>); })}</div></PopoverContent></Popover></div><Button size="icon" onClick={() => handleSendMessage()} disabled={!inputValue.trim()} className="h-11 w-11 rounded-2xl gradient-bg text-white shadow-xl shadow-primary/30 active:scale-95 transition-all"><Send size={18} className="ml-0.5" /></Button></div>
         </div>
-        <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}><DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow"><DialogHeader className="p-6 pb-4 text-left"><DialogTitle className="flex items-center gap-2 font-black tracking-tight"><Flag size={20} className="text-destructive" />{t('report.title')}</DialogTitle><DialogDescription className="pt-2">{t('report.description')}</DialogDescription></DialogHeader><div className="px-6 space-y-4"><RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">{REPORT_REASONS.map(reasonKey => (<div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg"><RadioGroupItem value={t(reasonKey)} id={`${reasonKey}_chat`} /><Label htmlFor={`${reasonKey}_chat`} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label></div>))}</RadioGroup><Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" /></div><DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl"><Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button><Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg shadow-destructive/20" onClick={handleReportSubmit}>{t('report.button.send')}</Button></DialogFooter></DialogContent></Dialog>
-        {selectedChat && !groupId && <VideoCallDialog open={isVideoCall} onOpenChange={setIsVideoCall} user={selectedChat} />}
-        {selectedChat && !groupId && <VoiceCallDialog open={isVoiceCall} onOpenChange={setIsVoiceCall} user={selectedChat} />}
+        {selectedChat && !isGroupChat && <VideoCallDialog open={isVideoCall} onOpenChange={setIsVideoCall} user={selectedChat} />}
+        {selectedChat && !isGroupChat && <VoiceCallDialog open={isVoiceCall} onOpenChange={setIsVoiceCall} user={selectedChat} />}
       </div>
     );
   }
@@ -225,13 +252,34 @@ function ChatsContent() {
         </div>
         <div className="space-y-1 px-1">
           {filteredChats.length > 0 ? (
-            filteredChats.map((chat, idx) => {
-              const hasUnread = chat.id % 3 === 0;
-              const messageTime = chat.id % 2 === 0 ? "10:30" : (language === 'RU' ? 'Вчера' : 'Yesterday');
-              const lastMsg = language === 'RU' ? 'Привет!' : 'Hi!';
+            filteredChats.map((chat) => {
+              if (chat.type === 'group') {
+                return (
+                  <div key={`group-${chat.id}`} onClick={() => openChat(chat)} className="flex items-center gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
+                    <div className="relative flex-shrink-0">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-transform group-hover:scale-105">
+                        <Image src={chat.img} alt={chat.name} fill sizes="48px" data-ai-hint={chat.hint || ''} className="object-cover" />
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg z-20 bg-blue-500">
+                          <Users size={10} className="text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-center mb-0.5">
+                        <span className="font-black text-sm text-foreground tracking-tight group-hover:text-primary transition-colors">{chat.name}</span>
+                        <span className="text-[10px] text-muted-foreground font-bold opacity-60">{chat.time}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                         <p className="text-xs truncate pr-2 font-medium text-muted-foreground opacity-80">{chat.lastMessage}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
               
+              const hasUnread = chat.id % 3 === 0;
               return (
-                <div key={chat.id} onClick={() => openChat(chat)} className="flex items-center gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
+                <div key={`user-${chat.id}`} onClick={() => openChat(chat)} className="flex items-center gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
                   <div className="relative flex-shrink-0">
                     <div className="w-12 h-12 rounded-xl overflow-hidden relative border-2 border-white shadow-sm transition-transform group-hover:scale-105">
                       <Image src={chat.img} alt={chat.name} fill sizes="48px" className="object-cover" />
@@ -241,11 +289,11 @@ function ChatsContent() {
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-0.5">
                       <span className="font-black text-sm text-foreground tracking-tight group-hover:text-primary transition-colors">{chat.name}</span>
-                      <span className="text-[10px] text-muted-foreground font-bold opacity-60">{messageTime}</span>
+                      <span className="text-[10px] text-muted-foreground font-bold opacity-60">{chat.time}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        {idx % 4 === 0 ? (
+                        {chat.id % 4 === 0 ? (
                           <CheckCheck size={12} className="text-primary flex-shrink-0" />
                         ) : (
                           <Check size={12} className="text-muted-foreground/40 flex-shrink-0" />
@@ -254,7 +302,7 @@ function ChatsContent() {
                           "text-xs truncate pr-2 font-medium leading-snug",
                           hasUnread ? "text-foreground font-bold" : "text-muted-foreground opacity-80"
                         )}>
-                          {lastMsg}
+                          {chat.lastMessage}
                         </p>
                       </div>
                       {hasUnread && (
