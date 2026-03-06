@@ -25,6 +25,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { toast } from "@/hooks/use-toast";
 import { VideoCallDialog } from "@/components/video-call";
+import { VoiceCallDialog } from "@/components/voice-call";
 import { useFeatureFlags } from "@/context/feature-flags-context";
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 
@@ -78,6 +79,7 @@ function ChatsContent() {
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
   const [isVideoCall, setIsVideoCall] = useState(false);
+  const [isVoiceCall, setIsVoiceCall] = useState(false);
 
   // Optimized Search Logic
   const filteredChats = useMemo(() => {
@@ -133,7 +135,7 @@ function ChatsContent() {
           <Button variant="ghost" size="icon" onClick={() => setSelectedChat(null)} className="rounded-full hover:bg-muted/50"><ChevronLeft size={24} /></Button>
           <div className="relative"><div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm"><Image src={selectedChat.img} alt={selectedChat.name} fill sizes="40px" className="object-cover" /></div>{selectedChat.online && <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2ecc71] border-2 border-white rounded-full shadow-sm"></span>}</div>
           <div className="flex-1 min-w-0"><h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3><p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline')}</p></div>
-          <div className="flex items-center">{videoCallsEnabled && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVideoCall(true)}><Video size={18} /></Button>}<Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => toast({ title: t('voice_calls.coming_soon.title'), description: t('voice_calls.coming_soon.description') })}><Phone size={18} /></Button><DropdownMenu modal={false}><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50"><MoreVertical size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white"><DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"><Flag size={14} className="mr-2" />{t('button.report')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+          <div className="flex items-center">{videoCallsEnabled && <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVideoCall(true)}><Video size={18} /></Button>}<Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50" onClick={() => setIsVoiceCall(true)}><Phone size={18} /></Button><DropdownMenu modal={false}><DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:bg-muted/50"><MoreVertical size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white"><DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10"><Flag size={14} className="mr-2" />{t('button.report')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
         </header>
         <main className="flex-1 overflow-y-auto p-4 space-y-2"><div className="text-center my-2"><Badge variant="secondary" className="bg-white/50 text-[9px] text-muted-foreground border-0 font-black uppercase tracking-widest px-2.5 py-0.5">{t('chats.today')}</Badge></div><AnimatePresence>{messages.map((msg) => (<motion.div initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} key={msg.id} className={cn("flex flex-col max-w-[80%]", msg.sender === "me" ? "ml-auto items-end" : "items-start")}><div className={cn("px-3 py-2 rounded-lg text-sm shadow-sm font-medium leading-snug", msg.sender === "me" ? "gradient-bg text-white rounded-br-none shadow-primary/10" : "bg-white text-foreground rounded-bl-none border border-border/40")}>{msg.text}</div><span className="text-[9px] text-muted-foreground mt-1.5 px-1 font-bold uppercase tracking-tighter opacity-60">{msg.time}</span></motion.div>))}</AnimatePresence>{isTyping && (<motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-1.5 text-muted-foreground"><div className="flex gap-1 bg-white px-3 py-2.5 rounded-lg border border-border/40 shadow-sm rounded-bl-none"><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]"></span><span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]"></span></div><span className="text-[9px] font-bold uppercase tracking-widest">{t('chats.typing')}</span></motion.div>)}<div ref={messagesEndRef} /></main>
         <div className="p-4 bg-white border-t border-border shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] relative z-10">
@@ -142,6 +144,7 @@ function ChatsContent() {
         </div>
         <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}><DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow"><DialogHeader className="p-6 pb-4 text-left"><DialogTitle className="flex items-center gap-2 font-black tracking-tight"><Flag size={20} className="text-destructive" />{t('report.title')}</DialogTitle><DialogDescription className="pt-2">{t('report.description')}</DialogDescription></DialogHeader><div className="px-6 space-y-4"><RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">{REPORT_REASONS.map(reasonKey => (<div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg"><RadioGroupItem value={t(reasonKey)} id={`${reasonKey}_chat`} /><Label htmlFor={`${reasonKey}_chat`} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label></div>))}</RadioGroup><Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" /></div><DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl"><Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button><Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg shadow-destructive/20" onClick={handleReportSubmit}>{t('report.button.send')}</Button></DialogFooter></DialogContent></Dialog>
         {selectedChat && <VideoCallDialog open={isVideoCall} onOpenChange={setIsVideoCall} user={selectedChat} />}
+        {selectedChat && <VoiceCallDialog open={isVoiceCall} onOpenChange={setIsVoiceCall} user={selectedChat} />}
       </div>
     );
   }
@@ -230,5 +233,3 @@ export default function ChatsPage() {
     <ChatsContent />
   );
 }
-
-    

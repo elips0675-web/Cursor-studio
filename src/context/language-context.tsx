@@ -300,8 +300,6 @@ const translations = {
     'incognito.banner.description': 'Ваши посещения профилей других пользователей не будут отображаться в их активности.',
     'incognito.toast.title': 'Режим Инкогнито',
     'incognito.toast.description': 'Ваш визит на эту страницу останется анонимным.',
-    'voice_calls.coming_soon.title': 'Голосовые звонки',
-    'voice_calls.coming_soon.description': 'Эта функция скоро появится!',
   },
   EN: {
     // Landing / SEO
@@ -588,8 +586,6 @@ const translations = {
     'incognito.banner.description': 'Your visits to other profiles will not be shown in their activity.',
     'incognito.toast.title': 'Incognito Mode',
     'incognito.toast.description': 'Your visit to this page will remain anonymous.',
-    'voice_calls.coming_soon.title': 'Voice Calls',
-    'voice_calls.coming_soon.description': 'This feature is coming soon!',
   }
 };
 
@@ -642,5 +638,3 @@ export const useLanguage = () => {
   if (!context) throw new Error('useLanguage must be used within LanguageProvider');
   return context;
 };
-
-    
