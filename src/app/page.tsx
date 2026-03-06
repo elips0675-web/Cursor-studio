@@ -322,7 +322,7 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-2 mb-8">
           <Button 
             asChild
-            className="h-10 rounded-xl gradient-bg text-white font-black text-xs app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
+            className="h-10 rounded-xl gradient-bg text-white font-black text-xs shadow-lg shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
           >
             <Link href="/search">
               <Search size={14} className="stroke-[3px]" /> {ALL_DEMO_USERS.length} {t('swipes.nearby')}
@@ -330,7 +330,7 @@ export default function Home() {
           </Button>
           <Button 
             onClick={() => setIsFilterDialogOpen(true)}
-            className="h-10 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs app-shadow hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
+            className="h-10 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs shadow-lg shadow-primary/10 hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
           >
             <Zap size={14} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> {t('button.autosearch')}
           </Button>
