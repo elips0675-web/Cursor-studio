@@ -43,6 +43,7 @@ import {
   Flag,
   Sun,
   GraduationCap,
+  User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -211,7 +212,7 @@ function UserProfileContent() {
                     <MoreVertical size={20} />
                   </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-2xl border-0 app-shadow p-1.5 min-w-[160px] bg-white">
+              <DropdownMenuContent align="end" className="rounded-2xl border-0 shadow-2xl p-1.5 min-w-[160px] bg-white">
                   <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10">
                     <Flag size={14} className="mr-2" />
                     {t('button.report')}
