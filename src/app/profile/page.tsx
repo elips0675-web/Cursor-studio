@@ -276,8 +276,8 @@ export default function ProfilePage() {
             <CarouselPrevious className="left-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
             <CarouselNext className="right-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
           </Carousel>
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50">
-            <Button variant="outline" size="icon" onClick={() => setIsViewerOpen(false)} className="w-14 h-14 rounded-full bg-black/20 backdrop-blur-md border-white/20 text-white hover:bg-black/40 transition-all active:scale-90 shadow-2xl"><X size={28} /></Button>
+          <div className="absolute top-6 right-6 z-50">
+            <Button variant="outline" size="icon" onClick={() => setIsViewerOpen(false)} className="w-10 h-10 rounded-full bg-black/20 backdrop-blur-md border-white/20 text-white hover:bg-black/40 transition-all active:scale-90 shadow-lg"><X size={20} /></Button>
           </div>
         </DialogContent>
       </Dialog>
