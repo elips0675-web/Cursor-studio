@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Heart, 
@@ -19,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ALL_DEMO_USERS } from "@/lib/demo-data";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,18 +28,39 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginMethod, setLoginMethod] = useState<"email" | "phone">("phone");
 
+  useEffect(() => {
+    if (localStorage.getItem('userProfile')) {
+      router.push('/');
+    }
+  }, [router]);
+
+  const simulateLogin = () => {
+    // Сохраняем профиль по умолчанию для имитации авторизации
+    const defaultUser = ALL_DEMO_USERS.find(u => u.name === "Анна") || ALL_DEMO_USERS[0];
+    localStorage.setItem('userProfile', JSON.stringify(defaultUser));
+    
+    const defaultGallery = [
+      defaultUser.img,
+      "https://picsum.photos/seed/person_anna_gallery1/600/800",
+      "https://picsum.photos/seed/person_anna_gallery2/600/800"
+    ];
+    localStorage.setItem('userProfileGallery', JSON.stringify(defaultGallery));
+
+    toast({
+      title: "С возвращением!",
+      description: "Вы успешно вошли в SwiftMatch.",
+    });
+    // После входа направляем на главную страницу
+    router.push("/");
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     // Имитация входа
     setTimeout(() => {
       setIsLoading(false);
-      toast({
-        title: "С возвращением!",
-        description: "Вы успешно вошли в SwiftMatch.",
-      });
-      // После входа направляем на онбординг для заполнения профиля
-      router.push("/onboarding");
+      simulateLogin();
     }, 1500);
   };
 
@@ -47,7 +68,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      router.push("/onboarding");
+      simulateLogin();
     }, 1000);
   };
 

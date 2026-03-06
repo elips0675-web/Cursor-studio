@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ArrowRight, 
@@ -52,6 +51,14 @@ export default function OnboardingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(1);
   const totalSteps = 5;
+
+  useEffect(() => {
+    const userProfile = localStorage.getItem('userProfile');
+    if (userProfile) {
+      // Если профиль уже есть, значит пользователь авторизован, перенаправляем на главную
+      router.push('/');
+    }
+  }, [router]);
 
   const [formData, setFormData] = useState({
     gender: "",
@@ -159,6 +166,10 @@ export default function OnboardingPage() {
   };
 
   const handleFinish = () => {
+    // Сохраняем созданный профиль для имитации сессии
+    localStorage.setItem('userProfile', JSON.stringify(formData));
+    localStorage.setItem('userProfileGallery', JSON.stringify([formData.photo]));
+
     toast({ title: t('onboarding.toast.finish_title'), description: t('onboarding.toast.finish_desc') });
     router.push("/");
   };
@@ -306,7 +317,9 @@ export default function OnboardingPage() {
               <div className="flex justify-between items-center">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step5.bio_label')}</Label>
                 <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-widest bg-primary/5 px-3 py-1.5 rounded-full hover:bg-primary/10 transition-colors shadow-sm">
-                  <Sparkles size={12} className={cn(isGeneratingBio && "animate-spin")} /> AI {t('button.save')}
+                  <p className="flex items-center gap-1.5">
+                    <Sparkles size={12} className={cn(isGeneratingBio && "animate-spin")} /> AI {t('button.save')}
+                  </p>
                 </button>
               </div>
               <Textarea value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder={t('onboarding.step5.bio_placeholder')} className="min-h-[120px] rounded-2xl bg-muted/30 border-0 text-sm font-medium p-4 resize-none focus-visible:ring-primary/10" />
