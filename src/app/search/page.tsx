@@ -70,7 +70,19 @@ export default function SearchPage() {
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
 
-  const filteredUsers = useMemo(() => ALL_DEMO_USERS, []);
+  // Gender-based filtering for Swipes
+  const filteredUsers = useMemo(() => {
+    // Simulating current user "Anna" (female)
+    const currentUser = ALL_DEMO_USERS.find(u => u.name === "Анна");
+    if (!currentUser) return ALL_DEMO_USERS;
+
+    // Opposite gender matching logic
+    const targetGender = currentUser.gender === 'female' ? 'male' : 'female';
+    
+    return ALL_DEMO_USERS.filter(user => 
+      user.gender === targetGender && user.id !== currentUser.id
+    );
+  }, []);
   
   const user = currentIndex < filteredUsers.length ? filteredUsers[currentIndex] : null;
 
@@ -175,7 +187,7 @@ export default function SearchPage() {
         
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
           {/* Navigation Arrows */}
-          <div className="absolute inset-y-0 left-[-15px] z-20 flex items-center">
+          <div className="absolute inset-y-0 -left-4 z-20 flex items-center">
             <Button 
               variant="ghost" 
               size="icon" 
@@ -186,7 +198,7 @@ export default function SearchPage() {
               <ChevronLeft size={24} />
             </Button>
           </div>
-          <div className="absolute inset-y-0 right-[-15px] z-20 flex items-center">
+          <div className="absolute inset-y-0 -right-4 z-20 flex items-center">
             <Button 
               variant="ghost" 
               size="icon" 
