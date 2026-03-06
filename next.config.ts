@@ -40,7 +40,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       'lucide-react', 
       'framer-motion', 
-      'date-fns', 
       '@radix-ui/react-icons',
       '@radix-ui/react-dialog',
       '@radix-ui/react-dropdown-menu',
