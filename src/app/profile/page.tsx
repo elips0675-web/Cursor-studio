@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { 
-  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Dog, Ruler, Moon, Sun, Target, Sparkles, Heart, Upload, Info, User, GraduationCap, Bed, Trophy, RotateCcw, Zap, Play, CreditCard, MoreVertical
+  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Dog, Ruler, Moon, Sun, Target, Sparkles, Heart, Upload, Info, User, GraduationCap, Bed, Trophy, RotateCcw, Zap, Play, CreditCard, MoreVertical, Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -67,9 +67,12 @@ export default function ProfilePage() {
     interests: language === 'RU' 
       ? ["Фотография", "Путешествия", "Кофе", "Музыка", "Спорт", "Искусство"]
       : ["Photography", "Travel", "Coffee", "Music", "Sports", "Art"],
+    joinedGroups: language === 'RU' 
+      ? ["Хип-хоп", "Бег", "UI/UX Дизайн"] 
+      : ["Hip-hop", "Running", "UI/UX Design"],
   };
 
-  const [profile, setProfile] = useState(defaultProfile);
+  const [profile, setProfile] = useState(defaultProfile as any);
   const [photos, setPhotos] = useState([
     PlaceHolderImages[0].imageUrl, PlaceHolderImages[2].imageUrl, PlaceHolderImages[4].imageUrl, PlaceHolderImages[6].imageUrl, PlaceHolderImages[8].imageUrl,
   ]);
@@ -254,7 +257,23 @@ export default function ProfilePage() {
             
             <div>
               <div className="flex items-center gap-2 mb-4"><Star size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4></div>
-              <div className="flex flex-wrap gap-2">{profile.interests.map((interest) => { const Icon = interestIconsMap[interest] || Heart; return <Badge key={interest} variant="secondary" className="bg-muted/40 text-foreground/80 border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg transition-all hover:scale-105"><Icon size={14} className="text-primary" /> {interest}</Badge>; })}</div>
+              <div className="flex flex-wrap gap-2">{profile.interests.map((interest: string) => { const Icon = interestIconsMap[interest] || Heart; return <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70"><Icon size={14} className="text-primary" /> {interest}</Badge>; })}</div>
+            </div>
+
+            <div className="h-px bg-border/50"></div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Users size={16} className="text-primary" />
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.groups')}</h4>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {profile.joinedGroups && (profile.joinedGroups as string[]).map((groupName: string) => (
+                  <Badge key={groupName} variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 border gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:scale-105 shadow-sm">
+                    <Users size={14} /> {groupName}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
 

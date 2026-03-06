@@ -70,6 +70,7 @@ const translations = {
     'profile.height': 'Рост',
     'profile.pro': 'PRO 💎',
     'profile.someone': 'Кто-то',
+    'profile.groups': 'Мои группы',
     // Lifestyle Labels
     'profile.label.zodiac': 'Зодиак',
     'profile.label.height': 'Рост',
@@ -367,6 +368,7 @@ const translations = {
     'profile.height': 'Height',
     'profile.pro': 'PRO 💎',
     'profile.someone': 'Someone',
+    'profile.groups': 'My Groups',
     // Lifestyle Labels
     'profile.label.zodiac': 'Zodiac',
     'profile.label.height': 'Height',
