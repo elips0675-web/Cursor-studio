@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -236,7 +237,7 @@ export default function OnboardingPage() {
                   <Target size={14} className="text-primary" /> {t('onboarding.step3.goal_label')}
                 </Label>
                 <Select value={formData.datingGoal} onValueChange={(val) => setFormData({...formData, datingGoal: val})}>
-                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6">
+                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6 focus:ring-primary/20">
                     <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-0 shadow-2xl">
@@ -249,7 +250,7 @@ export default function OnboardingPage() {
                   <Stars size={14} className="text-primary" /> {t('onboarding.step3.zodiac_label')}
                 </Label>
                 <Select value={formData.zodiac} onValueChange={(val) => setFormData({...formData, zodiac: val})}>
-                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6">
+                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6 focus:ring-primary/20">
                     <SelectValue placeholder={t('onboarding.step3.zodiac_placeholder')} />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-0 shadow-2xl">
@@ -352,13 +353,13 @@ export default function OnboardingPage() {
             <div key={i} className={cn("w-2 h-2 rounded-full transition-all", step === i + 1 ? "w-6 bg-primary" : "bg-muted")}></div>
           ))}
         </div>
-        <Button onClick={skipStep} className="rounded-2xl gradient-bg text-white h-10 px-6 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all border-0">
+        <Button onClick={skipStep} className="rounded-2xl gradient-bg text-white h-10 px-6 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0">
           {t('button.skip')}
         </Button>
       </header>
       <main className="flex-1 px-8 pt-4 pb-24 max-w-md mx-auto w-full">{renderStep()}</main>
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 bg-white/80 backdrop-blur-md">
-        <Button onClick={nextStep} disabled={!isStepValid()} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 active:scale-95 transition-all">
+        <Button onClick={nextStep} disabled={!isStepValid()} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all">
           {step === totalSteps ? t('button.start') : t('button.continue')} <ArrowRight size={20} className="ml-2" />
         </Button>
       </div>

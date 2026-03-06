@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -105,7 +106,7 @@ export default function LoginPage() {
                     placeholder="+7 (999) 000-00-00" 
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-medium"
+                    className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold"
                     required
                   />
                 </div>
@@ -120,7 +121,7 @@ export default function LoginPage() {
                       placeholder="Email" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-medium"
+                      className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold"
                       required
                     />
                   </div>
@@ -133,7 +134,7 @@ export default function LoginPage() {
                       placeholder="Пароль" 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-medium"
+                      className="h-14 pl-12 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold"
                       required
                     />
                   </div>
@@ -144,7 +145,7 @@ export default function LoginPage() {
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all active:scale-95"
+              className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-2xl shadow-primary/40 hover:scale-[1.02] transition-all active:scale-95 border-0"
             >
               {isLoading ? "Вход..." : "Продолжить"} <ArrowRight size={18} className="ml-2" />
             </Button>
@@ -162,7 +163,7 @@ export default function LoginPage() {
           <Button 
             variant="outline" 
             onClick={handleGoogleLogin}
-            className="w-full h-14 rounded-full border-2 border-muted hover:bg-muted/30 transition-all font-bold gap-3"
+            className="w-full h-14 rounded-full border-2 border-muted hover:bg-muted/30 transition-all font-bold gap-3 shadow-sm"
           >
             <Chrome size={20} className="text-[#4285F4]" />
             Войти через Google
@@ -177,15 +178,11 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-auto pt-12 flex flex-col items-center gap-4">
-          <Badge variant="secondary" className="bg-primary/5 text-primary border-0 px-4 py-2 rounded-xl flex gap-2">
+          <Badge variant="secondary" className="bg-primary/5 text-primary border-0 px-4 py-2 rounded-xl flex gap-2 shadow-sm">
             <Sparkles size={14} /> <span>100% Приватно</span>
           </Badge>
         </div>
       </main>
     </div>
   );
-}
-
-function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
 }
