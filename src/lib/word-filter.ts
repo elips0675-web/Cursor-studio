@@ -10,6 +10,9 @@ const FORBIDDEN_WORD_ROOTS = [
   // Hate speech (RU & EN)
   'нацист', 'расист', 'фашист',
   'nazi', 'racist', 'fascist',
+  // Violence & Extremism (RU & EN)
+  'уби', 'насил', 'террор', 'экстрем',
+  'kill', 'murder', 'violen', 'terror', 'extremis',
   // Spam / Links
   'http:', 'https:', 'www.', '.com', '.ru', '.net', '.org', 't.me', 'vk.com'
 ];
