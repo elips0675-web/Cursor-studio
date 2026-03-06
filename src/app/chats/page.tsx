@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect, Suspense, useMemo, useCallback } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { 
   Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, Flame, Star, Ghost, Rocket, Crown, Music, Phone, Video, Flag, Check, CheckCheck, Info
 } from "lucide-react";
@@ -225,24 +225,8 @@ function ChatsContent() {
   );
 }
 
-function LoadingSkeleton() {
-  return (
-    <div className="p-6 space-y-4">
-      <Skeleton className="h-12 w-full rounded-2xl" />
-      <Skeleton className="h-24 w-full rounded-2xl" />
-      <div className="space-y-2">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-2xl" />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function ChatsPage() {
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <ChatsContent />
-    </Suspense>
+    <ChatsContent />
   );
 }
