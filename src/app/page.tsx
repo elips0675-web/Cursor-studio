@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star, Navigation } from "lucide-react";
@@ -202,6 +203,15 @@ export default function Home() {
             setSelectedCity("Все");
         }
         setAgeRange([Math.max(18, currentUser.age - 5), currentUser.age + 5]);
+        
+        // Логика: Женщина ищет Мужчину, Мужчина ищет Женщину
+        if (currentUser.gender === 'female') {
+          setGenderPreference('male');
+        } else if (currentUser.gender === 'male') {
+          setGenderPreference('female');
+        } else {
+          setGenderPreference('all');
+        }
       }
     }
   }, [isFilterDialogOpen]);
@@ -262,11 +272,14 @@ export default function Home() {
     
     setTimeout(() => {
       const filtered = ALL_DEMO_USERS.filter(user => {
+        // Исключаем саму Анну (текущего пользователя)
+        if (user.name === "Анна") return false;
+
         const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
         const matchesInterests = selectedInterests.length === 0 || 
           user.interests.some(i => selectedInterests.includes(i));
         const matchesCity = selectedCity === "Все" || user.city === selectedCity;
-        const matchesGender = genderPref === "all" || user.gender === (genderPref === 'male' ? 'male' : 'female');
+        const matchesGender = genderPref === "all" || user.gender === genderPref;
         const matchesDistance = user.distance <= distance[0];
         
         return matchesAge && matchesInterests && matchesCity && matchesGender && matchesDistance;
