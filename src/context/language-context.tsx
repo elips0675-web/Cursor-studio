@@ -15,6 +15,13 @@ interface LanguageContextProps {
 
 const translations = {
   RU: {
+    // Landing / SEO
+    'landing.headline': 'Найди свою идеальную пару сегодня',
+    'landing.subheadline': 'SwiftMatch — умный способ познакомиться с интересными людьми рядом.',
+    'landing.stats.users': '1M+ Пользователей',
+    'landing.stats.matches': '500K Совпадений',
+    'landing.stats.countries': '50+ Стран',
+    
     // Bottom Nav
     'nav.home': 'Главная',
     'nav.swipes': 'Свайпы',
@@ -49,6 +56,7 @@ const translations = {
     'profile.add': 'Добавить',
     'profile.likes': 'Лайков',
     'profile.matches': 'Мэтчей',
+    'profile.age': 'Возраст',
     'profile.city': 'Москва',
     'profile.goal': 'Цель',
     'profile.goal_value': 'Серьезные отношения',
@@ -244,6 +252,13 @@ const translations = {
     'admin.no_reports': 'Жалоб пока нет',
   },
   EN: {
+    // Landing / SEO
+    'landing.headline': 'Find your perfect match today',
+    'landing.subheadline': 'SwiftMatch — a smart way to meet interesting people nearby.',
+    'landing.stats.users': '1M+ Users',
+    'landing.stats.matches': '500K Matches',
+    'landing.stats.countries': '50+ Countries',
+
     // Bottom Nav
     'nav.home': 'Home',
     'nav.swipes': 'Swipes',
@@ -278,6 +293,7 @@ const translations = {
     'profile.add': 'Add',
     'profile.likes': 'Likes',
     'profile.matches': 'Matches',
+    'profile.age': 'Age',
     'profile.city': 'Moscow',
     'profile.goal': 'Goal',
     'profile.goal_value': 'Serious relationship',

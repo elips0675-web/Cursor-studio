@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star, Navigation } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star, Navigation, Globe, Users } from "lucide-react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { toast } from "@/hooks/use-toast";
-import { cn, getUserTitles } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Slider } from "@/components/ui/slider";
@@ -308,128 +307,166 @@ export default function Home() {
   return (
     <>
       <AppHeader />
-      <main className="flex-1 overflow-y-auto px-4 pt-6 pb-24 bg-[#f8f9fb]">
-        <div className="text-center mb-6">
-          <Badge variant="secondary" className="mb-2 bg-primary/10 text-primary border-0 gap-1 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest">
-            <Flame size={10} fill="currentColor" /> {t('home.popular')}
-          </Badge>
-          <h2 className="text-xl font-black font-headline mb-1 leading-tight tracking-tight text-foreground">
-            {t('home.headline')}
-          </h2>
-          <p className="text-muted-foreground text-[10px] font-medium">{t('home.subheadline')}</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 mb-8">
-          <Button 
-            asChild
-            className="h-10 rounded-xl gradient-bg text-white font-black text-xs shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-tight"
+      <main className="flex-1 overflow-y-auto pb-24 bg-[#f8f9fb]">
+        {/* Hero Section / Landing */}
+        <section className="px-6 pt-12 pb-16 text-center relative overflow-hidden bg-white">
+          <div className="absolute top-[-10%] left-[-20%] w-[100%] h-[50%] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+          <div className="absolute bottom-[-10%] right-[-20%] w-[100%] h-[50%] bg-[#ff8e53]/5 rounded-full blur-[120px] -z-10"></div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <Link href="/search">
-              <Search size={14} className="stroke-[3px]" /> {ALL_DEMO_USERS.length} {t('swipes.nearby')}
-            </Link>
-          </Button>
-          <Button 
-            onClick={() => setIsFilterDialogOpen(true)}
-            className="h-10 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs shadow-lg shadow-primary/10 hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-tight"
-          >
-            <Zap size={14} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> {t('button.autosearch')}
-          </Button>
-        </div>
+            <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary border-0 gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
+              <Sparkles size={12} fill="currentColor" /> {t('home.popular')}
+            </Badge>
+            <h1 className="text-4xl font-black font-headline mb-4 leading-[1.1] tracking-tighter text-foreground max-w-[320px] mx-auto">
+              {t('landing.headline')}
+            </h1>
+            <p className="text-muted-foreground text-sm font-medium mb-10 max-w-[300px] mx-auto leading-relaxed">
+              {t('landing.subheadline')}
+            </p>
+          </motion.div>
 
-        <section className="mb-8">
-          <div className="flex justify-between items-center mb-3 px-1">
-            <div className="flex items-center gap-1.5">
-              <Trophy size={16} className="text-primary" />
-              <h5 className="font-black text-base font-headline tracking-tight">{t('home.top_week')}</h5>
-            </div>
-            <Button asChild variant="ghost" className="text-primary font-bold uppercase tracking-widest text-[9px] h-auto p-0 hover:bg-transparent">
-               <Link href="/search">{t('button.close')}</Link>
+          <div className="grid grid-cols-2 gap-3 max-w-[360px] mx-auto mb-12">
+            <Button 
+              asChild
+              className="h-14 rounded-2xl gradient-bg text-white font-black text-xs shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-widest"
+            >
+              <Link href="/search">
+                <Search size={16} className="stroke-[3px]" /> {ALL_DEMO_USERS.length} {t('swipes.nearby')}
+              </Link>
+            </Button>
+            <Button 
+              onClick={() => setIsFilterDialogOpen(true)}
+              className="h-14 rounded-2xl bg-white border-2 border-primary text-primary font-black text-xs shadow-xl shadow-primary/10 hover:scale-[1.02] hover:bg-primary/5 active:scale-95 transition-all uppercase tracking-widest"
+            >
+              <Zap size={16} fill={isAutoSearching ? "currentColor" : "none"} className={cn("", isAutoSearching && "animate-pulse")} /> {t('button.autosearch')}
             </Button>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            {topUsers.map((u, i) => (
-              <FeaturedCard key={u.id} user={u} language={language} onLike={() => handleLikeUser(u)} priority={i < 2} />
-            ))}
+
+          {/* Stats Bar */}
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-muted">
+            <div className="flex flex-col items-center">
+              <Users size={18} className="text-primary mb-1" />
+              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.users')}</span>
+            </div>
+            <div className="flex flex-col items-center border-x border-muted">
+              <Heart size={18} className="text-primary mb-1" fill="currentColor" />
+              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.matches')}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <Globe size={18} className="text-primary mb-1" />
+              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.countries')}</span>
+            </div>
           </div>
         </section>
 
-        <section className="scroll-mt-6 mb-8">
-          <div className="flex justify-between items-end mb-3 px-1">
-            <div className="flex items-center gap-1.5">
-              <Sparkles size={16} className="text-primary" />
-              <h5 className="font-black text-base font-headline tracking-tight">{t('home.recommend')}</h5>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {recommendedUsers.map((u) => (
-              <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
-            ))}
-          </div>
-        </section>
-
-        <div ref={resultsRef} className="scroll-mt-24">
-          {isAutoSearching && (
-            <div className="py-10 flex flex-col items-center justify-center space-y-3">
-              <div className="w-10 h-10 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-              <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest animate-pulse">{t('home.searching')}</p>
-            </div>
-          )}
-
-          {showResults && (
-            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10 px-1">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-1.5">
-                  <Zap size={16} className="text-primary fill-current" />
-                  <div>
-                    <h5 className="font-black text-base font-headline tracking-tight">{t('home.results')}</h5>
-                    <p className="text-[8px] text-primary font-bold uppercase tracking-wider">{searchResults.length}</p>
-                  </div>
+        {/* Dynamic Content */}
+        <div className="px-4 space-y-8 mt-8">
+          <section>
+            <div className="flex justify-between items-center mb-4 px-1">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-sm">
+                  <Trophy size={16} />
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setShowResults(false)}
-                  className="text-muted-foreground text-[8px] font-bold uppercase"
-                >
-                  {t('button.close')}
-                </Button>
+                <h2 className="font-black text-lg font-headline tracking-tight">{t('home.top_week')}</h2>
               </div>
-              
-              {searchResults.length > 0 ? (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    {paginatedResults.map((u) => (
-                      <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
-                    ))}
-                  </div>
-                  
-                  {hasMore && (
-                    <Button 
-                      onClick={handleLoadMore}
-                      variant="outline"
-                      className="w-full h-10 rounded-xl border-2 border-primary/20 text-primary font-black uppercase tracking-widest text-[9px] bg-white hover:bg-primary/5 transition-all shadow-sm flex items-center justify-center gap-2"
-                    >
-                      {t('button.load_more')} <ChevronDown size={12} />
-                    </Button>
-                  )}
+              <Button asChild variant="ghost" className="text-primary font-bold uppercase tracking-widest text-[9px] h-auto p-0 hover:bg-transparent">
+                 <Link href="/search">{t('button.close')}</Link>
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {topUsers.map((u, i) => (
+                <FeaturedCard key={u.id} user={u} language={language} onLike={() => handleLikeUser(u)} priority={i < 2} />
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <div className="flex justify-between items-end mb-4 px-1">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 shadow-sm">
+                  <Sparkles size={16} fill="currentColor" />
                 </div>
-              ) : (
-                <div className="bg-white rounded-[1.5rem] p-6 text-center app-shadow border border-dashed border-muted/50">
-                  <p className="text-[10px] text-muted-foreground font-medium mb-3 leading-tight">{t('home.no_results')}</p>
+                <h2 className="font-black text-lg font-headline tracking-tight">{t('home.recommend')}</h2>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {recommendedUsers.map((u) => (
+                <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
+              ))}
+            </div>
+          </section>
+
+          <div ref={resultsRef} className="scroll-mt-24">
+            {isAutoSearching && (
+              <div className="py-16 flex flex-col items-center justify-center space-y-4">
+                <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin shadow-lg"></div>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] animate-pulse">{t('home.searching')}</p>
+              </div>
+            )}
+
+            {showResults && (
+              <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
+                      <Zap size={16} fill="currentColor" />
+                    </div>
+                    <div>
+                      <h2 className="font-black text-lg font-headline tracking-tight">{t('home.results')}</h2>
+                      <p className="text-[9px] text-primary font-black uppercase tracking-widest">{searchResults.length} {language === 'RU' ? 'найдено' : 'found'}</p>
+                    </div>
+                  </div>
                   <Button 
-                    variant="outline" 
-                    onClick={() => setIsFilterDialogOpen(true)}
-                    className="rounded-full text-[8px] font-black uppercase tracking-widest h-8 px-4"
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setShowResults(false)}
+                    className="text-muted-foreground text-[10px] font-black uppercase tracking-widest"
                   >
-                    {t('button.filters')}
+                    {t('button.close')}
                   </Button>
                 </div>
-              )}
-            </section>
-          )}
+                
+                {searchResults.length > 0 ? (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      {paginatedResults.map((u) => (
+                        <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
+                      ))}
+                    </div>
+                    
+                    {hasMore && (
+                      <Button 
+                        onClick={handleLoadMore}
+                        variant="outline"
+                        className="w-full h-12 rounded-2xl border-2 border-primary/20 text-primary font-black uppercase tracking-[0.2em] text-[10px] bg-white hover:bg-primary/5 transition-all shadow-md flex items-center justify-center gap-2"
+                      >
+                        {t('button.load_more')} <ChevronDown size={14} strokeWidth={3} />
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-[2rem] p-10 text-center app-shadow border-2 border-dashed border-muted/50">
+                    <p className="text-xs text-muted-foreground font-bold mb-6 leading-relaxed">{t('home.no_results')}</p>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setIsFilterDialogOpen(true)}
+                      className="rounded-full text-[10px] font-black uppercase tracking-widest h-10 px-8 border-2"
+                    >
+                      {t('button.filters')}
+                    </Button>
+                  </div>
+                )}
+              </section>
+            )}
+          </div>
         </div>
       </main>
 
+      {/* Dialogs remain the same as they handle important UX flows */}
       <AnimatePresence>
         {matchUser && (
           <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
