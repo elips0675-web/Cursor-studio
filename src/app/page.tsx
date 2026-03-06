@@ -365,20 +365,46 @@ export default function Home() {
             </Button>
           </div>
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-muted">
-            <div className="flex flex-col items-center">
-              <Users size={18} className="text-primary mb-1" />
-              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.users')}</span>
-            </div>
-            <div className="flex flex-col items-center border-x border-muted">
-              <Heart size={18} className="text-primary mb-1" fill="currentColor" />
-              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.matches')}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Globe size={18} className="text-primary mb-1" />
-              <span className="text-[10px] font-black text-foreground uppercase tracking-tight">{t('landing.stats.countries')}</span>
-            </div>
+          {/* Stats Bar - Redesigned for more beauty */}
+          <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-col items-center p-3 rounded-2xl bg-muted/30 border border-border/50 shadow-sm"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <Users size={16} />
+              </div>
+              <span className="text-sm font-black gradient-text tracking-tighter">{t('landing.stats.users.num')}</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{t('landing.stats.users.label')}</span>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col items-center p-3 rounded-2xl bg-muted/30 border border-border/50 shadow-sm"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <Heart size={16} fill="currentColor" />
+              </div>
+              <span className="text-sm font-black gradient-text tracking-tighter">{t('landing.stats.matches.num')}</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{t('landing.stats.matches.label')}</span>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-col items-center p-3 rounded-2xl bg-muted/30 border border-border/50 shadow-sm"
+            >
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <Globe size={16} />
+              </div>
+              <span className="text-sm font-black gradient-text tracking-tighter">{t('landing.stats.countries.num')}</span>
+              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{t('landing.stats.countries.label')}</span>
+            </motion.div>
           </div>
         </section>
 

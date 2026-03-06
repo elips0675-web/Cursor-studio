@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -18,9 +19,12 @@ const translations = {
     // Landing / SEO
     'landing.headline': 'Найди свою идеальную пару сегодня',
     'landing.subheadline': 'SwiftMatch — умный способ познакомиться с интересными людьми рядом.',
-    'landing.stats.users': '1M+ Пользователей',
-    'landing.stats.matches': '500K Совпадений',
-    'landing.stats.countries': '50+ Стран',
+    'landing.stats.users.num': '1M+',
+    'landing.stats.users.label': 'Пользователей',
+    'landing.stats.matches.num': '500K',
+    'landing.stats.matches.label': 'Совпадений',
+    'landing.stats.countries.num': '50+',
+    'landing.stats.countries.label': 'Стран',
     
     // Bottom Nav
     'nav.home': 'Главная',
@@ -211,7 +215,7 @@ const translations = {
     'faq.q4.question': 'Как я могу пожаловаться на пользователя?',
     'faq.q4.answer': 'Вы можете пожаловаться на пользователя прямо из его профиля или из окна чата, нажав на меню с тремя точками и выбрав "Пожаловаться".',
     'faq.q5.question': 'Как работает "Автопоиск"?',
-    'faq.q5.answer': '"Автопоиск" использует ваши предпочтения (возраст, интересы), чтобы найти для вас наиболее подходящих людей. Вы можете настроить фильтры, чтобы уточнить поиск.',
+    'faq.q5.answer': '"Автопоиск" использует ваши предпочтения (возраст, интересы) чтобы найти для вас наиболее подходящих людей. Вы можете настроить фильтры, чтобы уточнить поиск.',
     'faq.q6.question': 'Почему тормозит приложение?',
     'faq.q6.answer': 'Это может быть связано с: \n1. Нестабильной связью с интернетом или большой нагрузкой на сеть (3G, 4G).\n2. Большим количеством открытых приложений или вкладок в браузере (рекомендуем закрыть лишние).\n3. Работой лишних приложений в автозапуске или фоновом режиме.',
     'faq.q7.question': 'Что означают звания в моем профиле?',
@@ -255,9 +259,12 @@ const translations = {
     // Landing / SEO
     'landing.headline': 'Find your perfect match today',
     'landing.subheadline': 'SwiftMatch — a smart way to meet interesting people nearby.',
-    'landing.stats.users': '1M+ Users',
-    'landing.stats.matches': '500K Matches',
-    'landing.stats.countries': '50+ Countries',
+    'landing.stats.users.num': '1M+',
+    'landing.stats.users.label': 'Users',
+    'landing.stats.matches.num': '500K',
+    'landing.stats.matches.label': 'Matches',
+    'landing.stats.countries.num': '50+',
+    'landing.stats.countries.label': 'Countries',
 
     // Bottom Nav
     'nav.home': 'Home',
