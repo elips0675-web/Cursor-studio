@@ -87,6 +87,8 @@ function ChatsContent() {
   const [reportDescription, setReportDescription] = useState('');
   const [isVideoCall, setIsVideoCall] = useState(false);
   const [isVoiceCall, setIsVoiceCall] = useState(false);
+  const [lastMessageTime, setLastMessageTime] = useState(0);
+  const COOLDOWN_SECONDS = 5;
 
   const allChats = useMemo(() => {
     const userChats = ALL_DEMO_USERS.map(u => ({ ...u, type: 'user' as const, lastMessage: language === 'RU' ? 'Привет!' : 'Hi!', time: u.id % 2 === 0 ? "10:30" : (language === 'RU' ? 'Вчера' : 'Yesterday') }));
@@ -166,6 +168,18 @@ function ChatsContent() {
     const textToSend = textOverride || inputValue;
     if (!textToSend.trim()) return;
 
+    if (selectedChat?.type === 'group') {
+        const now = Date.now();
+        if (now - lastMessageTime < COOLDOWN_SECONDS * 1000) {
+            toast({
+                variant: 'destructive',
+                title: t('cooldown.title'),
+                description: t('cooldown.description').replace('{seconds}', COOLDOWN_SECONDS.toString()),
+            });
+            return;
+        }
+    }
+
     if (containsForbiddenWords(textToSend)) {
       toast({
         variant: 'destructive',
@@ -179,6 +193,7 @@ function ChatsContent() {
     setMessages([...messages, newMessage]); if (!textOverride) setInputValue(""); setShowThemeGrid(false);
     
     if (selectedChat?.type === 'group') {
+        setLastMessageTime(Date.now());
         // Simulate a reply from another group member
         setTimeout(() => {
             setIsTyping(true);

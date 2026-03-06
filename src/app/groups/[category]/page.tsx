@@ -61,7 +61,7 @@ function SubGroupsContent() {
 
                 <div className="space-y-3">
                     {category.subgroups.map(subgroup => (
-                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex items-center justify-between gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
+                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex flex-col gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
                             <div className="flex items-center gap-4 min-w-0">
                                 <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 border-2 border-white shadow-sm">
                                     <Image src={category.img} alt={subgroup.name} fill sizes="56px" data-ai-hint={category.hint} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"/>
@@ -80,7 +80,7 @@ function SubGroupsContent() {
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="ghost" size="sm" className="rounded-full h-9 px-5 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform shrink-0">
+                            <Button variant="secondary" size="sm" className="w-full rounded-lg h-9 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform">
                                 <Plus size={14} className="mr-1.5" />
                                 {t('button.join') || 'Вступить'}
                             </Button>

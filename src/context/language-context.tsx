@@ -120,6 +120,8 @@ const translations = {
     'chats.close_themes': 'Закрыть темы',
     'chats.placeholder': 'Ваше сообщение...',
     'chats.members': 'участников',
+    'cooldown.title': 'Сообщение не отправлено',
+    'cooldown.description': 'Вы можете отправлять сообщения в группу раз в {seconds} секунд.',
     // Home / Search
     'home.popular': 'Популярное сейчас',
     'home.headline': 'Твой идеальный мэтч ждет тебя',
@@ -415,6 +417,8 @@ const translations = {
     'chats.close_themes': 'Close themes',
     'chats.placeholder': 'Your message...',
     'chats.members': 'members',
+    'cooldown.title': 'Message not sent',
+    'cooldown.description': 'You can send messages to the group once every {seconds} seconds.',
     // Home / Search
     'home.popular': 'Popular now',
     'home.headline': 'Your ideal match is waiting',
