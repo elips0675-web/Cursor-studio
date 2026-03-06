@@ -310,14 +310,8 @@ function UserProfileContent() {
       </main>
 
       <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-        <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center">
+        <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center [&>button]:hidden">
           <DialogTitle className="sr-only">Viewer</DialogTitle>
-          <button 
-            onClick={() => setIsViewerOpen(false)} 
-            className="absolute top-8 right-8 z-[100] p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors shadow-lg border border-white/20"
-          >
-            <X size={24} />
-          </button>
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
