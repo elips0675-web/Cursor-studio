@@ -187,7 +187,7 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
+          <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
             {earnedTitles.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Мое звание</h4></div>
@@ -229,7 +229,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 mb-12 text-left">
+          <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-12 text-left">
             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><Camera size={18} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4></div><input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" /></div>
             <div className="grid grid-cols-2 gap-3">{photos.map((url, idx) => (<div key={idx} onClick={() => openPhotoViewer(idx)} className="relative aspect-square rounded-xl overflow-hidden bg-muted group shadow-sm border border-border/10 cursor-pointer"><Image src={url} alt={`Photo ${idx}`} fill className="object-cover" /><div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><Maximize2 size={24} className="text-white/80 drop-shadow-md" /></div><button onClick={(e) => { e.stopPropagation(); handleDeletePhoto(idx); }} className="absolute top-2 right-2 p-2 bg-white/80 text-destructive rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive hover:text-white hover:scale-110 z-10 shadow-md backdrop-blur-sm"><Trash2 size={12} strokeWidth={2.5} /></button></div>))}{photos.length < 10 && (<div onClick={handleTriggerFileInput} className="relative aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/50 hover:border-primary/50 hover:text-primary cursor-pointer transition-colors group"><div className="p-4 bg-muted/60 rounded-full group-hover:bg-primary/10 transition-colors"><Upload size={24} /></div><span className="mt-3 text-[9px] font-black uppercase tracking-widest">{t('profile.add')}</span></div>)}</div>
           </div>
@@ -252,7 +252,13 @@ export default function ProfilePage() {
                   {isBoostLoading ? (<div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div><span className="text-[10px] font-black uppercase tracking-widest text-primary">{language === 'RU' ? 'Загрузка...' : 'Loading...'}</span></div>) : (<><div className="flex items-center gap-2 text-primary"><Play size={14} fill="currentColor" /><span className="text-[11px] font-black uppercase tracking-widest">{t('boost.free')}</span></div><span className="text-[8px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">{language === 'RU' ? '1 Буст за видео' : '1 Boost for 1 Video'}</span></>)}
                 </Button>
                 <div className="relative py-2"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-muted"></span></div><div className="relative flex justify-center text-[8px] uppercase font-black tracking-widest text-muted-foreground bg-white px-4">или</div></div>
-                <Button onClick={handleBoostPaid} className="w-full h-16 rounded-2xl gradient-bg text-white shadow-xl shadow-primary/20 flex flex-col items-center justify-center gap-1 active:scale-95 transition-all border-0"><div className="flex items-center gap-2"><CreditCard size={14} /><span className="text-[11px] font-black uppercase tracking-widest">{t('boost.paid')}</span></div><span className="text-[8px] text-white/80 font-bold uppercase tracking-tighter">{language === 'RU' ? 'Всего за 99 ₽' : 'Just $1.99'}</span></Button>
+                <Button onClick={handleBoostPaid} className="w-full h-16 rounded-2xl gradient-bg text-white shadow-xl shadow-primary/20 flex flex-col items-center justify-center gap-1 active:scale-95 transition-all border-0">
+                  <div className="flex items-center gap-2">
+                    <CreditCard size={16} />
+                    <span className="text-xs font-black uppercase tracking-widest">{t('boost.paid')}</span>
+                  </div>
+                  <span className="text-[10px] text-white/80 font-bold uppercase tracking-tighter">{language === 'RU' ? 'Всего за 99 ₽' : 'Just $1.99'}</span>
+                </Button>
               </div>
               <DialogFooter className="p-6 pt-0"><Button variant="ghost" onClick={() => setShowBoostDialog(false)} className="w-full text-muted-foreground text-[9px] font-black uppercase tracking-widest h-10">{t('button.not_now')}</Button></DialogFooter>
             </DialogContent>
