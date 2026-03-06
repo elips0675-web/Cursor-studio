@@ -298,11 +298,11 @@ function UserProfileContent() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 flex gap-4 bg-white/80 backdrop-blur-md z-40 safe-pb">
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 flex justify-center items-center gap-4 bg-white/80 backdrop-blur-md z-40 safe-pb">
           <Button onClick={() => router.back()} variant="outline" className="w-16 h-16 rounded-full border-2 border-muted hover:bg-muted text-muted-foreground flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
             <X size={28} />
           </Button>
-          <Button onClick={handleLike} className="flex-1 h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
+          <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
             {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
           <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 text-primary hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
@@ -451,3 +451,5 @@ export default function UserProfilePage() {
     </Suspense>
   );
 }
+
+    
