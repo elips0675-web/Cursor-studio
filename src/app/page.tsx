@@ -41,9 +41,6 @@ const HeartConfetti = dynamic(() => import("@/components/animations/heart-confet
 const ITEMS_PER_PAGE = 4;
 
 const FeaturedCard = memo(({ user, onLike, language, priority = false }: { user: any; onLike: () => void; language: 'RU' | 'EN'; priority?: boolean }) => {
-  const titles = getUserTitles(user, language);
-  const mainTitle = titles[0];
-
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-[4/3] bg-muted block overflow-hidden cursor-pointer">
@@ -56,15 +53,10 @@ const FeaturedCard = memo(({ user, onLike, language, priority = false }: { user:
           priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-1.5 right-1.5 flex flex-col items-end gap-1">
+        <div className="absolute top-1.5 right-1.5">
              <Badge className="bg-orange-500 text-white text-[8px] border-0 px-1.5 py-0.5 font-black uppercase shadow-lg">
                {user.match}%
              </Badge>
-             {mainTitle && (
-               <Badge className={cn("text-[7px] font-black uppercase border-0 px-1.5 py-0.5 shadow-md", mainTitle.color)}>
-                 {mainTitle.displayName}
-               </Badge>
-             )}
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
           <p className="text-white font-bold text-[11px] leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
@@ -101,9 +93,6 @@ const FeaturedCard = memo(({ user, onLike, language, priority = false }: { user:
 FeaturedCard.displayName = "FeaturedCard";
 
 const ProfilePreviewCard = memo(({ user, showActions = false, language, onLike }: { user: any; showActions?: boolean; language: 'RU' | 'EN'; onLike: () => void }) => {
-  const titles = getUserTitles(user, language);
-  const mainTitle = titles[0];
-
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-[16/10] bg-muted block overflow-hidden cursor-pointer">
@@ -118,13 +107,6 @@ const ProfilePreviewCard = memo(({ user, showActions = false, language, onLike }
         {user.online && (
           <div className="absolute top-1.5 left-1.5">
             <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
-          </div>
-        )}
-        {mainTitle && (
-          <div className="absolute top-1.5 right-1.5">
-            <Badge className={cn("text-[6px] font-black uppercase border-0 px-1 py-0.5", mainTitle.color)}>
-              {mainTitle.displayName}
-            </Badge>
           </div>
         )}
       </Link>
@@ -187,7 +169,7 @@ export default function Home() {
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  // Requirement for Top of Week: Highest match and titles
+  // Requirement for Top of Week: Highest match
   const topUsers = useMemo(() => {
     return [...ALL_DEMO_USERS]
       .sort((a, b) => b.match - a.match)
