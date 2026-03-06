@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Table,
@@ -33,7 +33,7 @@ import {
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { toast } from "@/hooks/use-toast";
 
-const ADMIN_USERS_DATA = [
+const INITIAL_USERS = [
     { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, email: 'anna@example.com', online: true, city: 'Москва', joined: '2024-05-01' },
     { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, email: 'maxim@example.com', online: true, city: 'Питер', joined: '2024-05-02' },
     { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, email: 'elena@example.com', online: false, city: 'Москва', joined: '2024-04-28' },
@@ -45,10 +45,10 @@ const ADMIN_USERS_DATA = [
 
 export default function AdminUsersPage() {
   const router = useRouter();
-  const [users, setUsers] = useState(ADMIN_USERS_DATA);
+  const [users, setUsers] = useState(INITIAL_USERS);
 
   const handleDeleteUser = (userId: number, userName: string) => {
-    setUsers(users.filter(user => user.id !== userId));
+    setUsers(prev => prev.filter(user => user.id !== userId));
     toast({
       variant: "destructive",
       title: "Пользователь удален",
@@ -56,59 +56,59 @@ export default function AdminUsersPage() {
     });
   };
 
+  const usersList = useMemo(() => users, [users]);
+
   return (
-    <Card>
+    <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle>Users</CardTitle>
+        <CardTitle className="text-xl font-black">Users</CardTitle>
         <CardDescription>Manage all users in the system.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0 sm:p-6">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
+              <TableHead className="hidden w-[80px] sm:table-cell">Image</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="hidden md:table-cell">City</TableHead>
               <TableHead className="hidden md:table-cell">Joined</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map(user => (
-              <TableRow key={user.id}>
+            {usersList.map(user => (
+              <TableRow key={user.id} className="group transition-colors">
                 <TableCell className="hidden sm:table-cell">
-                  <Image
-                    alt="User avatar"
-                    className="aspect-square rounded-md object-cover"
-                    height="64"
-                    src={user.img}
-                    width="64"
-                  />
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-border">
+                    <Image
+                      alt={user.name}
+                      src={user.img}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
                 </TableCell>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell className="hidden md:table-cell">{user.email}</TableCell>
+                <TableCell className="font-bold">{user.name}</TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground text-xs">{user.email}</TableCell>
                 <TableCell>
-                  <Badge variant={user.online ? "default" : "outline"} className={user.online ? "bg-green-500 hover:bg-green-600 text-white border-transparent" : ""}>
+                  <Badge variant={user.online ? "default" : "outline"} className={user.online ? "bg-green-500 hover:bg-green-600 text-white border-transparent text-[10px]" : "text-[10px]"}>
                     {user.online ? "Online" : "Offline"}
                   </Badge>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{user.city}</TableCell>
-                <TableCell className="hidden md:table-cell">{user.joined}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
+                <TableCell className="hidden md:table-cell text-xs">{user.city}</TableCell>
+                <TableCell className="hidden md:table-cell text-xs opacity-60">{user.joined}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
-                      <Button aria-haspopup="true" size="icon" variant="ghost">
+                      <Button aria-haspopup="true" size="icon" variant="ghost" className="h-8 w-8">
                         <MoreHorizontal className="h-4 w-4" />
                         <span className="sr-only">Toggle menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="rounded-xl">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem onClick={() => router.push(`/user?id=${user.id}`)}>View Profile</DropdownMenuItem>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -121,9 +121,9 @@ export default function AdminUsersPage() {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
-        <div className="text-xs text-muted-foreground">
-          Showing <strong>1-{users.length}</strong> of <strong>{users.length}</strong> users
+      <CardFooter className="bg-muted/5 border-t">
+        <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground py-2">
+          Total: <strong>{usersList.length}</strong> users
         </div>
       </CardFooter>
     </Card>

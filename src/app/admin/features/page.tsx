@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { doc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -11,7 +12,7 @@ import { FeatureFlags } from '@/context/feature-flags-context';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, Save, RotateCcw } from 'lucide-react';
 
-const featureMetadata: { key: keyof FeatureFlags; label: string; description: string }[] = [
+const FEATURE_METADATA: { key: keyof FeatureFlags; label: string; description: string }[] = [
   {
     key: 'videoCallsEnabled',
     label: 'Видеозвонки',
@@ -75,9 +76,9 @@ export default function FeatureFlagsPage() {
     return () => unsubscribe();
   }, [featureFlagsRef]);
 
-  const handleFlagToggle = (key: keyof FeatureFlags, value: boolean) => {
+  const handleFlagToggle = useCallback((key: keyof FeatureFlags, value: boolean) => {
     setPendingFlags(prev => ({ ...prev, [key]: value }));
-  };
+  }, []);
 
   const handleReset = () => {
     setPendingFlags(flags);
@@ -116,17 +117,17 @@ export default function FeatureFlagsPage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle>Управление функциями</CardTitle>
-          <CardDescription>Включайте или отключайте функции приложения. Нажмите «Сохранить», чтобы применить изменения.</CardDescription>
+          <CardTitle className="text-xl font-black uppercase tracking-tight">Управление функциями</CardTitle>
+          <CardDescription>Включайте или отключайте функции приложения в реальном времени.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {featureMetadata.map(({ key, label, description }) => (
-            <div key={key} className="flex items-center justify-between space-x-4 p-4 rounded-lg border bg-background hover:bg-muted/10 transition-colors">
+        <CardContent className="space-y-4">
+          {FEATURE_METADATA.map(({ key, label, description }) => (
+            <div key={key} className="flex items-center justify-between space-x-4 p-4 rounded-2xl border bg-background hover:bg-muted/5 transition-colors">
               <div className="space-y-0.5">
-                <Label htmlFor={key} className="text-base font-medium cursor-pointer">{label}</Label>
-                <p className="text-sm text-muted-foreground">{description}</p>
+                <Label htmlFor={key} className="text-sm font-bold cursor-pointer">{label}</Label>
+                <p className="text-xs text-muted-foreground">{description}</p>
               </div>
               <Switch
                 id={key}
@@ -141,24 +142,24 @@ export default function FeatureFlagsPage() {
             variant="ghost" 
             onClick={handleReset} 
             disabled={!hasChanges || isSaving}
-            size="sm"
+            className="rounded-full text-[10px] font-black uppercase tracking-widest h-10 px-6"
           >
-            <RotateCcw className="mr-2 h-4 w-4" />
+            <RotateCcw className="mr-2 h-3 w-3" />
             Сбросить
           </Button>
           <Button 
             onClick={handleSave} 
             disabled={!hasChanges || isSaving}
-            className="min-w-[140px]"
+            className="min-w-[140px] rounded-full gradient-bg text-white font-black uppercase tracking-widest h-10 px-8 shadow-lg shadow-primary/20 border-0"
           >
             {isSaving ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
                 Сохранение...
               </>
             ) : (
               <>
-                <Save className="mr-2 h-4 w-4" />
+                <Save className="mr-2 h-3 w-3" />
                 Сохранить
               </>
             )}
@@ -167,8 +168,8 @@ export default function FeatureFlagsPage() {
       </Card>
 
       {hasChanges && (
-        <div className="bg-primary/10 border border-primary/20 p-4 rounded-lg flex items-center justify-between animate-in fade-in slide-in-from-top-2">
-          <p className="text-sm font-medium text-primary-foreground bg-primary px-3 py-1 rounded-full">У вас есть несохраненные изменения</p>
+        <div className="bg-primary/10 border border-primary/20 p-4 rounded-2xl flex items-center justify-center animate-in fade-in slide-in-from-top-2">
+          <p className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">У вас есть несохраненные изменения</p>
         </div>
       )}
     </div>

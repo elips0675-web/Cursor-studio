@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -33,7 +33,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 
-const REPORTS_DATA = [
+const INITIAL_REPORTS = [
     {
         id: 1,
         reporter: { name: 'Елена', id: 3 },
@@ -66,21 +66,23 @@ const REPORTS_DATA = [
 
 export default function AdminReportsPage() {
   const router = useRouter();
-  const [reports, setReports] = useState(REPORTS_DATA);
+  const [reports, setReports] = useState(INITIAL_REPORTS);
 
   const handleUpdateReport = (reportId: number, toastMessage: { title: string; description: string }) => {
-    setReports(reports.map(r => r.id === reportId ? { ...r, status: 'resolved' } : r));
+    setReports(prev => prev.map(r => r.id === reportId ? { ...r, status: 'resolved' } : r));
     toast(toastMessage);
   };
 
+  const reportsList = useMemo(() => reports, [reports]);
+
   return (
-    <Card>
+    <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle>Жалобы</CardTitle>
+        <CardTitle className="text-xl font-black">Жалобы</CardTitle>
         <CardDescription>Просмотр и управление жалобами от пользователей.</CardDescription>
       </CardHeader>
-      <CardContent>
-        {reports.length > 0 ? (
+      <CardContent className="p-0 sm:p-6">
+        {reportsList.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
@@ -89,43 +91,43 @@ export default function AdminReportsPage() {
                 <TableHead>Причина</TableHead>
                 <TableHead className="hidden md:table-cell">Дата</TableHead>
                 <TableHead>Статус</TableHead>
-                <TableHead>
-                  <span className="sr-only">Действия</span>
-                </TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {reports.map((report) => (
-                <TableRow key={report.id}>
+              {reportsList.map((report) => (
+                <TableRow key={report.id} className="group">
                   <TableCell>
                     <div className="flex items-center gap-3">
-                        <Image
-                            alt="User avatar"
-                            className="aspect-square rounded-full object-cover"
-                            height="32"
-                            src={report.reportedUser.img}
-                            width="32"
-                        />
-                        <span className="font-medium">{report.reportedUser.name}</span>
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border">
+                          <Image
+                              alt={report.reportedUser.name}
+                              fill
+                              sizes="32px"
+                              src={report.reportedUser.img}
+                              className="object-cover"
+                          />
+                        </div>
+                        <span className="font-bold text-sm">{report.reportedUser.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">{report.reporter.name}</TableCell>
-                  <TableCell>{report.reason}</TableCell>
-                  <TableCell className="hidden md:table-cell">{report.date}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-sm">{report.reporter.name}</TableCell>
+                  <TableCell className="text-xs font-medium">{report.reason}</TableCell>
+                  <TableCell className="hidden md:table-cell text-xs opacity-60">{report.date}</TableCell>
                   <TableCell>
-                    <Badge variant={report.status === 'new' ? 'destructive' : 'outline'} className={report.status !== 'new' ? "bg-green-100 text-green-800 border-green-200" : ""}>
+                    <Badge variant={report.status === 'new' ? 'destructive' : 'outline'} className={report.status !== 'new' ? "bg-green-100 text-green-800 border-green-200 text-[9px]" : "text-[9px]"}>
                       {report.status === 'new' ? 'Новая' : 'Решена'}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
+                  <TableCell className="text-right">
+                    <DropdownMenu modal={false}>
                       <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <Button aria-haspopup="true" size="icon" variant="ghost" className="h-8 w-8">
                           <MoreHorizontal className="h-4 w-4" />
                           <span className="sr-only">Toggle menu</span>
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="rounded-xl">
                         <DropdownMenuLabel>Действия</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => router.push(`/user?id=${report.reportedUser.id}`)}>Просмотреть профиль</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Отчет решен', description: 'Статус отчета был изменен.' })}>Отметить как решенный</DropdownMenuItem>
@@ -140,9 +142,9 @@ export default function AdminReportsPage() {
             </TableBody>
           </Table>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-4 text-center h-64 border-2 border-dashed border-muted rounded-lg">
-            <Flag className="w-12 h-12 text-muted-foreground" />
-            <p className="text-muted-foreground">На данный момент активных жалоб нет.</p>
+          <div className="flex flex-col items-center justify-center gap-4 text-center h-64 border-2 border-dashed border-muted rounded-2xl mx-6 mb-6">
+            <Flag className="w-12 h-12 text-muted-foreground opacity-20" />
+            <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">Жалоб пока нет</p>
           </div>
         )}
       </CardContent>
