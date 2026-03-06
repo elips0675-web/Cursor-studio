@@ -246,21 +246,44 @@ export default function Home() {
     setVisibleResultsCount(ITEMS_PER_PAGE);
     
     setTimeout(() => {
-      const filtered = ALL_DEMO_USERS.filter(user => {
-        if (user.id === (currentUser?.id || 1)) return false;
+      const processedUsers = ALL_DEMO_USERS
+        .filter(user => {
+          // Step 1: Hard filters that must always be met
+          if (user.id === (currentUser?.id || 1)) return false;
+          
+          const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
+          const matchesCity = selectedCity === "Все" || user.city === selectedCity;
+          const matchesGender = genderPref === "all" || user.gender === genderPref;
+          const matchesDistance = user.distance <= distance[0];
+          
+          return matchesAge && matchesCity && matchesGender && matchesDistance;
+        })
+        .map(user => {
+          // Step 2: Score each remaining user based on softer criteria
+          let score = 0;
+          const commonInterests = selectedInterests.length > 0 
+              ? user.interests.filter(i => selectedInterests.includes(i))
+              : [];
+          
+          const goalMatches = selectedDatingGoal === "all" || user.goal === selectedDatingGoal;
 
-        const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
-        const matchesInterests = selectedInterests.length === 0 || 
-          user.interests.some(i => selectedInterests.includes(i));
-        const matchesCity = selectedCity === "Все" || user.city === selectedCity;
-        const matchesGender = genderPref === "all" || user.gender === genderPref;
-        const matchesDistance = user.distance <= distance[0];
-        const matchesDatingGoal = selectedDatingGoal === "all" || user.goal === selectedDatingGoal;
-        
-        return matchesAge && matchesInterests && matchesCity && matchesGender && matchesDistance && matchesDatingGoal;
-      });
+          // High score for matching dating goal to prioritize them
+          if (goalMatches) {
+            score += 1000;
+          }
+          
+          // Score for each common interest
+          score += commonInterests.length * 100;
+          
+          // A user is a candidate if their goal matches OR they have at least one common interest.
+          const isCandidate = goalMatches || commonInterests.length > 0;
 
-      setSearchResults(filtered);
+          return { ...user, score, isCandidate };
+        })
+        .filter(user => user.isCandidate) // Step 3: Filter out users who are not candidates at all
+        .sort((a, b) => b.score - a.score); // Step 4: Sort by the calculated score
+
+      setSearchResults(processedUsers);
       setIsAutoSearching(false);
       setShowResults(true);
       
