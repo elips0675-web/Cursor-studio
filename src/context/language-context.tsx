@@ -278,6 +278,12 @@ const translations = {
     'dialog.delete_photo.cancel': 'Отмена',
     'delete_photo_error.title': 'Нельзя удалить',
     'delete_photo_error.description': 'Вы не можете удалить последнее фото в галерее.',
+    'settings.incognito.enabled_desc': 'Ваши визиты теперь скрыты.',
+    'settings.incognito.disabled_desc': 'Ваши визиты снова видны.',
+    'incognito.banner.title': 'Режим Инкогнито',
+    'incognito.banner.description': 'Ваши посещения профилей других пользователей не будут отображаться в их активности.',
+    'incognito.toast.title': 'Режим Инкогнито',
+    'incognito.toast.description': 'Ваш визит на эту страницу останется анонимным.',
   },
   EN: {
     // Landing / SEO
@@ -542,6 +548,12 @@ const translations = {
     'dialog.delete_photo.cancel': 'Cancel',
     'delete_photo_error.title': 'Cannot Delete',
     'delete_photo_error.description': 'You cannot delete the last photo in your gallery.',
+    'settings.incognito.enabled_desc': 'Your visits are now hidden.',
+    'settings.incognito.disabled_desc': 'Your visits are visible again.',
+    'incognito.banner.title': 'Incognito Mode',
+    'incognito.banner.description': 'Your visits to other profiles will not be shown in their activity.',
+    'incognito.toast.title': 'Incognito Mode',
+    'incognito.toast.description': 'Your visit to this page will remain anonymous.',
   }
 };
 
@@ -594,3 +606,5 @@ export const useLanguage = () => {
   if (!context) throw new Error('useLanguage must be used within LanguageProvider');
   return context;
 };
+
+    

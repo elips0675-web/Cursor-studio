@@ -130,6 +130,16 @@ function UserProfileContent() {
     ]);
   }, [user.img]);
 
+  useEffect(() => {
+    const savedIncognito = localStorage.getItem('incognito-mode');
+    if (savedIncognito && JSON.parse(savedIncognito)) {
+        toast({
+            title: t('incognito.toast.title'),
+            description: t('incognito.toast.description'),
+        });
+    }
+  }, [t]);
+
   const earnedTitles = useMemo(() => getUserTitles(user, language), [user, language]);
 
   const getAiInsight = async (targetUser: any) => {
@@ -451,5 +461,7 @@ export default function UserProfilePage() {
     </Suspense>
   );
 }
+
+    
 
     

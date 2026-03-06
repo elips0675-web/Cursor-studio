@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Heart, 
   Eye, 
@@ -9,6 +9,7 @@ import {
   ChevronRight, 
   Sparkles, 
   Play, 
+  EyeOff,
   Check, 
   Zap, 
   ShieldCheck,
@@ -57,6 +58,14 @@ export default function ActivityPage() {
   const [showAd, setShowAd] = useState(false);
   const [isAdLoading, setIsAdLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('6m');
+  const [isIncognito, setIsIncognito] = useState(false);
+
+  useEffect(() => {
+    const savedIncognito = localStorage.getItem('incognito-mode');
+    if (savedIncognito) {
+      setIsIncognito(JSON.parse(savedIncognito));
+    }
+  }, []);
 
   const handleWatchAd = () => {
     setIsAdLoading(true);
@@ -103,6 +112,21 @@ export default function ActivityPage() {
           </TabsList>
           
           <TabsContent value={activeTab} className="mt-6 space-y-4 outline-none">
+            {activeTab === 'visits' && isIncognito && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-4 p-4 rounded-2xl bg-blue-500/5 text-blue-600 border border-blue-500/10 shadow-sm"
+                >
+                    <EyeOff size={28} />
+                    <div className="flex-1">
+                        <h4 className="font-black text-sm tracking-tight">{t('incognito.banner.title')}</h4>
+                        <p className="text-xs leading-snug mt-0.5 opacity-80 font-medium">
+                          {t('incognito.banner.description')}
+                        </p>
+                    </div>
+                </motion.div>
+            )}
             <motion.button 
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
@@ -384,3 +408,5 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
     </div>
   );
 }
+
+    

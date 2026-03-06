@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/firebase";
 import { 
@@ -36,10 +37,27 @@ export default function SettingsPage() {
     photoVerification: true
   });
 
+  useEffect(() => {
+    const savedIncognito = localStorage.getItem('incognito-mode');
+    if (savedIncognito) {
+      setSettings(prev => ({ ...prev, incognito: JSON.parse(savedIncognito) }));
+    }
+  }, []);
+
+  const handleIncognitoChange = (val: boolean) => {
+    setSettings(prev => ({ ...prev, incognito: val }));
+    localStorage.setItem('incognito-mode', JSON.stringify(val));
+    toast({
+      title: t('settings.incognito'),
+      description: val ? t('settings.incognito.enabled_desc') : t('settings.incognito.disabled_desc'),
+    });
+  };
+
   const handleLogout = () => {
     auth.signOut().then(() => {
       localStorage.removeItem('userProfile');
       localStorage.removeItem('userProfileGallery');
+      localStorage.removeItem('incognito-mode');
       toast({
         title: t('logout.title') || "Вы вышли из системы",
       });
@@ -106,7 +124,7 @@ export default function SettingsPage() {
                     <p className="text-sm font-bold">{t('settings.incognito') || 'Инкогнито'}</p>
                   </div>
                 </div>
-                <Switch checked={settings.incognito} onCheckedChange={(val) => setSettings({...settings, incognito: val})} />
+                <Switch checked={settings.incognito} onCheckedChange={handleIncognitoChange} />
               </div>
 
               <div className="flex items-center justify-between py-3 border-b border-border/50">
@@ -171,3 +189,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
