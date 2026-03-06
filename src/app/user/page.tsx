@@ -284,7 +284,7 @@ function UserProfileContent() {
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
                 <div key={idx} onClick={() => { setActivePhotoIndex(idx); setIsViewerOpen(true); }} className="relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer group">
-                  <Image src={url} alt={`Photo ${idx}`} fill sizes="50vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
                     <Maximize2 size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
@@ -427,9 +427,8 @@ function UserProfileContent() {
 }
 
 export default function UserProfilePage() {
-  const { language } = useLanguage();
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-svh font-black">{language === 'RU' ? 'Загрузка...' : 'Loading...'}</div>}>
+    <Suspense fallback={null}>
       <UserProfileContent />
     </Suspense>
   );
