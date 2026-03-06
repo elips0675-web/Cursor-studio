@@ -125,7 +125,7 @@ export default function AdminUsersPage() {
       </CardContent>
       <CardFooter className="bg-muted/5 border-t">
         <div className="text-[10px] uppercase font-black tracking-widest text-muted-foreground py-2">
-          Total: <strong>{usersList.length}</strong> users
+          Total: <strong>{usersList.length}</strong> {language === 'RU' ? 'пользователей' : 'users'}
         </div>
       </CardFooter>
     </Card>

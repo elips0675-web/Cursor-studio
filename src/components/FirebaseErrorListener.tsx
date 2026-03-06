@@ -22,3 +22,7 @@ export function FirebaseErrorListener() {
     return () => {
       errorEmitter.off('permission-error', handleError);
     };
+  }, []);
+
+  return null;
+}

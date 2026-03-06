@@ -85,7 +85,7 @@ export default function ContentManagementPage() {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="interests" className="w-full">
-                    <TabsList className="grid grid-cols-3">
+                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
                         <TabsTrigger value="interests">{t('admin.content.interests.title')}</TabsTrigger>
                         <TabsTrigger value="goals">{t('admin.content.dating_goals.title')}</TabsTrigger>
                         <TabsTrigger value="education">{t('admin.content.education.title')}</TabsTrigger>
