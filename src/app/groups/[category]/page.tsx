@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Suspense } from 'react';
@@ -62,24 +61,26 @@ function SubGroupsContent() {
 
                 <div className="space-y-3">
                     {category.subgroups.map(subgroup => (
-                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex items-center gap-4 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
-                            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 border-2 border-white shadow-sm">
-                                <Image src={category.img} alt={subgroup.name} fill sizes="56px" data-ai-hint={category.hint} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"/>
-                                <div className="absolute inset-0 bg-black/10"></div>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{subgroup.name}</h4>
-                                <div className="flex items-center text-muted-foreground text-xs mt-1 gap-4">
-                                    <div className="flex items-center gap-1.5 font-semibold">
-                                        <Users size={12} /> {subgroup.members}
-                                    </div>
-                                    <div className="flex items-center gap-1.5 font-semibold text-green-600">
-                                        <div className="w-2 h-2 rounded-full bg-current"></div>
-                                        {subgroup.online} {t('chats.online')}
+                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex items-center justify-between gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
+                            <div className="flex items-center gap-4 min-w-0">
+                                <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 border-2 border-white shadow-sm">
+                                    <Image src={category.img} alt={subgroup.name} fill sizes="56px" data-ai-hint={category.hint} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"/>
+                                    <div className="absolute inset-0 bg-black/10"></div>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{subgroup.name}</h4>
+                                    <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
+                                        <div className="flex items-center gap-1.5 font-semibold">
+                                            <Users size={12} /> {subgroup.members}
+                                        </div>
+                                        <div className="flex items-center gap-1.5 font-semibold text-green-600">
+                                            <div className="w-2 h-2 rounded-full bg-current"></div>
+                                            {subgroup.online} {t('chats.online')}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="ghost" size="sm" className="rounded-full h-9 px-5 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary ml-auto group-hover:scale-105 transition-transform shrink-0">
+                            <Button variant="ghost" size="sm" className="rounded-full h-9 px-5 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform shrink-0">
                                 <Plus size={14} className="mr-1.5" />
                                 {t('button.join') || 'Вступить'}
                             </Button>
