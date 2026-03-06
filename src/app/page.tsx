@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star, Navigation } from "lucide-react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
@@ -162,9 +162,12 @@ export default function Home() {
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
 
+  // Filter States
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [ageRange, setAgeRange] = useState([18, 40]);
   const [selectedCity, setSelectedCity] = useState("Все");
+  const [distance, setDistance] = useState([50]);
+  const [genderPref, setGenderPreference] = useState("all");
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -198,7 +201,7 @@ export default function Home() {
         } else {
             setSelectedCity("Все");
         }
-        setAgeRange([Math.max(18, currentUser.age - 2), currentUser.age + 2]);
+        setAgeRange([Math.max(18, currentUser.age - 5), currentUser.age + 5]);
       }
     }
   }, [isFilterDialogOpen]);
@@ -263,7 +266,10 @@ export default function Home() {
         const matchesInterests = selectedInterests.length === 0 || 
           user.interests.some(i => selectedInterests.includes(i));
         const matchesCity = selectedCity === "Все" || user.city === selectedCity;
-        return matchesAge && matchesInterests && matchesCity;
+        const matchesGender = genderPref === "all" || user.gender === (genderPref === 'male' ? 'male' : 'female');
+        const matchesDistance = user.distance <= distance[0];
+        
+        return matchesAge && matchesInterests && matchesCity && matchesGender && matchesDistance;
       });
 
       setSearchResults(filtered);
@@ -528,8 +534,8 @@ export default function Home() {
       </AnimatePresence>
 
       <Dialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen}>
-        <DialogContent className="max-w-[340px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
-          <DialogHeader className="p-5 bg-muted/30 pb-4">
+        <DialogContent className="max-w-[360px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
+          <DialogHeader className="p-6 bg-muted/30 pb-4">
             <div className="flex items-center gap-3 mb-1">
               <div className="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center text-white shadow-lg">
                 <Zap size={20} fill="currentColor" />
@@ -539,9 +545,82 @@ export default function Home() {
             <p className="text-xs text-muted-foreground font-medium">{t('button.filters')}</p>
           </DialogHeader>
 
-          <div className="p-4 space-y-4 overflow-y-auto max-h-[60vh] no-scrollbar">
+          <div className="p-6 space-y-6 overflow-y-auto max-h-[65vh] no-scrollbar">
             <div className="space-y-3">
-              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.interests')}</label>
+              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
+                <User size={12} className="text-primary" /> {t('filter.who_to_see')}
+              </label>
+              <div className="flex gap-2 bg-muted/30 p-1 rounded-xl">
+                {['all', 'female', 'male'].map(pref => (
+                  <button
+                    key={pref}
+                    onClick={() => setGenderPreference(pref)}
+                    className={cn(
+                      "flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all",
+                      genderPref === pref ? "bg-white shadow-sm text-primary" : "text-muted-foreground hover:bg-white/50"
+                    )}
+                  >
+                    {t(`filter.gender.${pref}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center px-1">
+                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Navigation size={12} className="text-primary" /> {t('filter.distance')}
+                </label>
+                <span className="text-xs font-black text-primary">{distance[0]} км</span>
+              </div>
+              <Slider 
+                value={distance} 
+                onValueChange={setDistance} 
+                min={1} 
+                max={100} 
+                step={1} 
+                className="py-2"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex justify-between items-center px-1">
+                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Cpu size={12} className="text-primary" /> {t('profile.age')}
+                </label>
+                <span className="text-xs font-black text-primary">{ageRange[0]} - {ageRange[1]}</span>
+              </div>
+              <Slider 
+                value={ageRange} 
+                onValueChange={setAgeRange} 
+                min={18} 
+                max={60} 
+                step={1} 
+                className="py-2"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
+                <MapPin size={12} className="text-primary" /> {t('profile.city')}
+              </label>
+              <Select value={selectedCity} onValueChange={setSelectedCity}>
+                <SelectTrigger className="h-11 rounded-xl bg-muted/30 border-0 font-bold px-4 focus:ring-primary/20">
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-0 shadow-2xl">
+                  <SelectItem value="Все" className="font-bold text-sm">Все города</SelectItem>
+                  {CAPITALS.map(city => (
+                    <SelectItem key={city} value={city} className="font-bold text-sm">{city}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
+                <Star size={12} className="text-primary" /> {t('profile.interests')}
+              </label>
               <div className="flex flex-wrap gap-1.5">
                 {INTEREST_OPTIONS.map(interest => (
                   <Badge 
@@ -560,45 +639,15 @@ export default function Home() {
                 ))}
               </div>
             </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center px-1">
-                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{t('profile.age')}</label>
-                <span className="text-xs font-black text-primary">{ageRange[0]} - {ageRange[1]}</span>
-              </div>
-              <Slider 
-                value={ageRange} 
-                onValueChange={setAgeRange} 
-                min={18} 
-                max={60} 
-                step={1} 
-                className="py-2"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('profile.city')}</label>
-              <Select value={selectedCity} onValueChange={setSelectedCity}>
-                <SelectTrigger className="h-11 rounded-xl bg-muted/30 border-0 font-bold px-4">
-                  <SelectValue placeholder="Выберите город" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-0 shadow-2xl">
-                  <SelectItem value="Все" className="font-bold text-sm">Все города</SelectItem>
-                  {CAPITALS.map(city => (
-                    <SelectItem key={city} value={city} className="font-bold text-sm">{city}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
-          <DialogFooter className="p-4 pt-2">
+          <DialogFooter className="p-6 pt-2 bg-muted/10 border-t">
             <Button 
               onClick={() => {
                 setIsFilterDialogOpen(false);
                 handleAutoSearch();
               }}
-              className="w-full h-11 rounded-full gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all border-0"
+              className="w-full h-14 rounded-full gradient-bg text-white font-black uppercase tracking-[0.15em] shadow-xl shadow-primary/20 active:scale-95 transition-all border-0 text-[10px]"
             >
               {t('button.autosearch')}
             </Button>

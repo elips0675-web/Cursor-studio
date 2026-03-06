@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -105,6 +104,12 @@ const translations = {
     'match.insight': 'AI Инсайт',
     'swipes.nearby': 'анкет рядом',
     'match.insight_default': 'Вы отлично подходите друг другу!',
+    // Filter
+    'filter.who_to_see': 'Кого вы ищете?',
+    'filter.distance': 'Расстояние',
+    'filter.gender.all': 'Все',
+    'filter.gender.male': 'Мужчины',
+    'filter.gender.female': 'Женщины',
     // Onboarding
     'onboarding.step1.title': 'Как тебя зовут?',
     'onboarding.step1.desc': 'Имя будет отображаться в твоем профиле.',
@@ -321,6 +326,12 @@ const translations = {
     'match.insight': 'AI Insight',
     'swipes.nearby': 'profiles nearby',
     'match.insight_default': 'You are a great match!',
+    // Filter
+    'filter.who_to_see': 'Who are you looking for?',
+    'filter.distance': 'Distance',
+    'filter.gender.all': 'All',
+    'filter.gender.male': 'Men',
+    'filter.gender.female': 'Women',
     // Onboarding
     'onboarding.step1.title': "What's your name?",
     'onboarding.step1.desc': 'Name will be displayed in your profile.',
