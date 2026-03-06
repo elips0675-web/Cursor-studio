@@ -44,6 +44,7 @@ import {
   Sun,
   GraduationCap,
   User,
+  Info,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -239,54 +240,63 @@ function UserProfileContent() {
         </div>
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40">
-            <div className="flex items-center gap-2 mb-4">
-               <User size={16} className="text-primary" />
-               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
+          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6">
+            {/* О себе */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Info size={16} className="text-primary" />
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
+              </div>
+              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
+                "{user.bio}"
+              </p>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
-                <ZodiacIcon sign={user.zodiac} /> {user.zodiac}
-              </Badge>
-              <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
-                <Ruler size={14} /> {user.height} {language === 'RU' ? 'см' : 'cm'}
-              </Badge>
-              <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start col-span-2">
-                <Target size={14} /> {language === 'RU' ? user.goal : 'Serious relations'}
-              </Badge>
-              <Badge variant="secondary" className="bg-purple-50 text-purple-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
-                <GraduationCap size={14} /> {language === 'RU' ? 'Высшее' : 'Higher'}
-              </Badge>
-              <Badge variant="secondary" className="bg-green-50 text-green-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
-                <Briefcase size={14} /> {language === 'RU' ? 'Дизайнер' : 'Designer'}
-              </Badge>
-            </div>
-          </div>
 
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles size={16} className="text-primary" />
-              <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
-            </div>
-            <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
-              "{user.bio}"
-            </p>
-          </div>
+            <div className="h-px bg-border/50"></div>
 
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4">
-            <div className="flex items-center gap-2">
-               <Star size={16} className="text-primary" />
-               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4>
+            {/* Стиль жизни */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                 <User size={16} className="text-primary" />
+                 <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Badge variant="secondary" className="bg-orange-50 text-orange-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
+                  <ZodiacIcon sign={user.zodiac} /> {user.zodiac}
+                </Badge>
+                <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
+                  <Ruler size={14} /> {user.height} {language === 'RU' ? 'см' : 'cm'}
+                </Badge>
+                <Badge variant="secondary" className="bg-primary/5 text-primary border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start col-span-2">
+                  <Target size={14} /> {language === 'RU' ? user.goal : 'Serious relations'}
+                </Badge>
+                <Badge variant="secondary" className="bg-purple-50 text-purple-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
+                  <GraduationCap size={14} /> {language === 'RU' ? 'Высшее' : 'Higher'}
+                </Badge>
+                <Badge variant="secondary" className="bg-green-50 text-green-600 border-0 gap-1.5 py-2.5 px-3.5 font-bold text-[10px] rounded-lg shadow-sm justify-start">
+                  <Briefcase size={14} /> {language === 'RU' ? 'Дизайнер' : 'Designer'}
+                </Badge>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {user.interests.map((interest) => {
-                const Icon = interestIcons[interest] || Heart;
-                return (
-                  <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg">
-                    <Icon size={14} className="text-primary" /> {interest}
-                  </Badge>
-                );
-              })}
+
+            <div className="h-px bg-border/50"></div>
+
+            {/* Интересы */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                 <Star size={16} className="text-primary" />
+                 <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {user.interests.map((interest) => {
+                  const Icon = interestIcons[interest] || Heart;
+                  return (
+                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg">
+                      <Icon size={14} className="text-primary" /> {interest}
+                    </Badge>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
