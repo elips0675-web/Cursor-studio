@@ -51,7 +51,7 @@ const translations = {
     'button.watch': 'Смотреть',
     'button.not_now': 'Не сейчас',
     'button.report': 'Пожаловаться',
-    'button.browse_profiles': 'Смотреть анкеты',
+    'button.browse_profiles': 'Люди рядом',
     // Profile
     'profile.edit': 'Изменить',
     'profile.about': 'О себе',
