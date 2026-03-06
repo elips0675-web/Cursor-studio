@@ -32,6 +32,7 @@ import {
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/context/language-context";
 
 const INITIAL_REPORTS = [
     {
@@ -66,6 +67,7 @@ const INITIAL_REPORTS = [
 
 export default function AdminReportsPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [reports, setReports] = useState(INITIAL_REPORTS);
 
   const handleUpdateReport = (reportId: number, toastMessage: { title: string; description: string }) => {
@@ -78,20 +80,20 @@ export default function AdminReportsPage() {
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-xl font-black">Жалобы</CardTitle>
-        <CardDescription>Просмотр и управление жалобами от пользователей.</CardDescription>
+        <CardTitle className="text-xl font-black">{t('admin.reports')}</CardTitle>
+        <CardDescription>{t('admin.manage_reports')}</CardDescription>
       </CardHeader>
       <CardContent className="p-0 sm:p-6">
         {reportsList.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Пользователь</TableHead>
-                <TableHead className="hidden sm:table-cell">Пожаловался</TableHead>
-                <TableHead>Причина</TableHead>
-                <TableHead className="hidden md:table-cell">Дата</TableHead>
-                <TableHead>Статус</TableHead>
-                <TableHead className="text-right">Действия</TableHead>
+                <TableHead>{t('admin.reported_user')}</TableHead>
+                <TableHead className="hidden sm:table-cell">{t('admin.reporter')}</TableHead>
+                <TableHead>{t('admin.reason')}</TableHead>
+                <TableHead className="hidden md:table-cell">{t('admin.date')}</TableHead>
+                <TableHead>{t('admin.status')}</TableHead>
+                <TableHead className="text-right">{t('admin.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -116,7 +118,7 @@ export default function AdminReportsPage() {
                   <TableCell className="hidden md:table-cell text-xs opacity-60">{report.date}</TableCell>
                   <TableCell>
                     <Badge variant={report.status === 'new' ? 'destructive' : 'outline'} className={report.status !== 'new' ? "bg-green-100 text-green-800 border-green-200 text-[9px]" : "text-[9px]"}>
-                      {report.status === 'new' ? 'Новая' : 'Решена'}
+                      {report.status === 'new' ? t('admin.report_new') : t('admin.report_resolved')}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
@@ -128,12 +130,12 @@ export default function AdminReportsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="rounded-xl">
-                        <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => router.push(`/user?id=${report.reportedUser.id}`)}>Просмотреть профиль</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Отчет решен', description: 'Статус отчета был изменен.' })}>Отметить как решенный</DropdownMenuItem>
+                        <DropdownMenuLabel>{t('admin.actions')}</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => router.push(`/user?id=${report.reportedUser.id}`)}>{t('admin.view_profile')}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: t('admin.report_resolved'), description: 'Status updated.' })}>{t('admin.mark_resolved')}</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Пользователь заблокирован', description: `${report.reportedUser.name} был заблокирован.` })}>Заблокировать</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: 'Пользователь удален', description: `${report.reportedUser.name} был удален.` })} className="text-destructive focus:text-destructive">Удалить пользователя</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: t('admin.block_user'), description: `${report.reportedUser.name} blocked.` })}>{t('admin.block_user')}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateReport(report.id, { title: t('admin.delete_user'), description: `${report.reportedUser.name} deleted.` })} className="text-destructive focus:text-destructive">{t('admin.delete_user')}</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -144,7 +146,7 @@ export default function AdminReportsPage() {
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 text-center h-64 border-2 border-dashed border-muted rounded-2xl mx-6 mb-6">
             <Flag className="w-12 h-12 text-muted-foreground opacity-20" />
-            <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">Жалоб пока нет</p>
+            <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest">{t('admin.no_reports')}</p>
           </div>
         )}
       </CardContent>

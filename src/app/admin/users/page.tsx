@@ -70,8 +70,8 @@ export default function AdminUsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[80px] sm:table-cell">Image</TableHead>
-              <TableHead>Name</TableHead>
+              <TableHead className="hidden w-[80px] sm:table-cell">{t('admin.user_image')}</TableHead>
+              <TableHead>{t('admin.user_name')}</TableHead>
               <TableHead className="hidden md:table-cell">Email</TableHead>
               <TableHead>{t('admin.status')}</TableHead>
               <TableHead className="hidden md:table-cell">{t('admin.city')}</TableHead>
@@ -112,7 +112,7 @@ export default function AdminUsersPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-xl">
                       <DropdownMenuLabel>{t('admin.actions')}</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => router.push(`/user?id=${user.id}`)}>View Profile</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => router.push(`/user?id=${user.id}`)}>{t('admin.view_profile')}</DropdownMenuItem>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteUser(user.id, user.name)} className="text-destructive focus:text-destructive">Delete</DropdownMenuItem>
                     </DropdownMenuContent>
