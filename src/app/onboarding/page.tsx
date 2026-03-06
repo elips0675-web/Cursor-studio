@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser, useFirestore } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { 
   ArrowRight, 
   Sparkles, 
@@ -52,13 +54,8 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const totalSteps = 5;
 
-  useEffect(() => {
-    const userProfile = localStorage.getItem('userProfile');
-    if (userProfile) {
-      // Если профиль уже есть, значит пользователь авторизован, перенаправляем на главную
-      router.push('/');
-    }
-  }, [router]);
+  const { user } = useUser();
+  const firestore = useFirestore();
 
   const [formData, setFormData] = useState({
     gender: "",
@@ -70,8 +67,18 @@ export default function OnboardingPage() {
     zodiac: "",
     interests: [] as string[],
     bio: "",
-    photo: PlaceHolderImages[10].imageUrl
+    photo: PlaceHolderImages.find(p => p.id === 'me')?.imageUrl || PlaceHolderImages[10].imageUrl
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({ 
+        ...prev, 
+        name: user.displayName || "",
+        photo: user.photoURL || prev.photo,
+      }));
+    }
+  }, [user]);
 
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
@@ -165,13 +172,41 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleFinish = () => {
-    // Сохраняем созданный профиль для имитации сессии
-    localStorage.setItem('userProfile', JSON.stringify(formData));
-    localStorage.setItem('userProfileGallery', JSON.stringify([formData.photo]));
+  const handleFinish = async () => {
+    if (!user) {
+        toast({ title: "Ошибка", description: "Вы не авторизованы. Пожалуйста, вернитесь на страницу входа.", variant: "destructive"});
+        router.push('/login');
+        return;
+    }
 
-    toast({ title: t('onboarding.toast.finish_title'), description: t('onboarding.toast.finish_desc') });
-    router.push("/");
+    try {
+        const userDocRef = doc(firestore, 'users', user.uid);
+        
+        const profileForDb = {
+            displayName: formData.name,
+            photoURL: formData.photo,
+            bio: formData.bio,
+            interests: formData.interests,
+            age: parseInt(formData.age) || null,
+            city: formData.city,
+            height: parseInt(formData.height) || null,
+            datingGoal: formData.datingGoal,
+            zodiac: formData.zodiac,
+            gender: formData.gender,
+        };
+        
+        await setDoc(userDocRef, profileForDb);
+
+        // Save to localStorage for client-side access
+        localStorage.setItem('userProfile', JSON.stringify({ uid: user.uid, ...profileForDb }));
+        localStorage.setItem('userProfileGallery', JSON.stringify([formData.photo]));
+
+        toast({ title: t('onboarding.toast.finish_title'), description: t('onboarding.toast.finish_desc') });
+        router.push("/");
+    } catch (error) {
+        console.error("Error saving profile:", error);
+        toast({ title: "Ошибка сохранения", description: "Не удалось сохранить профиль.", variant: "destructive" });
+    }
   };
 
   const renderStep = () => {

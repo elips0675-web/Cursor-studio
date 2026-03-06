@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser, useFirestore } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { Sparkles, Camera, User, MapPin, Info, GraduationCap, Dog, Briefcase, Bed, Target, Heart } from "lucide-react";
 import Image from "next/image";
 import { AppHeader } from "@/components/layout/app-header";
@@ -47,6 +49,9 @@ export default function EditProfilePage() {
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
   const [mainPhoto, setMainPhoto] = useState(PlaceHolderImages[0].imageUrl);
   const [profile, setProfile] = useState(defaultProfile);
+  
+  const { user } = useUser();
+  const firestore = useFirestore();
 
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile');
@@ -54,6 +59,9 @@ export default function EditProfilePage() {
       try {
         const loadedProfile = JSON.parse(savedProfile);
         setProfile(prev => ({ ...prev, ...loadedProfile }));
+        if(loadedProfile.photoURL) {
+          setMainPhoto(loadedProfile.photoURL);
+        }
       } catch(e) {}
     }
     const savedGallery = localStorage.getItem('userProfileGallery');
@@ -84,15 +92,36 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleSave = () => {
-    localStorage.setItem('userProfile', JSON.stringify(profile));
-    const savedGallery = localStorage.getItem('userProfileGallery');
-    let gallery = savedGallery ? JSON.parse(savedGallery) : [];
-    if (gallery.length > 0) gallery[0] = mainPhoto;
-    else gallery = [mainPhoto];
-    localStorage.setItem('userProfileGallery', JSON.stringify(gallery));
-    toast({ title: "Профиль сохранен" });
-    router.push("/profile");
+  const handleSave = async () => {
+    if (!user) {
+      toast({ title: "Ошибка", description: "Вы не авторизованы.", variant: "destructive" });
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const userDocRef = doc(firestore, 'users', user.uid);
+      const profileForDb = {
+        ...profile,
+        photoURL: mainPhoto,
+      };
+
+      await setDoc(userDocRef, profileForDb, { merge: true });
+      
+      localStorage.setItem('userProfile', JSON.stringify({ uid: user.uid, ...profileForDb }));
+
+      const savedGallery = localStorage.getItem('userProfileGallery');
+      let gallery = savedGallery ? JSON.parse(savedGallery) : [];
+      if (gallery.length > 0) gallery[0] = mainPhoto;
+      else gallery = [mainPhoto];
+      localStorage.setItem('userProfileGallery', JSON.stringify(gallery));
+      
+      toast({ title: "Профиль сохранен" });
+      router.push("/profile");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      toast({ title: "Ошибка сохранения", description: "Не удалось сохранить профиль.", variant: "destructive" });
+    }
   };
 
   const toggleInterest = (interest: string) => {

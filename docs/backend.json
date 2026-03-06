@@ -11,7 +11,16 @@
         "bio": { "type": "string" },
         "interests": { "type": "array", "items": { "type": "string" } },
         "age": { "type": "number" },
-        "city": { "type": "string" }
+        "city": { "type": "string" },
+        "height": { "type": "number" },
+        "zodiac": { "type": "string" },
+        "datingGoal": { "type": "string" },
+        "work": { "type": "string" },
+        "education": { "type": "string" },
+        "gender": { "type": "string" },
+        "lookingFor": { "type": "string" },
+        "pets": { "type": "string" },
+        "sleepSchedule": { "type": "string" }
       }
     }
   },

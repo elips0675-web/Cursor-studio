@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Heart, 
@@ -18,7 +18,9 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { ALL_DEMO_USERS } from "@/lib/demo-data";
+import { useAuth, useFirestore } from "@/firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,48 +30,52 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginMethod, setLoginMethod] = useState<"email" | "phone">("phone");
 
-  useEffect(() => {
-    if (localStorage.getItem('userProfile')) {
-      router.push('/');
-    }
-  }, [router]);
-
-  const simulateLogin = () => {
-    // Сохраняем профиль по умолчанию для имитации авторизации
-    const defaultUser = ALL_DEMO_USERS.find(u => u.name === "Анна") || ALL_DEMO_USERS[0];
-    localStorage.setItem('userProfile', JSON.stringify(defaultUser));
-    
-    const defaultGallery = [
-      defaultUser.img,
-      "https://picsum.photos/seed/person_anna_gallery1/600/800",
-      "https://picsum.photos/seed/person_anna_gallery2/600/800"
-    ];
-    localStorage.setItem('userProfileGallery', JSON.stringify(defaultGallery));
-
-    toast({
-      title: "С возвращением!",
-      description: "Вы успешно вошли в SwiftMatch.",
-    });
-    // После входа направляем на главную страницу
-    router.push("/");
-  };
+  const auth = useAuth();
+  const firestore = useFirestore();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Имитация входа
-    setTimeout(() => {
-      setIsLoading(false);
-      simulateLogin();
-    }, 1500);
+    toast({
+      title: "В разработке",
+      description: "Вход по email и телефону будет добавлен позже.",
+    });
+    setIsLoading(false);
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+
+      const userDocRef = doc(firestore, "users", firebaseUser.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userProfile = { uid: firebaseUser.uid, ...userDoc.data() };
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        // Redirect to home, let other pages load from localStorage
+        router.push('/');
+        toast({
+          title: "С возвращением!",
+          description: `Вы успешно вошли, ${firebaseUser.displayName}.`,
+        });
+      } else {
+        // New user, redirect to onboarding
+        router.push('/onboarding');
+      }
+    } catch (error: any) {
+      console.error("Google Sign-In Error:", error);
+      toast({
+        title: "Ошибка входа",
+        description: error.message || "Не удалось войти через Google.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      simulateLogin();
-    }, 1000);
+    }
   };
 
   return (
@@ -184,6 +190,7 @@ export default function LoginPage() {
           <Button 
             variant="outline" 
             onClick={handleGoogleLogin}
+            disabled={isLoading}
             className="w-full h-14 rounded-full border-2 border-muted hover:bg-muted/30 transition-all font-bold gap-3 shadow-sm"
           >
             <Chrome size={20} className="text-[#4285F4]" />

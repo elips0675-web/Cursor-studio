@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/firebase";
 import { 
   Bell, 
   Search, 
@@ -24,6 +25,7 @@ import { useLanguage } from "@/context/language-context";
 export default function SettingsPage() {
   const router = useRouter();
   const { t } = useLanguage();
+  const auth = useAuth();
   const [settings, setSettings] = useState({
     notifications: true,
     discovery: true,
@@ -35,10 +37,14 @@ export default function SettingsPage() {
   });
 
   const handleLogout = () => {
-    toast({
-      title: t('logout.title') || "Вы вышли из системы",
+    auth.signOut().then(() => {
+      localStorage.removeItem('userProfile');
+      localStorage.removeItem('userProfileGallery');
+      toast({
+        title: t('logout.title') || "Вы вышли из системы",
+      });
+      router.push("/login");
     });
-    router.push("/login");
   };
 
   return (
