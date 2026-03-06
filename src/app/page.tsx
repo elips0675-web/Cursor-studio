@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy } from "lucide-react";
+import { Flame, Search, Heart, MapPin, Zap, Sparkles, ChevronDown, Cpu, User, Trophy, Star } from "lucide-react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
 import { toast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
+import { cn, getUserTitles } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Slider } from "@/components/ui/slider";
@@ -40,7 +40,10 @@ const HeartConfetti = dynamic(() => import("@/components/animations/heart-confet
 
 const ITEMS_PER_PAGE = 4;
 
-const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLike: () => void; priority?: boolean }) => {
+const FeaturedCard = memo(({ user, onLike, language, priority = false }: { user: any; onLike: () => void; language: 'RU' | 'EN'; priority?: boolean }) => {
+  const titles = getUserTitles(user, language);
+  const mainTitle = titles[0];
+
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-[4/3] bg-muted block overflow-hidden cursor-pointer">
@@ -53,10 +56,15 @@ const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLi
           priority={priority}
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-1.5 right-1.5">
+        <div className="absolute top-1.5 right-1.5 flex flex-col items-end gap-1">
              <Badge className="bg-orange-500 text-white text-[8px] border-0 px-1.5 py-0.5 font-black uppercase shadow-lg">
                {user.match}%
              </Badge>
+             {mainTitle && (
+               <Badge className={cn("text-[7px] font-black uppercase border-0 px-1.5 py-0.5 shadow-md", mainTitle.color)}>
+                 {mainTitle.displayName}
+               </Badge>
+             )}
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
           <p className="text-white font-bold text-[11px] leading-tight truncate tracking-tight">{user.name}, {user.age}</p>
@@ -92,7 +100,10 @@ const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLi
 });
 FeaturedCard.displayName = "FeaturedCard";
 
-const ProfilePreviewCard = memo(({ user, showActions = false, onLike }: { user: any; showActions?: boolean; onLike: () => void }) => {
+const ProfilePreviewCard = memo(({ user, showActions = false, language, onLike }: { user: any; showActions?: boolean; language: 'RU' | 'EN'; onLike: () => void }) => {
+  const titles = getUserTitles(user, language);
+  const mainTitle = titles[0];
+
   return (
     <div className="bg-white rounded-[1rem] overflow-hidden app-shadow group border border-transparent hover:border-primary/10 flex flex-col h-full transition-all relative">
       <Link href={`/user?id=${user.id}`} className="relative aspect-[16/10] bg-muted block overflow-hidden cursor-pointer">
@@ -107,6 +118,13 @@ const ProfilePreviewCard = memo(({ user, showActions = false, onLike }: { user: 
         {user.online && (
           <div className="absolute top-1.5 left-1.5">
             <span className="flex h-1.5 w-1.5 rounded-full bg-[#2ecc71] border border-white shadow-sm"></span>
+          </div>
+        )}
+        {mainTitle && (
+          <div className="absolute top-1.5 right-1.5">
+            <Badge className={cn("text-[6px] font-black uppercase border-0 px-1 py-0.5", mainTitle.color)}>
+              {mainTitle.displayName}
+            </Badge>
           </div>
         )}
       </Link>
@@ -168,6 +186,25 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("Все");
 
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Requirement for Top of Week: Highest match and titles
+  const topUsers = useMemo(() => {
+    return [...ALL_DEMO_USERS]
+      .sort((a, b) => b.match - a.match)
+      .slice(0, 4);
+  }, []);
+
+  // Requirement for Recommendations: Based on shared interests with "Me" (Anna)
+  const recommendedUsers = useMemo(() => {
+    const myInterests = ["Фотография", "Кофе", "Музыка", "Путешествия"];
+    return ALL_DEMO_USERS.filter(u => u.name !== "Анна")
+      .map(u => ({
+        ...u,
+        commonInterests: u.interests.filter(i => myInterests.includes(i)).length
+      }))
+      .sort((a, b) => b.commonInterests - a.commonInterests)
+      .slice(0, 4);
+  }, []);
 
   useEffect(() => {
     if (isFilterDialogOpen) {
@@ -310,8 +347,8 @@ export default function Home() {
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {ALL_DEMO_USERS.slice(0, 4).map((u, i) => (
-              <FeaturedCard key={u.id} user={u} onLike={() => handleLikeUser(u)} priority={i < 2} />
+            {topUsers.map((u, i) => (
+              <FeaturedCard key={u.id} user={u} language={language} onLike={() => handleLikeUser(u)} priority={i < 2} />
             ))}
           </div>
         </section>
@@ -324,8 +361,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {ALL_DEMO_USERS.slice(6, 10).map((u) => (
-              <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
+            {recommendedUsers.map((u) => (
+              <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
             ))}
           </div>
         </section>
@@ -362,7 +399,7 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     {paginatedResults.map((u) => (
-                      <ProfilePreviewCard key={u.id} user={u} showActions onLike={() => handleLikeUser(u)} />
+                      <ProfilePreviewCard key={u.id} user={u} showActions language={language} onLike={() => handleLikeUser(u)} />
                     ))}
                   </div>
                   
