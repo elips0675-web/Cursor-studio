@@ -32,6 +32,7 @@ const translations = {
     'nav.activity': 'Активность',
     'nav.chats': 'Чаты',
     'nav.profile': 'Профиль',
+    'nav.groups': 'Группы',
     // Common Buttons
     'button.continue': 'Продолжить',
     'button.skip': 'Пропустить',
@@ -318,6 +319,7 @@ const translations = {
     'nav.activity': 'Activity',
     'nav.chats': 'Chats',
     'nav.profile': 'Profile',
+    'nav.groups': 'Groups',
     // Common Buttons
     'button.continue': 'Continue',
     'button.skip': 'Skip',
