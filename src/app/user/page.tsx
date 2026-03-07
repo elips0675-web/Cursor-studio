@@ -74,10 +74,6 @@ const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => m
 const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
 const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
 const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const DropdownMenu = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenu), { ssr: false });
-const DropdownMenuContent = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuContent), { ssr: false });
-const DropdownMenuItem = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuItem), { ssr: false });
-const DropdownMenuTrigger = dynamic(() => import("@/components/ui/dropdown-menu").then(mod => mod.DropdownMenuTrigger), { ssr: false });
 const RadioGroup = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroup));
 const RadioGroupItem = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroupItem));
 const Label = dynamic(() => import("@/components/ui/label").then(mod => mod.Label));
@@ -195,19 +191,14 @@ function UserProfileContent() {
             <Badge className="bg-orange-500 text-white border-0 px-3 py-1 font-black uppercase text-[9px] tracking-widest shadow-lg">
               {user.match}% {language === 'RU' ? 'Совпадение' : 'Match'}
             </Badge>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full bg-white/40 backdrop-blur-md text-foreground hover:bg-white/60 border border-white/40 shadow-sm">
-                    <MoreVertical size={20} />
-                  </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="rounded-2xl border-0 shadow-2xl p-1.5 min-w-[160px] bg-white">
-                  <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsReportDialogOpen(true); }} className="rounded-xl font-bold text-[10px] uppercase tracking-wider cursor-pointer py-2 text-destructive focus:text-destructive focus:bg-destructive/10">
-                    <Flag size={14} className="mr-2" />
-                    {t('button.report')}
-                  </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setIsReportDialogOpen(true)}
+              className="rounded-full bg-white/40 backdrop-blur-md text-destructive hover:bg-white/60 border border-white/40 shadow-sm"
+            >
+              <Flag size={20} />
+            </Button>
           </div>
       </header>
 
@@ -461,7 +452,3 @@ export default function UserProfilePage() {
     </Suspense>
   );
 }
-
-    
-
-    

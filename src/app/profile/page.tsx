@@ -89,12 +89,10 @@ export default function ProfilePage() {
   const stats = { likes: 124, matches: 15 };
   const earnedTitles = useMemo(() => getUserTitles(profile, language), [profile, language]);
   
-  // Memoized map for resolving group names and IDs
   const groupDataMap = useMemo(() => {
     const map = new Map<string, { ru: string; en: string; id: number }>();
     GROUP_CATEGORIES.forEach(category => {
       category.subgroups.forEach(subgroup => {
-        // Use both ru and en names as keys to handle any legacy data
         map.set(subgroup.name_ru, { ru: subgroup.name_ru, en: subgroup.name_en, id: subgroup.id });
         map.set(subgroup.name_en, { ru: subgroup.name_ru, en: subgroup.name_en, id: subgroup.id });
       });
@@ -107,14 +105,12 @@ export default function ProfilePage() {
       const savedProfileData = localStorage.getItem('userProfile');
       if (savedProfileData) {
         const loadedProfile = JSON.parse(savedProfileData);
-        // If joinedGroups is not in localStorage, initialize it with the static default and persist it.
         if (loadedProfile.joinedGroups === undefined) {
              loadedProfile.joinedGroups = defaultJoinedGroups;
              localStorage.setItem('userProfile', JSON.stringify(loadedProfile));
         }
         setProfile({ ...defaultProfile, ...loadedProfile });
       } else {
-        // If no profile exists, create the default one in localStorage
         localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
         setProfile(defaultProfile);
       }
@@ -123,11 +119,10 @@ export default function ProfilePage() {
       if (savedPhotos) setPhotos(JSON.parse(savedPhotos));
 
     } catch (error) { 
-      // On error, reset to a known good state.
       localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
       setProfile(defaultProfile);
     }
-  }, [defaultProfile]); // Depend on defaultProfile to update on language change, but localStorage logic is now robust.
+  }, [defaultProfile]);
 
 
   const handleTriggerFileInput = () => fileInputRef.current?.click();
@@ -200,8 +195,6 @@ export default function ProfilePage() {
     "Photography": Camera, "Travel": Globe, "Sports": Dumbbell, "Art": Palette, "Movies": Film, "Yoga": Flower2, "Business": Briefcase, "Gaming": Gamepad2, "Cats": Dog
   };
   
-  const getSleepIcon = () => profile.sleepSchedule === 'Сова' ? Moon : profile.sleepSchedule === 'Жаворонок' ? Sun : Bed;
-
   const LifestyleItem = ({ label, value, icon: Icon, className }: { label: string, value: any, icon?: any, className?: string }) => (
     <div className={cn("flex flex-col gap-1", className)}>
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{label}</span>
@@ -323,26 +316,24 @@ export default function ProfilePage() {
               {photos.map((url, idx) => (
                 <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-muted group shadow-sm border border-border/10">
                   <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            aria-label="Expand photo"
-                            onClick={() => openPhotoViewer(idx)}
-                            className="h-12 w-12 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border-white/30"
-                        >
-                            <Maximize2 size={24} />
-                        </Button>
-                      </div>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Button
+                          variant="outline"
+                          size="icon"
+                          aria-label="Expand photo"
+                          onClick={() => openPhotoViewer(idx)}
+                          className="h-12 w-12 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border-white/30 transition-transform active:scale-90"
+                      >
+                          <Maximize2 size={24} />
+                      </Button>
                       <Button
                           variant="destructive"
                           size="icon"
                           aria-label="Delete photo"
                           onClick={(e) => { e.stopPropagation(); requestDeletePhoto(idx); }}
-                          className="absolute top-2 right-2 h-10 w-10 rounded-full bg-destructive/80 text-destructive-foreground hover:bg-destructive backdrop-blur-sm border-white/20 shadow-lg"
+                          className="absolute top-2 right-2 h-9 w-9 rounded-full bg-destructive/80 text-destructive-foreground hover:bg-destructive backdrop-blur-sm border-white/20 shadow-lg"
                       >
-                          <Trash2 size={18} />
+                          <Trash2 size={16} />
                       </Button>
                   </div>
                 </div>

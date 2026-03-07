@@ -14,7 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, X, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,15 +44,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { INTEREST_OPTIONS } from "@/lib/constants";
 
 const INITIAL_USERS = [
-    { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, email: 'anna@example.com', online: true, city: 'Москва', joined: '2024-05-01', bio: 'Люблю закаты, хороший кофе и интересные разговоры.' },
-    { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, email: 'maxim@example.com', online: true, city: 'Питер', joined: '2024-05-02', bio: 'Путешественник и фотограф.' },
-    { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, email: 'elena@example.com', online: false, city: 'Москва', joined: '2024-04-28', bio: 'Ищу вдохновение в книгах и искусстве.' },
-    { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, email: 'dmitry@example.com', online: false, city: 'Казань', joined: '2024-04-25', bio: 'Программист, который любит готовить.' },
-    { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, email: 'sophia@example.com', online: true, city: 'Москва', joined: '2024-05-05', bio: 'Музыка - моя жизнь.' },
-    { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, email: 'artem@example.com', online: true, city: 'Питер', joined: '2024-05-04', bio: 'Спорт, технологии и ничего лишнего.' },
-    { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, email: 'maria@example.com', online: true, city: 'Москва', joined: '2024-05-03', bio: 'Йога, природа и саморазвитие.' },
+    { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, email: 'anna@example.com', online: true, city: 'Москва', joined: '2024-05-01', bio: 'Люблю закаты, хороший кофе и интересные разговоры.', interests: ["Фотография", "Путешествия", "Кофе"] },
+    { id: 2, name: 'Максим', age: 28, img: PlaceHolderImages[1].imageUrl, email: 'maxim@example.com', online: true, city: 'Питер', joined: '2024-05-02', bio: 'Путешественник и фотограф.', interests: ["Спорт", "Авто"] },
+    { id: 3, name: 'Елена', age: 26, img: PlaceHolderImages[2].imageUrl, email: 'elena@example.com', online: false, city: 'Москва', joined: '2024-04-28', bio: 'Ищу вдохновение в книгах и искусстве.', interests: ["Искусство", "Чтение"] },
+    { id: 4, name: 'Дмитрий', age: 31, img: PlaceHolderImages[3].imageUrl, email: 'dmitry@example.com', online: false, city: 'Казань', joined: '2024-04-25', bio: 'Программист, который любит готовить.', interests: ["IT технологии", "Кулинария"] },
+    { id: 5, name: 'София', age: 22, img: PlaceHolderImages[4].imageUrl, email: 'sophia@example.com', online: true, city: 'Москва', joined: '2024-05-05', bio: 'Музыка - моя жизнь.', interests: ["Музыка", "Творчество"] },
+    { id: 6, name: 'Артем', age: 25, img: PlaceHolderImages[5].imageUrl, email: 'artem@example.com', online: true, city: 'Питер', joined: '2024-05-04', bio: 'Спорт, технологии и ничего лишнего.', interests: ["Спорт", "IT технологии"] },
+    { id: 7, name: 'Мария', age: 29, img: PlaceHolderImages[6].imageUrl, email: 'maria@example.com', online: true, city: 'Москва', joined: '2024-05-03', bio: 'Йога, природа и саморазвитие.', interests: ["Йога", "Природа"] },
 ];
 
 type User = typeof INITIAL_USERS[0];
@@ -85,6 +86,14 @@ export default function AdminUsersPage() {
     toast({
         title: "Пользователь обновлен",
         description: `Данные для ${selectedUser.name} были успешно сохранены.`,
+    });
+  };
+
+  const removeInterest = (interest: string) => {
+    if (!selectedUser) return;
+    setSelectedUser({
+      ...selectedUser,
+      interests: selectedUser.interests.filter(i => i !== interest)
     });
   };
 
@@ -163,7 +172,7 @@ export default function AdminUsersPage() {
 
     {selectedUser && (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="sm:max-w-[425px] rounded-2xl">
+          <DialogContent className="sm:max-w-[500px] rounded-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Редактировать пользователя</DialogTitle>
               <DialogDescription>
@@ -172,18 +181,18 @@ export default function AdminUsersPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
+                <Label htmlFor="name" className="text-right font-bold text-xs uppercase tracking-widest text-muted-foreground">
                   Имя
                 </Label>
                 <Input
                   id="name"
                   value={selectedUser.name}
                   onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })}
-                  className="col-span-3"
+                  className="col-span-3 rounded-xl"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="age" className="text-right">
+                <Label htmlFor="age" className="text-right font-bold text-xs uppercase tracking-widest text-muted-foreground">
                   Возраст
                 </Label>
                 <Input
@@ -191,34 +200,51 @@ export default function AdminUsersPage() {
                   type="number"
                   value={selectedUser.age}
                   onChange={(e) => setSelectedUser({ ...selectedUser, age: parseInt(e.target.value) || 0 })}
-                  className="col-span-3"
+                  className="col-span-3 rounded-xl"
                 />
               </div>
                <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="city" className="text-right">
+                <Label htmlFor="city" className="text-right font-bold text-xs uppercase tracking-widest text-muted-foreground">
                   Город
                 </Label>
                 <Input
                   id="city"
                   value={selectedUser.city}
                   onChange={(e) => setSelectedUser({ ...selectedUser, city: e.target.value })}
-                  className="col-span-3"
+                  className="col-span-3 rounded-xl"
                 />
               </div>
                <div className="grid grid-cols-4 items-start gap-4">
-                <Label htmlFor="bio" className="text-right pt-2">
+                <Label htmlFor="bio" className="text-right pt-2 font-bold text-xs uppercase tracking-widest text-muted-foreground">
                   Био
                 </Label>
                 <Textarea
                   id="bio"
                   value={selectedUser.bio}
                   onChange={(e) => setSelectedUser({ ...selectedUser, bio: e.target.value })}
-                  className="col-span-3 min-h-[100px]"
+                  className="col-span-3 min-h-[80px] rounded-xl"
                 />
+              </div>
+              
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label className="text-right pt-2 font-bold text-xs uppercase tracking-widest text-muted-foreground">
+                  Интересы
+                </Label>
+                <div className="col-span-3 flex flex-wrap gap-2 pt-1">
+                  {selectedUser.interests.map((interest) => (
+                    <Badge key={interest} variant="secondary" className="gap-1.5 py-1 px-2.5 font-bold text-[10px] rounded-lg bg-muted/50 border-0">
+                      {interest}
+                      <button onClick={() => removeInterest(interest)} className="text-muted-foreground hover:text-destructive transition-colors">
+                        <X size={12} />
+                      </button>
+                    </Badge>
+                  ))}
+                  {selectedUser.interests.length === 0 && <p className="text-[10px] text-muted-foreground italic">Список пуст</p>}
+                </div>
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" onClick={handleSaveUser}>Сохранить изменения</Button>
+              <Button type="button" onClick={handleSaveUser} className="w-full rounded-xl gradient-bg text-white font-black uppercase tracking-widest shadow-lg border-0">Сохранить изменения</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
