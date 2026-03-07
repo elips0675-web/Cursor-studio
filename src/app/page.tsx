@@ -176,7 +176,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contest Entry Banner */}
+        <TopOfWeekSection topUsers={topUsers} onLike={handleLikeHomepage} t={t} />
+
+        {/* Contest Entry Banner - Moved here above recommendations */}
         <section className="px-5 pt-8">
           <Link href="/contest" className="block relative h-28 rounded-[2rem] overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600"></div>
@@ -196,8 +198,6 @@ export default function Home() {
             </div>
           </Link>
         </section>
-
-        <TopOfWeekSection topUsers={topUsers} onLike={handleLikeHomepage} t={t} />
 
         <RecommendationsSection recommendedUsers={recommendedUsers} onLike={handleLikeHomepage} t={t} />
       </main>

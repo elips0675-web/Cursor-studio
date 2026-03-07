@@ -38,11 +38,11 @@ import {
 import { GROUP_CATEGORIES } from "@/lib/demo-data";
 
 const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+const DialogContent = import("@/components/ui/dialog").then(mod => mod.DialogContent);
+const DialogTitle = import("@/components/ui/dialog").then(mod => mod.DialogTitle);
+const DialogDescription = import("@/components/ui/dialog").then(mod => mod.DialogDescription);
+const DialogHeader = import("@/components/ui/dialog").then(mod => mod.DialogHeader);
+const DialogFooter = import("@/components/ui/dialog").then(mod => mod.DialogFooter);
 
 // Canonical group names (using Russian names as identifiers)
 const defaultJoinedGroups = ["Хип-хоп", "Бег", "UI/UX Дизайн"];
@@ -189,6 +189,10 @@ export default function ProfilePage() {
     toast({ title: t('boost.success_paid') });
   };
 
+  const handleOpenContestDialog = () => {
+    setShowContestDialog(true);
+  };
+
   const handleSubmitToContest = (photoUrl: string) => {
     setShowContestDialog(false);
     toast({
@@ -252,7 +256,7 @@ export default function ProfilePage() {
 
           {/* Contest Banner in Profile */}
           <div 
-            onClick={() => setShowContestDialog(true)}
+            onClick={handleOpenContestDialog}
             className="bg-white rounded-[1.5rem] p-4 border border-amber-500/20 app-shadow mb-6 flex items-center justify-between cursor-pointer hover:bg-amber-50/30 transition-colors"
           >
             <div className="flex items-center gap-3">
@@ -264,7 +268,7 @@ export default function ProfilePage() {
                 <p className="text-[9px] text-muted-foreground font-bold">{t('contest.participate_banner')}</p>
               </div>
             </div>
-            <ChevronRight className="text-muted-foreground/40" size={18} />
+            <X className="text-muted-foreground/40 -rotate-90" size={18} />
           </div>
           
           <div className="bg-white rounded-[1.5rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
@@ -463,7 +467,6 @@ export default function ProfilePage() {
       
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent className="rounded-3xl">
-            <AlertDialogHeader>
             <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.delete_photo.title')}</AlertDialogTitle>
             <AlertDialogDescription>
