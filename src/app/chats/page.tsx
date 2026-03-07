@@ -97,6 +97,7 @@ function ChatsContent() {
     const groupChats = GROUP_CATEGORIES.flatMap(category => 
       category.subgroups.map(subgroup => ({
         ...subgroup,
+        name: language === 'RU' ? subgroup.name_ru : subgroup.name_en,
         id: subgroup.id,
         img: category.img,
         hint: category.hint,
@@ -149,6 +150,7 @@ function ChatsContent() {
             if (foundSubgroup) {
                 groupData = { 
                     ...foundSubgroup, 
+                    name: language === 'RU' ? foundSubgroup.name_ru : foundSubgroup.name_en,
                     img: category.img, 
                     hint: category.hint,
                 };
@@ -214,14 +216,13 @@ function ChatsContent() {
   const handleLeaveGroup = () => {
     if (!selectedChat || selectedChat.type !== 'group') return;
 
-    // Remove group from profile in localStorage
     try {
       const savedProfile = localStorage.getItem('userProfile');
       if (savedProfile) {
         const profile = JSON.parse(savedProfile);
         if (profile.joinedGroups && Array.isArray(profile.joinedGroups)) {
           profile.joinedGroups = profile.joinedGroups.filter(
-            (groupName: string) => groupName !== selectedChat.name
+            (groupName: string) => groupName !== selectedChat.name_ru && groupName !== selectedChat.name_en
           );
           localStorage.setItem('userProfile', JSON.stringify(profile));
         }
@@ -395,3 +396,5 @@ export default function ChatsPage() {
     <ChatsContent />
   );
 }
+
+    

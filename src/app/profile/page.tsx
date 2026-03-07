@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
@@ -91,7 +92,8 @@ export default function ProfilePage() {
     const map = new Map<string, number>();
     for (const category of GROUP_CATEGORIES) {
       for (const subgroup of category.subgroups) {
-        map.set(subgroup.name, subgroup.id);
+        map.set(subgroup.name_ru, subgroup.id);
+        map.set(subgroup.name_en, subgroup.id);
       }
     }
     return map;
@@ -406,3 +408,5 @@ export default function ProfilePage() {
     </>
   );
 }
+
+    

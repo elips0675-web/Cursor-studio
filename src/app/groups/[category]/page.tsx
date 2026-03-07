@@ -64,11 +64,11 @@ function SubGroupsContent() {
                         <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex flex-col gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
                             <div className="flex items-center gap-4 min-w-0">
                                 <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted flex-shrink-0 border-2 border-white shadow-sm">
-                                    <Image src={category.img} alt={subgroup.name} fill sizes="56px" data-ai-hint={category.hint} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"/>
+                                    <Image src={category.img} alt={language === 'RU' ? subgroup.name_ru : subgroup.name_en} fill sizes="56px" data-ai-hint={category.hint} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"/>
                                     <div className="absolute inset-0 bg-black/10"></div>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{subgroup.name}</h4>
+                                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{language === 'RU' ? subgroup.name_ru : subgroup.name_en}</h4>
                                     <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
                                         <div className="flex items-center gap-1.5 font-semibold">
                                             <Users size={12} /> {subgroup.members}
@@ -125,3 +125,5 @@ export default function SubGroupsPage() {
         </Suspense>
     )
 }
+
+    
