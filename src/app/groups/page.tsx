@@ -1,7 +1,30 @@
 "use client";
 
-import { Plus, Users, PackageX } from "lucide-react";
-import Image from "next/image";
+import { 
+  Plus, 
+  Users, 
+  PackageX,
+  Music,
+  Dumbbell,
+  Palette,
+  Gamepad2,
+  Film,
+  Globe,
+  ChefHat,
+  Cpu,
+  BookOpen,
+  Sparkles,
+  Shirt,
+  HeartPulse,
+  Dog,
+  FlaskConical,
+  Briefcase,
+  Home,
+  Car,
+  Laugh,
+  Star,
+  Scroll
+} from "lucide-react";
 import Link from "next/link";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { AppHeader } from "@/components/layout/app-header";
@@ -9,6 +32,11 @@ import { GROUP_CATEGORIES } from "@/lib/demo-data";
 import { Button } from "@/components/ui/button";
 import { useFeatureFlags } from "@/context/feature-flags-context";
 import { useLanguage } from "@/context/language-context";
+import { cn } from "@/lib/utils";
+
+const iconMap: Record<string, React.ElementType> = {
+  Music, Dumbbell, Palette, Gamepad2, Film, Globe, ChefHat, Cpu, BookOpen, Sparkles, Shirt, HeartPulse, Dog, FlaskConical, Briefcase, Home, Car, Laugh, Star, Scroll
+};
 
 export default function GroupsPage() {
   const { groupsPageEnabled } = useFeatureFlags();
@@ -39,10 +67,12 @@ export default function GroupsPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {GROUP_CATEGORIES.map((category) => (
+          {GROUP_CATEGORIES.map((category) => {
+            const Icon = iconMap[category.icon] || Users;
+            return (
             <Link href={`/groups/${category.id}`} key={category.id} className="bg-white rounded-2xl overflow-hidden app-shadow group block border border-transparent hover:border-primary/20 transition-all">
-              <div className="relative h-24 w-full">
-                <Image src={category.img} alt={language === 'RU' ? category.name_ru : category.name_en} fill sizes="(max-width: 480px) 50vw, 240px" data-ai-hint={category.hint} className="object-cover group-hover:scale-105 transition-transform" />
+              <div className={cn("relative h-24 w-full bg-muted flex items-center justify-center", `bg-gradient-to-br from-${category.id}-100 to-${category.id}-200`)}>
+                <Icon size={32} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-300" />
               </div>
               <div className="p-3">
                 <h6 className="font-bold text-sm leading-tight truncate group-hover:text-primary">{language === 'RU' ? category.name_ru : category.name_en}</h6>
@@ -51,7 +81,7 @@ export default function GroupsPage() {
                 </div>
               </div>
             </Link>
-          ))}
+          )})}
         </div>
 
         <Button className="w-full h-12 rounded-full gradient-bg text-white font-bold mt-8 shadow-lg shadow-primary/20">

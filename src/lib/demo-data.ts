@@ -19,7 +19,7 @@ export const ALL_DEMO_USERS = [
 
 export const GROUP_CATEGORIES = [
   {
-    id: 'music', name_ru: 'Музыка', name_en: 'Music', img: 'https://picsum.photos/seed/cat_music/600/400', hint: 'concert crowd',
+    id: 'music', name_ru: 'Музыка', name_en: 'Music', icon: 'Music', img: 'https://picsum.photos/seed/cat_music/600/400', hint: 'concert crowd',
     subgroups: [
       { id: 101, name_ru: 'Хип-хоп', name_en: 'Hip-hop', members: 150, online: 25 }, { id: 102, name_ru: 'Рок', name_en: 'Rock', members: 200, online: 40 },
       { id: 103, name_ru: 'Электроника', name_en: 'Electronic', members: 180, online: 30 }, { id: 104, name_ru: 'Джаз & Блюз', name_en: 'Jazz & Blues', members: 80, online: 10 },
@@ -34,7 +34,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'sports', name_ru: 'Спорт', name_en: 'Sports', img: 'https://picsum.photos/seed/cat_sports/600/400', hint: 'stadium sports',
+    id: 'sports', name_ru: 'Спорт', name_en: 'Sports', icon: 'Dumbbell', img: 'https://picsum.photos/seed/cat_sports/600/400', hint: 'stadium sports',
     subgroups: [
       { id: 201, name_ru: 'Футбол', name_en: 'Football', members: 400, online: 80 }, { id: 202, name_ru: 'Баскетбол', name_en: 'Basketball', members: 250, online: 50 },
       { id: 203, name_ru: 'Бег', name_en: 'Running', members: 180, online: 35 }, { id: 204, name_ru: 'Йога', name_en: 'Yoga', members: 300, online: 60 },
@@ -49,7 +49,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'creativity', name_ru: 'Творчество', name_en: 'Creativity', img: 'https://picsum.photos/seed/cat_creativity/600/400', hint: 'art supplies',
+    id: 'creativity', name_ru: 'Творчество', name_en: 'Creativity', icon: 'Palette', img: 'https://picsum.photos/seed/cat_creativity/600/400', hint: 'art supplies',
     subgroups: [
       { id: 301, name_ru: 'Рисование', name_en: 'Drawing', members: 220, online: 45 }, { id: 302, name_ru: 'Фотография', name_en: 'Photography', members: 350, online: 70 },
       { id: 303, name_ru: 'UI/UX Дизайн', name_en: 'UI/UX Design', members: 280, online: 60 }, { id: 304, name_ru: 'Писательство', name_en: 'Writing', members: 150, online: 25 },
@@ -64,7 +64,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'gaming', name_ru: 'Игры', name_en: 'Gaming', img: 'https://picsum.photos/seed/cat_gaming/600/400', hint: 'video games',
+    id: 'gaming', name_ru: 'Игры', name_en: 'Gaming', icon: 'Gamepad2', img: 'https://picsum.photos/seed/cat_gaming/600/400', hint: 'video games',
     subgroups: [
       { id: 401, name_ru: 'PC Гейминг', name_en: 'PC Gaming', members: 500, online: 120 }, { id: 402, name_ru: 'PlayStation', name_en: 'PlayStation', members: 450, online: 100 },
       { id: 403, name_ru: 'Xbox', name_en: 'Xbox', members: 300, online: 70 }, { id: 404, name_ru: 'Nintendo Switch', name_en: 'Nintendo Switch', members: 250, online: 50 },
@@ -79,7 +79,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'movies', name_ru: 'Кино и Сериалы', name_en: 'Movies & TV', img: 'https://picsum.photos/seed/cat_movies/600/400', hint: 'cinema theater',
+    id: 'movies', name_ru: 'Кино и Сериалы', name_en: 'Movies & TV', icon: 'Film', img: 'https://picsum.photos/seed/cat_movies/600/400', hint: 'cinema theater',
     subgroups: [
       { id: 501, name_ru: 'Netflix', name_en: 'Netflix', members: 700, online: 150 }, { id: 502, name_ru: 'Marvel & DC', name_en: 'Marvel & DC', members: 600, online: 130 },
       { id: 503, name_ru: 'Аниме', name_en: 'Anime', members: 550, online: 120 }, { id: 504, name_ru: 'Классика кино', name_en: 'Classic Cinema', members: 200, online: 30 },
@@ -94,7 +94,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'travel', name_ru: 'Путешествия', name_en: 'Travel', img: 'https://picsum.photos/seed/cat_travel/600/400', hint: 'world map',
+    id: 'travel', name_ru: 'Путешествия', name_en: 'Travel', icon: 'Globe', img: 'https://picsum.photos/seed/cat_travel/600/400', hint: 'world map',
     subgroups: [
       { id: 601, name_ru: 'Походы', name_en: 'Hiking', members: 250, online: 50 }, { id: 602, name_ru: 'Пляжный отдых', name_en: 'Beach Vacation', members: 400, online: 80 },
       { id: 603, name_ru: 'Автопутешествия', name_en: 'Road Trips', members: 300, online: 60 }, { id: 604, name_ru: 'Путешествия по Азии', name_en: 'Asia Travel', members: 200, online: 40 },
@@ -109,7 +109,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'food', name_ru: 'Еда и Кулинария', name_en: 'Food & Cooking', img: 'https://picsum.photos/seed/cat_food/600/400', hint: 'delicious food',
+    id: 'food', name_ru: 'Еда и Кулинария', name_en: 'Food & Cooking', icon: 'ChefHat', img: 'https://picsum.photos/seed/cat_food/600/400', hint: 'delicious food',
     subgroups: [
       { id: 701, name_ru: 'Домашняя выпечка', name_en: 'Home Baking', members: 300, online: 60 }, { id: 702, name_ru: 'Здоровое питание', name_en: 'Healthy Eating', members: 250, online: 50 },
       { id: 703, name_ru: 'Кофейные гурманы', name_en: 'Coffee Gourmets', members: 400, online: 80 }, { id: 704, name_ru: 'Вегетарианство/Веганство', name_en: 'Vegetarian/Vegan', members: 200, online: 40 },
@@ -124,7 +124,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'tech', name_ru: 'Технологии и IT', name_en: 'Tech & IT', img: 'https://picsum.photos/seed/cat_tech/600/400', hint: 'circuit board',
+    id: 'tech', name_ru: 'Технологии и IT', name_en: 'Tech & IT', icon: 'Cpu', img: 'https://picsum.photos/seed/cat_tech/600/400', hint: 'circuit board',
     subgroups: [
       { id: 801, name_ru: 'Frontend', name_en: 'Frontend', members: 400, online: 90 }, { id: 802, name_ru: 'Backend', name_en: 'Backend', members: 350, online: 80 },
       { id: 803, name_ru: 'Data Science & AI', name_en: 'Data Science & AI', members: 300, online: 70 }, { id: 804, name_ru: 'Mobile Dev', name_en: 'Mobile Dev', members: 250, online: 50 },
@@ -139,7 +139,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'books', name_ru: 'Книги', name_en: 'Books', img: 'https://picsum.photos/seed/cat_books/600/400', hint: 'library books',
+    id: 'books', name_ru: 'Книги', name_en: 'Books', icon: 'BookOpen', img: 'https://picsum.photos/seed/cat_books/600/400', hint: 'library books',
     subgroups: [
       { id: 901, name_ru: 'Фантастика', name_en: 'Science Fiction', members: 400, online: 80 }, { id: 902, name_ru: 'Фэнтези', name_en: 'Fantasy', members: 450, online: 90 },
       { id: 903, name_ru: 'Детективы', name_en: 'Detectives', members: 350, online: 70 }, { id: 904, name_ru: 'Классика', name_en: 'Classics', members: 200, online: 40 },
@@ -154,7 +154,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'selfdev', name_ru: 'Саморазвитие', name_en: 'Self-Dev', img: 'https://picsum.photos/seed/cat_selfdev/600/400', hint: 'meditation nature',
+    id: 'selfdev', name_ru: 'Саморазвитие', name_en: 'Self-Dev', icon: 'Sparkles', img: 'https://picsum.photos/seed/cat_selfdev/600/400', hint: 'meditation nature',
     subgroups: [
       { id: 1001, name_ru: 'Продуктивность', name_en: 'Productivity', members: 300, online: 60 }, { id: 1002, name_ru: 'Медитация', name_en: 'Meditation', members: 250, online: 50 },
       { id: 1003, name_ru: 'Финансовая грамотность', name_en: 'Financial Literacy', members: 280, online: 55 }, { id: 1004, name_ru: 'Изучение языков', name_en: 'Language Learning', members: 400, online: 80 },
@@ -169,7 +169,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'fashion', name_ru: 'Мода и Стиль', name_en: 'Fashion & Style', img: 'https://picsum.photos/seed/cat_fashion/600/400', hint: 'fashion runway',
+    id: 'fashion', name_ru: 'Мода и Стиль', name_en: 'Fashion & Style', icon: 'Shirt', img: 'https://picsum.photos/seed/cat_fashion/600/400', hint: 'fashion runway',
     subgroups: [
       { id: 1101, name_ru: 'Стритвир', name_en: 'Streetwear', members: 300, online: 60 }, { id: 1102, name_ru: 'Высокая мода', name_en: 'High Fashion', members: 150, online: 30 },
       { id: 1103, name_ru: 'Винтаж', name_en: 'Vintage', members: 180, online: 35 }, { id: 1104, name_ru: 'Кроссовки', name_en: 'Sneakers', members: 250, online: 50 },
@@ -184,7 +184,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'health', name_ru: 'Здоровье', name_en: 'Health', img: 'https://picsum.photos/seed/cat_health/600/400', hint: 'healthy food yoga',
+    id: 'health', name_ru: 'Здоровье', name_en: 'Health', icon: 'HeartPulse', img: 'https://picsum.photos/seed/cat_health/600/400', hint: 'healthy food yoga',
     subgroups: [
       { id: 1201, name_ru: 'Правильное питание', name_en: 'Healthy Nutrition', members: 350, online: 70 }, { id: 1202, name_ru: 'Фитнес дома', name_en: 'Home Fitness', members: 300, online: 60 },
       { id: 1203, name_ru: 'Тренажерный зал', name_en: 'Gym', members: 280, online: 56 }, { id: 1204, name_ru: 'Йога и пилатес', name_en: 'Yoga & Pilates', members: 250, online: 50 },
@@ -199,7 +199,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'pets', name_ru: 'Питомцы', name_en: 'Pets', img: 'https://picsum.photos/seed/cat_pets/600/400', hint: 'cute dog cat',
+    id: 'pets', name_ru: 'Питомцы', name_en: 'Pets', icon: 'Dog', img: 'https://picsum.photos/seed/cat_pets/600/400', hint: 'cute dog cat',
     subgroups: [
       { id: 1301, name_ru: 'Собачники', name_en: 'Dog Lovers', members: 500, online: 100 }, { id: 1302, name_ru: 'Кошатники', name_en: 'Cat Lovers', members: 600, online: 120 },
       { id: 1303, name_ru: 'Грызуны', name_en: 'Rodents', members: 150, online: 30 }, { id: 1304, name_ru: 'Аквариумистика', name_en: 'Aquaristics', members: 120, online: 24 },
@@ -214,7 +214,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'science', name_ru: 'Наука', name_en: 'Science', img: 'https://picsum.photos/seed/cat_science/600/400', hint: 'galaxy space',
+    id: 'science', name_ru: 'Наука', name_en: 'Science', icon: 'FlaskConical', img: 'https://picsum.photos/seed/cat_science/600/400', hint: 'galaxy space',
     subgroups: [
       { id: 1401, name_ru: 'Космос', name_en: 'Space', members: 300, online: 60 }, { id: 1402, name_ru: 'Физика', name_en: 'Physics', members: 200, online: 40 },
       { id: 1403, name_ru: 'Биология', name_en: 'Biology', members: 250, online: 50 }, { id: 1404, name_ru: 'Химия', name_en: 'Chemistry', members: 180, online: 36 },
@@ -229,7 +229,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'business', name_ru: 'Бизнес', name_en: 'Business', img: 'https://picsum.photos/seed/cat_business/600/400', hint: 'city skyline office',
+    id: 'business', name_ru: 'Бизнес', name_en: 'Business', icon: 'Briefcase', img: 'https://picsum.photos/seed/cat_business/600/400', hint: 'city skyline office',
     subgroups: [
       { id: 1501, name_ru: 'Стартапы', name_en: 'Startups', members: 300, online: 60 }, { id: 1502, name_ru: 'Инвестиции', name_en: 'Investing', members: 350, online: 70 },
       { id: 1503, name_ru: 'Маркетинг', name_en: 'Marketing', members: 280, online: 56 }, { id: 1504, name_ru: 'Продажи', name_en: 'Sales', members: 250, online: 50 },
@@ -244,7 +244,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'home', name_ru: 'Дом и Сад', name_en: 'Home & Garden', img: 'https://picsum.photos/seed/cat_home/600/400', hint: 'cozy interior garden',
+    id: 'home', name_ru: 'Дом и Сад', name_en: 'Home & Garden', icon: 'Home', img: 'https://picsum.photos/seed/cat_home/600/400', hint: 'cozy interior garden',
     subgroups: [
       { id: 1601, name_ru: 'Дизайн интерьера', name_en: 'Interior Design', members: 300, online: 60 }, { id: 1602, name_ru: 'Садоводство', name_en: 'Gardening', members: 250, online: 50 },
       { id: 1603, name_ru: 'Комнатные растения', name_en: 'Houseplants', members: 350, online: 70 }, { id: 1604, name_ru: 'DIY-ремонт', name_en: 'DIY Renovation', members: 200, online: 40 },
@@ -259,7 +259,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'cars', name_ru: 'Автомобили', name_en: 'Cars', img: 'https://picsum.photos/seed/cat_cars/600/400', hint: 'sports car',
+    id: 'cars', name_ru: 'Автомобили', name_en: 'Cars', icon: 'Car', img: 'https://picsum.photos/seed/cat_cars/600/400', hint: 'sports car',
     subgroups: [
       { id: 1701, name_ru: 'Спорткары', name_en: 'Sports Cars', members: 250, online: 50 }, { id: 1702, name_ru: 'Классические авто', name_en: 'Classic Cars', members: 180, online: 36 },
       { id: 1703, name_ru: 'Внедорожники', name_en: 'SUVs', members: 300, online: 60 }, { id: 1704, name_ru: 'Электромобили', name_en: 'Electric Cars', members: 220, online: 44 },
@@ -274,7 +274,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'humor', name_ru: 'Юмор', name_en: 'Humor', img: 'https://picsum.photos/seed/cat_humor/600/400', hint: 'laughing people',
+    id: 'humor', name_ru: 'Юмор', name_en: 'Humor', icon: 'Laugh', img: 'https://picsum.photos/seed/cat_humor/600/400', hint: 'laughing people',
     subgroups: [
       { id: 1801, name_ru: 'Мемы', name_en: 'Memes', members: 800, online: 150 }, { id: 1802, name_ru: 'Stand-up', name_en: 'Stand-up', members: 400, online: 80 },
       { id: 1803, name_ru: 'Черный юмор', name_en: 'Dark Humor', members: 250, online: 50 }, { id: 1804, name_ru: 'Анекдоты', name_en: 'Jokes', members: 300, online: 60 },
@@ -289,7 +289,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'dance', name_ru: 'Танцы', name_en: 'Dance', img: 'https://picsum.photos/seed/cat_dance/600/400', hint: 'dancing couple',
+    id: 'dance', name_ru: 'Танцы', name_en: 'Dance', icon: 'Star', img: 'https://picsum.photos/seed/cat_dance/600/400', hint: 'dancing couple',
     subgroups: [
       { id: 1901, name_ru: 'Хип-хоп', name_en: 'Hip-hop', members: 250, online: 50 }, { id: 1902, name_ru: 'Сальса и Бачата', name_en: 'Salsa & Bachata', members: 300, online: 60 },
       { id: 1903, name_ru: 'Современные танцы', name_en: 'Modern Dance', members: 220, online: 44 }, { id: 1904, name_ru: 'Балет', name_en: 'Ballet', members: 120, online: 24 },
@@ -304,7 +304,7 @@ export const GROUP_CATEGORIES = [
     ]
   },
   {
-    id: 'history', name_ru: 'История', name_en: 'History', img: 'https://picsum.photos/seed/cat_history/600/400', hint: 'ancient ruins',
+    id: 'history', name_ru: 'История', name_en: 'History', icon: 'Scroll', img: 'https://picsum.photos/seed/cat_history/600/400', hint: 'ancient ruins',
     subgroups: [
       { id: 2001, name_ru: 'Древний мир', name_en: 'Ancient World', members: 200, online: 40 }, { id: 2002, name_ru: 'Средневековье', name_en: 'Middle Ages', members: 250, online: 50 },
       { id: 2003, name_ru: 'Новое время', name_en: 'Modern History', members: 180, online: 36 }, { id: 2004, name_ru: 'XX век', name_en: '20th Century', members: 300, online: 60 },
@@ -319,5 +319,3 @@ export const GROUP_CATEGORIES = [
     ]
   },
 ];
-
-    
