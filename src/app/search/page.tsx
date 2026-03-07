@@ -229,10 +229,10 @@ function SearchContent() {
             asChild 
             variant="outline" 
             size="icon" 
-            className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-[#2ecc71] hover:text-[#27ae60] active:scale-90 transition-all"
+            className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-[#2ecc71] hover:text-[#27ae60] active:scale-90 transition-all"
           >
             <Link href={`/chats?matchId=${user.id}`}>
-              <MessageCircle size={28} strokeWidth={3} />
+              <MessageCircle size={32} strokeWidth={3} />
             </Link>
           </Button>
         </div>
