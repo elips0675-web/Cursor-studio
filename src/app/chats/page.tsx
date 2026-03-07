@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
@@ -6,7 +5,7 @@ import {
   Search, ChevronLeft, Send, MoreVertical, Sparkles, Smile, Heart, Laugh, Compass, Coffee, Zap, MessageSquareQuote, Flame, Star, Ghost, Rocket, Crown, Music, Phone, Video, Flag, Check, CheckCheck, Info, Users, LogOut
 } from "lucide-react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { AppHeader } from "@/components/layout/app-header";
 import { Input } from "@/components/ui/input";
@@ -68,6 +67,7 @@ const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.rea
 
 function ChatsContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { t, language } = useLanguage();
   const { videoCallsEnabled, aiIcebreakersEnabled } = useFeatureFlags();
   const matchId = searchParams.get('matchId');
@@ -249,12 +249,20 @@ function ChatsContent() {
     }
   };
 
+  const handleBack = () => {
+    if (matchId || groupId) {
+      router.back();
+    } else {
+      setSelectedChat(null);
+    }
+  };
+
   if (selectedChat) {
     const isGroupChat = selectedChat.type === 'group';
     return (
       <div className="flex flex-col h-svh bg-[#f8f9fb]">
         <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50">
-          <Button variant="ghost" size="icon" onClick={() => setSelectedChat(null)} className="rounded-full hover:bg-muted/50"><ChevronLeft size={24} /></Button>
+          <Button variant="ghost" size="icon" onClick={handleBack} className="rounded-full hover:bg-muted/50"><ChevronLeft size={24} /></Button>
           <div className="relative"><div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm"><Image src={selectedChat.img} alt={selectedChat.name} fill sizes="40px" className="object-cover" /></div>{selectedChat.online && !isGroupChat && <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#2ecc71] border-2 border-white rounded-full shadow-sm"></span>}</div>
           <div className="flex-1 min-w-0"><h3 className="font-black text-sm leading-tight tracking-tight text-foreground">{selectedChat.name}</h3><p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">{isGroupChat ? `${selectedChat.members} ${t('chats.members')}, ${selectedChat.online} ${t('chats.online')}` : (selectedChat.online ? `• ${t('chats.online')}` : t('chats.offline'))}</p></div>
           <div className="flex items-center">
@@ -396,5 +404,3 @@ export default function ChatsPage() {
     <ChatsContent />
   );
 }
-
-    
