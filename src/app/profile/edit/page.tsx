@@ -1,10 +1,11 @@
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { Sparkles, Camera, User, MapPin, Info, GraduationCap, Dog, Briefcase, Bed, Target, Heart } from "lucide-react";
+import { Sparkles, Camera, User, MapPin, Info, GraduationCap, Dog, Briefcase, Bed, Target, Heart, Users, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { INTEREST_OPTIONS, DATING_GOALS, ZODIAC_SIGNS, PET_OPTIONS, SLEEP_SCHEDULE_OPTIONS, EDUCATION_OPTIONS } from "@/lib/constants";
+import { GROUP_CATEGORIES } from "@/lib/demo-data";
 import { useLanguage } from "@/context/language-context";
 
 const defaultProfile = {
@@ -40,24 +42,39 @@ const defaultProfile = {
     sleepSchedule: "Сова",
     work: "Дизайнер",
     gender: "female",
-    lookingFor: "male"
+    lookingFor: "male",
+    joinedGroups: ["Хип-хоп", "Бег", "UI/UX Дизайн"],
 };
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
   const [mainPhoto, setMainPhoto] = useState(PlaceHolderImages[0].imageUrl);
-  const [profile, setProfile] = useState(defaultProfile);
+  const [profile, setProfile] = useState(defaultProfile as any);
   
   const { user } = useUser();
   const firestore = useFirestore();
+
+  const groupDataMap = useMemo(() => {
+    const map = new Map<string, { ru: string; en: string; id: number }>();
+    GROUP_CATEGORIES.forEach(category => {
+      category.subgroups.forEach(subgroup => {
+        map.set(subgroup.name_ru, { ru: subgroup.name_ru, en: subgroup.name_en, id: subgroup.id });
+        map.set(subgroup.name_en, { ru: subgroup.name_ru, en: subgroup.name_en, id: subgroup.id });
+      });
+    });
+    return map;
+  }, []);
 
   useEffect(() => {
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
       try {
         const loadedProfile = JSON.parse(savedProfile);
+        if (!loadedProfile.joinedGroups) {
+          loadedProfile.joinedGroups = defaultProfile.joinedGroups;
+        }
         setProfile(prev => ({ ...prev, ...loadedProfile }));
         if(loadedProfile.photoURL) {
           setMainPhoto(loadedProfile.photoURL);
@@ -127,8 +144,23 @@ export default function EditProfilePage() {
   const toggleInterest = (interest: string) => {
     setProfile(prev => ({
       ...prev,
-      interests: prev.interests.includes(interest) ? prev.interests.filter(i => i !== interest) : [...prev.interests, interest]
+      interests: prev.interests.includes(interest) ? prev.interests.filter((i: string) => i !== interest) : [...prev.interests, interest]
     }));
+  };
+  
+  const handleRemoveGroup = (groupNameToRemove: string) => {
+    const groupInfo = groupDataMap.get(groupNameToRemove);
+    if (!groupInfo) return;
+
+    const updatedGroups = profile.joinedGroups.filter(
+        (g: string) => g !== groupInfo.ru && g !== groupInfo.en
+    );
+
+    setProfile((prev: any) => ({ ...prev, joinedGroups: updatedGroups }));
+
+    toast({
+        title: `${t('toast.left_group')} "${language === 'RU' ? groupInfo.ru : groupInfo.en}"`,
+    });
   };
 
   return (
@@ -225,7 +257,7 @@ export default function EditProfilePage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
-                <Select value={profile.zodiac || ''} onValueChange={(val) => setProfile({...profile, zodiac: val})}><SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger><SelectContent className="rounded-xl border-0 shadow-2xl">{ZODIAC_SIGNS.map(sign => <SelectItem key={sign} value={sign} className="font-bold text-xs">{sign}</SelectItem>)}</SelectContent></Select>
+                <Select value={profile.zodiac || ''} onValueChange={(val) => setProfile({...profile, zodiac: val})}><SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger><SelectContent className="rounded-xl border-0 shadow-2xl">{ZODIAC_SIGNS.map(sign => <SelectItem key={sign} value={sign} className="font-bold text-xs">{t(sign)}</SelectItem>)}</SelectContent></Select>
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
@@ -238,10 +270,40 @@ export default function EditProfilePage() {
             <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
             <div className="flex flex-wrap gap-2">
               {INTEREST_OPTIONS.map(interest => (
-                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={profile.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", profile.interests.includes(interest) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground hover:bg-border")}>{interest}</Badge>
+                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={profile.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", profile.interests.includes(interest) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground hover:bg-border")}>{t(interest)}</Badge>
               ))}
             </div>
           </div>
+
+          <div className="h-px bg-border/50 my-6"></div>
+
+            <div className="space-y-3">
+                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1.5"><Users size={12}/> Мои группы</Label>
+                <div className="flex flex-wrap gap-2">
+                {(profile.joinedGroups && profile.joinedGroups.length > 0) ? (
+                    profile.joinedGroups.map((groupName: string) => {
+                    const groupInfo = groupDataMap.get(groupName);
+                    if (!groupInfo) return null;
+                    const displayName = language === 'RU' ? groupInfo.ru : groupInfo.en;
+
+                    return (
+                        <Badge key={groupName} variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 border gap-2 py-1.5 px-3 font-bold text-[10px] rounded-lg shadow-sm">
+                        <Users size={12} />
+                        <span>{displayName}</span>
+                        <button
+                            onClick={() => handleRemoveGroup(groupName)}
+                            className="-mr-1 text-blue-500/50 hover:text-blue-700 transition-colors"
+                        >
+                            <Trash2 size={13} />
+                        </button>
+                        </Badge>
+                    );
+                    })
+                ) : (
+                    <p className="text-xs text-muted-foreground p-2">{language === 'RU' ? 'Вы не состоите в группах' : 'You are not in any groups'}</p>
+                )}
+                </div>
+            </div>
         </div>
         <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 active:scale-95 transition-all">Сохранить</Button>
       </main>
