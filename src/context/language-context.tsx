@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -126,6 +125,8 @@ const translations = {
     'contest.select_photo': 'Выберите фото для конкурса',
     'contest.rules': 'Правила конкурса',
     'contest.rules_desc': 'Вы можете подать одну заявку в месяц. Победители получают статус PRO и бонусные суперлайки!',
+    'contest.tab.women': 'Девушки',
+    'contest.tab.men': 'Парни',
     // Chats
     'chats.title': 'Сообщения',
     'chats.subtitle': 'Твои диалоги',
@@ -450,6 +451,8 @@ const translations = {
     'contest.select_photo': 'Select photo for the contest',
     'contest.rules': 'Contest Rules',
     'contest.rules_desc': 'You can submit one entry per month. Winners get PRO status and bonus superlikes!',
+    'contest.tab.women': 'Women',
+    'contest.tab.men': 'Men',
     // Chats
     'chats.title': 'Messages',
     'chats.subtitle': 'Your dialogs',
