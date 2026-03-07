@@ -263,31 +263,7 @@ export default function ContestPage() {
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-muted/30 to-transparent -z-0 rounded-b-[3rem]"></div>
             </section>
 
-            {/* Prizes List */}
-            <section className="mb-10">
-              <div className="flex items-center gap-2 mb-4 px-1">
-                <Award className="text-primary" size={18} />
-                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('contest.prizes.title')}</h4>
-              </div>
-              <div className="grid grid-cols-1 gap-2.5">
-                {prizes.map((prize) => (
-                  <div key={prize.id} className="flex items-center gap-4 bg-white p-3.5 rounded-2xl border border-border/40 app-shadow">
-                    <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
-                      {prize.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="text-xs font-black leading-none">{prize.title}</h5>
-                      <p className="text-[10px] text-muted-foreground mt-1 font-medium">{prize.desc}</p>
-                    </div>
-                    <div className="text-primary/20">
-                      <CheckCircle2 size={16} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="space-y-3">
+            <section className="space-y-3 mb-10">
               <div className="flex items-center justify-between px-1 mb-4">
                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('contest.all_participants')}</h4>
                 <Sparkles className="text-primary/40" size={14} />
@@ -339,6 +315,30 @@ export default function ContestPage() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+              </div>
+            </section>
+
+            {/* Prizes List - Moved here under all participants */}
+            <section className="mb-10">
+              <div className="flex items-center gap-2 mb-4 px-1">
+                <Award className="text-primary" size={18} />
+                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('contest.prizes.title')}</h4>
+              </div>
+              <div className="grid grid-cols-1 gap-2.5">
+                {prizes.map((prize) => (
+                  <div key={prize.id} className="flex items-center gap-4 bg-white p-3.5 rounded-2xl border border-border/40 app-shadow">
+                    <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
+                      {prize.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="text-xs font-black leading-none">{prize.title}</h5>
+                      <p className="text-[10px] text-muted-foreground mt-1 font-medium">{prize.desc}</p>
+                    </div>
+                    <div className="text-primary/20">
+                      <CheckCircle2 size={16} />
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           </TabsContent>
