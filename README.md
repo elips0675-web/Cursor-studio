@@ -1,5 +1,19 @@
-# Firebase Studio
+# Firebase Studio - SwiftMatch
 
-This is a NextJS starter in Firebase Studio.
+Это полноценное веб-приложение (MVP), построенное на базе Next.js, React и Firebase.
 
-To get started, take a look at src/app/page.tsx.
+## О проекте
+В отличие от простых статических HTML-страниц, это приложение является полнофункциональным программным продуктом с интеграцией базы данных, системы авторизации и искусственного интеллекта.
+
+## Как запустить демо в интернете?
+Чтобы ваше приложение стало доступно по ссылке в интернете (стало реальным сайтом), его необходимо развернуть (выполнить деплой).
+
+1. **Firebase App Hosting**: Основной способ для Next.js приложений в экосистеме Firebase.
+2. **Firebase Console**: Перейдите в консоль Firebase вашего проекта для настройки хостинга и подключения домена.
+
+## Технологический стек
+- **Frontend**: Next.js 15 (App Router), React, Tailwind CSS, ShadCN UI.
+- **Backend**: Firebase Authentication, Firestore Database.
+- **AI**: Genkit (Google Gemini) для анализа совместимости, генерации icebreakers и био.
+
+Проект готов к работе "как есть" и может быть опубликован сразу после настройки реальных ключей доступа в `src/firebase/config.ts`.
