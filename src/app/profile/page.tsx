@@ -227,7 +227,9 @@ export default function ProfilePage() {
         <div className="px-5 -mt-10">
           <div className="text-center mb-6">
             <div className="relative inline-block mb-4">
-              <div className="relative w-32 h-32 rounded-[2.5rem] border-[6px] border-white app-shadow overflow-hidden bg-muted"><Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt={profile.name} fill className="object-cover" priority /></div>
+              <div className="relative w-32 h-32 rounded-[2.5rem] border-[6px] border-white app-shadow overflow-hidden bg-muted">
+                <Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt={profile.name} fill sizes="128px" className="object-cover" priority />
+              </div>
               <Link href="/profile/edit" className="absolute -bottom-2 -right-2 gradient-bg text-white p-3 rounded-2xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-90"><Edit2 size={18} /></Link>
             </div>
             <div className="space-y-2">
@@ -424,7 +426,7 @@ export default function ProfilePage() {
                       onClick={() => handleSubmitToContest(url)}
                       className="relative aspect-square rounded-xl overflow-hidden cursor-pointer hover:ring-4 ring-primary/20 transition-all bg-muted"
                     >
-                      <Image src={url} alt={`Gallery photo ${idx}`} fill className="object-cover" />
+                      <Image src={url} alt={`Gallery photo ${idx}`} fill sizes="100px" className="object-cover" />
                     </div>
                   ))}
                 </div>

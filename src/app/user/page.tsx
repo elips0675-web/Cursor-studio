@@ -448,15 +448,3 @@ function UserProfileContent() {
     </div>
   );
 }
-
-function LoadingSkeleton() {
-  return <div className="flex items-center justify-center h-screen"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
-}
-
-export default function UserProfilePage() {
-  return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <UserProfileContent />
-    </Suspense>
-  );
-}

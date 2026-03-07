@@ -408,5 +408,3 @@ function ActivityItem({ item, onUnlock }: { item: any, onUnlock: () => void }) {
     </div>
   );
 }
-
-    
