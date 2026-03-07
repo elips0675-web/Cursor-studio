@@ -395,78 +395,78 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Gamification Tasks Accordion - Moved under Gallery */}
+          {/* Gamification Tasks Accordion - Light Theme */}
           <div className="mb-12">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="tasks" className="border-0">
-                <AccordionTrigger className="bg-slate-900 text-white rounded-[1.5rem] px-6 py-4 hover:no-underline hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 [&[data-state=open]]:rounded-b-none">
+                <AccordionTrigger className="bg-white text-foreground rounded-[1.5rem] px-6 py-4 hover:no-underline hover:bg-muted/30 transition-all app-shadow border border-border/40 [&[data-state=open]]:rounded-b-none [&[data-state=open]]:shadow-none">
                   <div className="flex items-center gap-3 w-full text-left">
-                    <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 shadow-lg">
+                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shadow-sm border border-amber-200">
                       <Trophy size={16} fill="currentColor" />
                     </div>
                     <div className="flex-1">
                       <h4 className="text-sm font-black uppercase tracking-tight">Задания</h4>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden max-w-[60px]">
-                          <div className="h-full bg-amber-500" style={{ width: `${totalQuestProgress}%` }}></div>
+                        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden max-w-[60px]">
+                          <div className="h-full gradient-bg" style={{ width: `${totalQuestProgress}%` }}></div>
                         </div>
-                        <span className="text-[9px] font-black text-amber-500">{totalQuestProgress}%</span>
+                        <span className="text-[9px] font-black text-primary">{totalQuestProgress}%</span>
                       </div>
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="bg-slate-900 text-white rounded-b-[1.5rem] px-6 pb-6 pt-2 border-t border-white/5 space-y-6">
+                <AccordionContent className="bg-white text-foreground rounded-b-[1.5rem] px-6 pb-6 pt-2 border-x border-b border-border/40 app-shadow space-y-6">
                   {/* Daily Rewards */}
-                  <div className="space-y-4">
+                  <div className="space-y-4 pt-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Clock size={14} className="text-blue-400" />
-                        <h5 className="text-[10px] font-black uppercase tracking-widest text-blue-400">Ежедневная награда</h5>
+                        <Clock size={14} className="text-blue-500" />
+                        <h5 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ежедневная награда</h5>
                       </div>
-                      <Badge className="bg-blue-500/20 text-blue-400 border-0 text-[8px] font-black uppercase px-2">День 3</Badge>
+                      <Badge className="bg-blue-50 text-blue-600 border border-blue-100 text-[8px] font-black uppercase px-2">День 3</Badge>
                     </div>
                     <div className="grid grid-cols-7 gap-1.5">
                       {Array.from({ length: 7 }).map((_, i) => (
                         <div key={i} className={cn(
                           "aspect-square rounded-xl flex flex-col items-center justify-center gap-1 border transition-all",
-                          i < 2 ? "bg-green-500/20 border-green-500/30 text-green-500" : 
-                          i === 2 ? "bg-amber-500 border-amber-500 text-slate-900 scale-110 shadow-lg shadow-amber-500/20" : 
-                          "bg-white/5 border-white/10 text-white/30"
+                          i < 2 ? "bg-green-50 border-green-200 text-green-600" : 
+                          i === 2 ? "gradient-bg border-0 text-white scale-110 shadow-lg shadow-primary/20" : 
+                          "bg-muted/30 border-transparent text-muted-foreground/40"
                         )}>
                           {i < 2 ? <Check size={12} strokeWidth={4} /> : <Gift size={12} />}
                           <span className="text-[7px] font-black">{i + 1}</span>
                         </div>
                       ))}
                     </div>
-                    <Button className="w-full h-10 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-900 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-amber-500/20 border-0">
+                    <Button className="w-full h-10 rounded-xl gradient-bg hover:opacity-90 text-white font-black uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20 border-0">
                       Забрать бонус
                     </Button>
                   </div>
 
-                  <div className="h-px bg-white/10"></div>
+                  <div className="h-px bg-border/50"></div>
 
                   {/* Daily Quests */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Flame size={14} className="text-orange-500" />
-                      <h5 className="text-[10px] font-black uppercase tracking-widest text-orange-500">Квесты дня</h5>
+                      <h5 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Квесты дня</h5>
                     </div>
                     <div className="space-y-3">
                       {DAILY_QUESTS.map((quest) => {
                         const Icon = quest.icon;
                         const isDone = quest.progress >= quest.total;
                         return (
-                          <div key={quest.id} className="bg-white/5 rounded-2xl p-3 border border-white/10">
+                          <div key={quest.id} className="bg-muted/30 rounded-2xl p-3 border border-transparent">
                             <div className="flex items-center gap-3 mb-2.5">
-                              <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white/5", quest.color)}>
+                              <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white shadow-sm", quest.color)}>
                                 <Icon size={16} fill={isDone ? "currentColor" : "none"} />
                               </div>
                               <div className="flex-1">
                                 <div className="flex justify-between items-center mb-1">
-                                  <p className="text-[11px] font-bold leading-none">{language === 'RU' ? quest.title_ru : quest.title_en}</p>
-                                  <span className="text-[9px] font-black text-white/40">{quest.progress}/{quest.total}</span>
+                                  <p className="text-[11px] font-bold leading-none text-foreground">{language === 'RU' ? quest.title_ru : quest.title_en}</p>
+                                  <span className="text-[9px] font-black text-muted-foreground">{quest.progress}/{quest.total}</span>
                                 </div>
-                                <Progress value={(quest.progress / quest.total) * 100} className="h-1.5 bg-white/5" />
+                                <Progress value={(quest.progress / quest.total) * 100} className="h-1.5 bg-white" />
                               </div>
                             </div>
                           </div>
