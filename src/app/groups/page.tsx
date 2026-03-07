@@ -73,8 +73,8 @@ export default function GroupsPage() {
             const totalMembers = category.subgroups.reduce((acc, sub) => acc + sub.members, 0);
             return (
             <Link href={`/groups/${category.id}`} key={category.id} className="bg-white rounded-2xl overflow-hidden app-shadow group block border border-transparent hover:border-primary/20 transition-all">
-              <div className={cn("relative h-20 w-full bg-muted flex items-center justify-center")}>
-                <Icon size={24} className="text-muted-foreground/60 group-hover:text-primary transition-colors duration-300" />
+              <div className={cn("relative h-20 w-full bg-orange-500/10 flex items-center justify-center")}>
+                <Icon size={24} className="text-orange-500 transition-colors duration-300" />
               </div>
               <div className="p-2 text-center">
                 <h6 className="font-bold text-xs leading-tight truncate group-hover:text-primary">{language === 'RU' ? category.name_ru : category.name_en}</h6>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense, useState } from 'react';
@@ -107,25 +108,20 @@ function SubGroupsContent() {
 
                 <div className="space-y-3">
                     {category.subgroups.map(subgroup => (
-                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex flex-col gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
-                            <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-14 h-14 rounded-xl bg-muted/40 flex-shrink-0 border border-border/50 flex items-center justify-center shadow-sm">
-                                    <Icon size={28} className="text-muted-foreground/70 group-hover:text-primary transition-colors" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{language === 'RU' ? subgroup.name_ru : subgroup.name_en}</h4>
-                                    <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
-                                        <div className="flex items-center gap-1.5 font-semibold">
-                                            <Users size={12} /> {subgroup.members}
-                                        </div>
-                                        <div className="flex items-center gap-1.5 font-semibold text-green-600">
-                                            <div className="w-2 h-2 rounded-full bg-current"></div>
-                                            {subgroup.online} {t('chats.online')}
-                                        </div>
+                        <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex items-center justify-between p-4 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
+                            <div className="flex-1 min-w-0">
+                                <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{language === 'RU' ? subgroup.name_ru : subgroup.name_en}</h4>
+                                <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
+                                    <div className="flex items-center gap-1.5 font-semibold">
+                                        <Users size={12} /> {subgroup.members}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 font-semibold text-green-600">
+                                        <div className="w-2 h-2 rounded-full bg-current"></div>
+                                        {subgroup.online} {t('chats.online')}
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="secondary" size="sm" className="self-center px-6 rounded-lg h-9 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform">
+                            <Button variant="secondary" size="sm" className="ml-4 shrink-0 px-6 rounded-lg h-9 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform">
                                 <Plus size={14} className="mr-1.5" />
                                 {t('button.join') || 'Вступить'}
                             </Button>
