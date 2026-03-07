@@ -18,7 +18,8 @@ const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLi
             fill 
             sizes="(max-width: 480px) 45vw, 240px"
             data-ai-hint={user.hint}
-            priority={priority}
+            priority={priority} // Важно для LCP
+            loading={priority ? "eager" : "lazy"}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute top-1.5 right-1.5">

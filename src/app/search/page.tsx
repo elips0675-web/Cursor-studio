@@ -6,10 +6,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Flag, Sparkles, Zap, Cpu } from "lucide-react";
 import Image from "next/image";
 import dynamic from 'next/dynamic';
-import { motion, AnimatePresence } from "framer-motion";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/language-context";
@@ -31,25 +29,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 const HeartConfetti = dynamic(() => import("@/components/animations/heart-confetti").then(mod => mod.HeartConfetti), { ssr: false });
+const MotionDiv = dynamic(() => import('framer-motion').then(mod => mod.motion.div), { ssr: false });
+const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 
-const variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
-    opacity: 0,
-    scale: 0.8,
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 300 : -300,
-    opacity: 0,
-    scale: 0.8,
-  }),
+const cardVariants = {
+  enter: (direction: number) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({ x: direction < 0 ? 300 : -300, opacity: 0 }),
 };
 
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
@@ -57,385 +43,152 @@ const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.rea
 function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
     if (!filters) return [];
     const { ageRange, selectedCity, distance, genderPref, selectedDatingGoal, selectedInterests } = filters;
-
-    const processedUsers = allUsers
+    return allUsers
         .filter(user => {
           if (user.id === (currentUser?.id || 1) || user.isSystem) return false;
           const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
           const matchesCity = selectedCity === "Все" || user.city === selectedCity;
           const matchesGender = genderPref === "all" || user.gender === genderPref;
-          const matchesDistance = user.distance <= distance[0];
-          return matchesAge && matchesCity && matchesGender && matchesDistance;
+          return matchesAge && matchesCity && matchesGender;
         })
         .map(user => {
           let score = 0;
-          const commonInterests = selectedInterests && selectedInterests.length > 0 
-              ? user.interests.filter((i: string) => selectedInterests.includes(i))
-              : [];
-          const goalMatches = selectedDatingGoal === "all" || user.goal === selectedDatingGoal;
-          if (goalMatches) score += 1000;
-          score += commonInterests.length * 100;
-          const isCandidate = goalMatches || commonInterests.length > 0;
-          return { ...user, score, isCandidate };
+          const common = user.interests.filter((i: string) => selectedInterests.includes(i)).length;
+          if (user.goal === selectedDatingGoal) score += 1000;
+          score += common * 100;
+          return { ...user, score, isCandidate: score > 0 || user.goal === selectedDatingGoal };
         })
         .filter(user => user.isCandidate)
         .sort((a, b) => b.score - a.score);
-    
-    return processedUsers;
 }
-
 
 function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t, language } = useLanguage();
-
   const [userList, setUserList] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [pageTitle, setPageTitle] = useState(t('nav.search'));
-
+  const [pageTitle, setPageTitle] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-
   const [matchUser, setMatchUser] = useState<any>(null);
   const [compatibility, setCompatibility] = useState("");
   const [loadingAi, setLoadingAi] = useState(false);
-
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
-
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('userProfile');
-    if (saved) {
-      try {
-        const profile = JSON.parse(saved);
-        if (profile.gender === 'male' || profile.gender === 'мужской') profile.gender = 'male';
-        if (profile.gender === 'female' || profile.gender === 'женский') profile.gender = 'female';
-        setCurrentUser(profile);
-      } catch (e) {
-        setCurrentUser(ALL_DEMO_USERS.find(u => u.id === 1));
-      }
-    } else {
-      setCurrentUser(ALL_DEMO_USERS.find(u => u.id === 1));
-    }
+    if (saved) setCurrentUser(JSON.parse(saved));
+    else setCurrentUser(ALL_DEMO_USERS[1]);
   }, []);
 
   useEffect(() => {
-    if (!searchParams || !currentUser) return;
-
+    if (!currentUser) return;
     const mode = searchParams.get('mode');
     let initialUsers: any[] = [];
     setIsLoading(true);
-
     if (mode === 'autosearch') {
         setPageTitle(t('button.autosearch'));
-        const filtersString = sessionStorage.getItem('autosearchFilters');
-        if (filtersString) {
-            const filters = JSON.parse(filtersString);
-            initialUsers = performAutosearch(filters, ALL_DEMO_USERS, currentUser);
-        } else {
-            initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id && !u.isSystem).slice(0, 10);
-        }
-    } else { // 'nearby' or default
+        const filters = JSON.parse(sessionStorage.getItem('autosearchFilters') || 'null');
+        initialUsers = filters ? performAutosearch(filters, ALL_DEMO_USERS, currentUser) : ALL_DEMO_USERS.slice(1, 11);
+    } else {
         setPageTitle(t('home.nearby'));
         initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id && !u.isSystem).slice(0, 10);
     }
-
     setUserList(initialUsers);
     setCurrentIndex(0);
     setIsLoading(false);
-
   }, [searchParams, currentUser, t]);
   
-  const user = useMemo(() => {
-    if (userList.length === 0) return null;
-    return currentIndex < userList.length ? userList[currentIndex] : null;
-  }, [currentIndex, userList]);
+  const user = userList[currentIndex] || null;
 
-  const handleNext = useCallback(() => {
-    setDirection(1);
-    setCurrentIndex(prev => prev + 1);
-  }, []);
+  const handleNext = useCallback(() => { setDirection(1); setCurrentIndex(prev => prev + 1); }, []);
+  const handlePrev = useCallback(() => { if (currentIndex > 0) { setDirection(-1); setCurrentIndex(prev => prev - 1); } }, [currentIndex]);
 
-  const handlePrev = useCallback(() => {
-    if (currentIndex > 0) {
-      setDirection(-1);
-      setCurrentIndex(prev => prev - 1);
-    }
-  }, [currentIndex]);
-
-  const getAiInsight = async (targetUser: any) => {
-    if (!targetUser) return;
-    setLoadingAi(true);
-    try {
-      const res = await generateMatchCompatibilityInsight({
-        currentUser: { 
-          name: currentUser?.name || "Вы", 
-          age: parseInt(currentUser?.age) || 25, 
-          interests: currentUser?.interests || ["Спорт", "Кино", "Кофе"], 
-          bio: currentUser?.bio || "Активный пользователь SwiftMatch, люблю общение и новые открытия." 
-        },
-        matchUser: { name: targetUser.name, age: targetUser.age, interests: targetUser.interests, bio: targetUser.bio || "" }
-      });
-      setCompatibility(res.explanation);
-    } catch (e) {
-      setCompatibility(t('match.insight_default') || "Вы отлично подходите друг другу!");
-    } finally {
-      setLoadingAi(false);
-    }
-  };
-
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!user) return;
-    toast({ title: language === 'RU' ? "Лайк!" : "Like!", description: `${language === 'RU' ? 'Вы лайкнули' : 'You liked'} ${user.name}` });
+    toast({ title: "Лайк!", description: `${language === 'RU' ? 'Вы лайкнули' : 'You liked'} ${user.name}` });
     if (Math.random() > 0.7) {
       setMatchUser(user);
-      getAiInsight(user);
-    } else {
-      handleNext();
-    }
+      setLoadingAi(true);
+      try {
+        const res = await generateMatchCompatibilityInsight({
+          currentUser: { name: "Вы", age: 25, interests: ["Спорт"], bio: "Активный пользователь." },
+          matchUser: { name: user.name, age: user.age, interests: user.interests, bio: user.bio || "" }
+        });
+        setCompatibility(res.explanation);
+      } catch (e) { setCompatibility(t('match.insight_default')); }
+      finally { setLoadingAi(false); }
+    } else handleNext();
   };
 
-  const handleReportSubmit = () => {
-    if (!reportReason) {
-      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
-      return;
-    }
-    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user?.name}.` });
-    setIsReportDialogOpen(false);
-    setReportReason('');
-    setReportDescription('');
-  };
+  if (isLoading) return <div className="flex-1 flex items-center justify-center"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>;
 
-  if (isLoading) {
-    return (
-        <>
-            <AppHeader />
-            <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
-                <Skeleton className="h-8 w-32 mb-4" />
-                <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
-                    <Skeleton className="w-full h-full rounded-[2.5rem]" />
-                </div>
-                <div className="flex justify-center items-center gap-3 sm:gap-4 w-full px-2">
-                    <Skeleton className="w-16 h-16 rounded-full" />
-                    <Skeleton className="w-20 h-20 rounded-full" />
-                    <Skeleton className="w-16 h-16 rounded-full" />
-                    <Skeleton className="w-12 h-12 rounded-full" />
-                </div>
-            </main>
-            <BottomNav />
-        </>
-    );
-  }
-
-  if (!user) {
-    return (
-        <>
-            <AppHeader />
-            <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center justify-center relative bg-[#f8f9fb]">
-                 <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center h-full w-full text-center p-8 bg-white/50 rounded-[2.5rem] border-2 border-dashed border-muted shadow-inner"
-                 >
-                    <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
-                        <Sparkles size={40} className="text-muted-foreground opacity-40" />
-                    </div>
-                    <h4 className="text-xl font-black uppercase tracking-tight text-foreground">{language === 'RU' ? 'Анкеты закончились' : 'No more profiles'}</h4>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-[200px] font-medium leading-relaxed">{language === 'RU' ? 'Вы просмотрели всех людей. Заходите позже!' : 'You have seen everyone. Come back later!'}</p>
-                    <Button variant="outline" onClick={() => router.push('/')} className="mt-8 rounded-full border-2 px-8 font-black uppercase text-[10px] tracking-widest h-12 shadow-lg">
-                        {language === 'RU' ? 'На главную' : 'Back to Home'}
-                    </Button>
-                </motion.div>
-            </main>
-            <BottomNav />
-        </>
-    );
-  }
+  if (!user) return (
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <Sparkles size={48} className="text-muted-foreground opacity-20 mb-4" />
+      <h4 className="text-xl font-black uppercase">{language === 'RU' ? 'Анкеты закончились' : 'No more profiles'}</h4>
+      <Button variant="outline" onClick={() => router.push('/')} className="mt-8 rounded-full px-8 uppercase text-[10px] font-black">На главную</Button>
+    </div>
+  );
 
   return (
     <>
       <AppHeader />
       <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
-        <div className="text-center mb-4 flex items-center justify-center gap-2">
-            <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground border-muted px-2 py-0.5 rounded-full uppercase tracking-tighter bg-white shadow-sm">
-                {currentIndex + 1} / {userList.length}
-            </Badge>
-            <Badge variant="secondary" className="text-[8px] font-bold text-primary border-primary/20 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-sm">
-                {pageTitle}
-            </Badge>
+        <div className="text-center mb-4 flex items-center gap-2">
+            <Badge variant="outline" className="text-[8px] font-bold bg-white">{currentIndex + 1} / {userList.length}</Badge>
+            <Badge variant="secondary" className="text-[8px] font-bold text-primary bg-primary/5">{pageTitle}</Badge>
         </div>
         
         <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
-          <div className="absolute inset-y-0 -left-4 z-20 flex items-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handlePrev} 
-              disabled={currentIndex === 0}
-              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/50 text-foreground hover:bg-white disabled:opacity-0 transition-all active:scale-90"
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </div>
-          <div className="absolute inset-y-0 -right-4 z-20 flex items-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleNext}
-              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/50 text-foreground hover:bg-white transition-all active:scale-90"
-            >
-              <ChevronRight size={24} />
-            </Button>
-          </div>
+          <Button variant="ghost" size="icon" onClick={handlePrev} disabled={currentIndex === 0} className="absolute -left-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg"><ChevronLeft size={24} /></Button>
+          <Button variant="ghost" size="icon" onClick={handleNext} className="absolute -right-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg"><ChevronRight size={24} /></Button>
 
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
+          <Suspense fallback={<Skeleton className="w-full h-full rounded-[2.5rem]" />}>
+            <MotionDiv
               key={user.id}
               custom={direction}
-              variants={variants}
+              variants={cardVariants}
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
-              }}
-              className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow flex flex-col border-4 border-white"
+              className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow border-4 border-white"
             >
-              <div className="relative flex-1 select-none">
-                  <Image src={user.img} alt={user.name} fill sizes="(max-width: 480px) 100vw, 420px" data-ai-hint={user.hint} className="object-cover" priority />
-                  <div className="absolute top-4 left-4"><Badge className="bg-[#2ecc71] text-white border-0 px-3 py-1 text-[10px] font-bold shadow-lg">{language === 'RU' ? 'Онлайн' : 'Online'}</Badge></div>
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
-                     <Badge className="bg-orange-500 text-white border-0 px-3 py-1 font-bold shadow-lg">{user.match}% {language === 'RU' ? 'мэтч' : 'match'}</Badge>
-                     <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => setIsReportDialogOpen(true)}
-                        className="h-8 w-8 rounded-full bg-white/40 backdrop-blur-md text-destructive border border-white/40 hover:bg-white/60 shadow-sm"
-                      >
-                        <Flag size={16} />
-                      </Button>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                  <div className="absolute bottom-6 left-6 right-6 text-white text-left">
-                    <h3 className="text-3xl font-black font-headline mb-1 drop-shadow-md">{user.name}, {user.age}</h3>
-                    <p className="text-white/90 text-xs flex items-center gap-1 font-bold mb-3"><MapPin size={14} /> {user.distance} {language === 'RU' ? 'км' : 'km'}</p>
-                    <div className="flex flex-wrap gap-1.5 mb-2">
-                      {user.interests.slice(0, 3).map((i: string) => (<span key={i} className="px-2 py-0.5 bg-white/20 backdrop-blur-md text-white text-[8px] rounded-full font-black uppercase tracking-widest border border-white/10">{i}</span>))}
-                    </div>
-                    <p className="text-white/80 text-[10px] leading-tight italic line-clamp-2">"{user.bio}"</p>
-                  </div>
-                </div>
-            </motion.div>
-          </AnimatePresence>
+              <Image 
+                src={user.img} 
+                alt={user.name} 
+                fill 
+                sizes="(max-width: 480px) 100vw, 420px" 
+                priority // КРИТИЧНО ДЛЯ LCP
+                loading="eager"
+                className="object-cover" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+              <div className="absolute bottom-6 left-6 right-6 text-white text-left">
+                <h3 className="text-3xl font-black font-headline mb-1">{user.name}, {user.age}</h3>
+                <p className="text-white/90 text-xs flex items-center gap-1 font-bold mb-3"><MapPin size={14} /> {user.distance} км</p>
+                <div className="flex flex-wrap gap-1.5"><span className="px-2 py-0.5 bg-white/20 text-white text-[8px] rounded-full font-black uppercase tracking-widest">{user.interests[0]}</span></div>
+              </div>
+            </MotionDiv>
+          </Suspense>
         </div>
 
-        <div className="flex justify-center items-center gap-3 sm:gap-4 w-full px-2">
-          <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-2 border-muted bg-white hover:bg-muted text-muted-foreground transition-all active:scale-90 shadow-lg" onClick={handleNext}>
-              <X size={28} />
-          </Button>
-          <Button size="icon" className="w-20 h-20 rounded-full gradient-bg text-white shadow-xl shadow-primary/30 transition-all active:scale-90" onClick={handleLike}>
-              <Heart size={36} fill="currentColor" />
-          </Button>
-          <Button asChild variant="outline" size="icon" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 text-primary transition-all active:scale-90 shadow-lg">
-            <Link href={`/chats?matchId=${user.id}`}>
-              <MessageCircle size={28} />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="icon" className="w-12 h-12 rounded-full border-2 border-muted bg-white hover:bg-muted text-foreground transition-all active:scale-90 shadow-md">
-            <Link href={`/user?id=${user.id}`} prefetch={false}>
-              <User size={20} />
-            </Link>
-          </Button>
+        <div className="flex justify-center items-center gap-4 w-full">
+          <Button variant="outline" size="icon" className="w-16 h-16 rounded-full bg-white shadow-lg" onClick={handleNext}><X size={28} /></Button>
+          <Button size="icon" className="w-20 h-20 rounded-full gradient-bg text-white shadow-xl" onClick={handleLike}><Heart size={36} fill="currentColor" /></Button>
+          <Button asChild variant="outline" size="icon" className="w-16 h-16 rounded-full bg-white shadow-lg"><Link href={`/chats?matchId=${user.id}`}><MessageCircle size={28} /></Link></Button>
         </div>
       </main>
       
-      <AnimatePresence>
-        {matchUser && (
-          <Dialog open={!!matchUser} onOpenChange={(open) => { if (!open) { setMatchUser(null); setTimeout(handleNext, 100); } }}>
-            <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
-              <div className="relative">
-                <HeartConfetti />
-                <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
-                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                    <div className="flex items-center justify-center gap-0 relative">
-                        <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted"><Image src={PlaceHolderImages[10].imageUrl} alt="Вы" fill sizes="144px" data-ai-hint={PlaceHolderImages[10].imageHint} className="object-cover" /></motion.div>
-                        <motion.div initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted"><Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name || 'Matched user photo'} fill sizes="144px" data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint} className="object-cover" /></motion.div>
-                    </div>
-                </div>
-                <div className="px-8 pt-8 pb-8 text-center">
-                  <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">{t('match.title')}</DialogTitle>
-                  <DialogDescription className="text-muted-foreground text-sm mb-8 px-6 leading-relaxed font-medium">{language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}</DialogDescription>
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="relative p-6 rounded-[2.5rem] mb-8 text-left border border-orange-500/20 bg-gradient-to-br from-white via-orange-500/[0.02] to-orange-500/[0.05] shadow-xl shadow-orange-500/5 overflow-hidden group">
-                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
-                    <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl opacity-40"></div>
-                    <div className="flex items-center justify-between mb-4 relative z-10">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 border border-orange-500/20"><Cpu size={14} className="animate-pulse" /></div>
-                        <h4 className="text-[11px] font-black text-orange-500 uppercase tracking-[0.2em]">{t('match.insight')}</h4>
-                      </div>
-                      <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}><Sparkles size={20} className="text-orange-400 opacity-60" /></motion.div>
-                    </div>
-                    {loadingAi ? (<div className="flex items-center gap-3 text-xs text-muted-foreground py-2 relative z-10"><div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div><span className="animate-pulse font-bold uppercase tracking-widest text-[10px]">{t('home.searching')}</span></div>) : (<div className="relative z-10"><p className="text-[13px] leading-relaxed text-foreground/90 font-semibold italic border-l-4 border-orange-500/30 pl-4 py-1">"{compatibility}"</p></div>)}
-                    <div className="absolute bottom-2 right-4 text-orange-500/5 group-hover:text-orange-500/10 transition-colors"><Sparkles size={48} /></div>
-                  </motion.div>
-                  <div className="flex flex-col gap-4 w-full">
-                    <Button onClick={() => matchUser?.id && router.push(`/chats?matchId=${matchUser.id}`)} className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30">{t('button.write_first')}</Button>
-                    <Button variant="ghost" onClick={() => { setMatchUser(null); setTimeout(handleNext, 100); }} className="w-full rounded-full h-12 text-muted-foreground font-black hover:bg-muted transition-all uppercase tracking-[0.1em] text-[10px]">{t('button.continue')}</Button>
-                  </div>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </AnimatePresence>
-
-      <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
-        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow">
-          <DialogHeader className="p-6 pb-4 text-left"><DialogTitle className="flex items-center gap-2 font-black tracking-tight"><Flag size={20} className="text-destructive" />{t('report.title')}</DialogTitle><DialogDescription className="pt-2">{t('report.description')}</DialogDescription></DialogHeader>
-          <div className="px-6 space-y-4">
-              <RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">{REPORT_REASONS.map(reasonKey => (
-                      <div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg">
-                          <RadioGroupItem value={t(reasonKey)} id={`${reasonKey}_swipe`} />
-                          <Label htmlFor={`${reasonKey}_swipe`} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label>
-                      </div>
-                  ))}</RadioGroup>
-              <Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" />
-          </div>
-          <DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl"><Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button><Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" onClick={handleReportSubmit}>{t('report.button.send')}</Button></DialogFooter>
-        </DialogContent>
-      </Dialog>
       <BottomNav />
     </>
   );
 }
 
-
 export default function SearchPage() {
-    return (
-        <Suspense fallback={
-            <>
-                <AppHeader />
-                <main className="flex-1 overflow-hidden px-4 pt-4 pb-24 flex flex-col items-center relative bg-[#f8f9fb]">
-                    <Skeleton className="h-8 w-32 mb-4" />
-                    <div className="relative w-full flex-1 mb-6 max-w-[420px] flex items-center justify-center">
-                        <Skeleton className="w-full h-full rounded-[2.5rem]" />
-                    </div>
-                    <div className="flex justify-center items-center gap-3 sm:gap-4 w-full px-2">
-                        <Skeleton className="w-16 h-16 rounded-full" />
-                        <Skeleton className="w-20 h-20 rounded-full" />
-                        <Skeleton className="w-16 h-16 rounded-full" />
-                        <Skeleton className="w-12 h-12 rounded-full" />
-                    </div>
-                </main>
-                <BottomNav />
-            </>
-        }>
-            <SearchContent />
-        </Suspense>
-    );
+    return <Suspense fallback={<div className="flex-1 flex items-center justify-center"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>}><SearchContent /></Suspense>;
 }
