@@ -2,8 +2,8 @@ import { PlaceHolderImages } from "./placeholder-images";
 
 export const SUPPORT_USER = {
   id: 0,
-  name: 'Техподдержка',
-  name_en: 'Tech Support',
+  name: 'Команда SwiftMatch',
+  name_en: 'SwiftMatch Team',
   img: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=128&h=128&auto=format&fit=crop',
   hint: 'support agent',
   online: true,
@@ -12,7 +12,7 @@ export const SUPPORT_USER = {
   city: 'SwiftMatch HQ',
   zodiac: 'Shield',
   interests: ['Помощь', 'Безопасность', 'Обновления'],
-  bio: 'Официальный аккаунт поддержки SwiftMatch. Мы здесь, чтобы помочь вам 24/7.',
+  bio: 'Официальный аккаунт команды SwiftMatch. Мы здесь, чтобы помочь вам 24/7 и сделать ваш опыт знакомств лучше.',
   height: 0,
   goal: 'Помощь пользователям',
   gender: 'system',
