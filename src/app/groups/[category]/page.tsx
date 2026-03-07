@@ -108,7 +108,7 @@ function SubGroupsContent() {
                 <div className="space-y-3">
                     {category.subgroups.map(subgroup => (
                         <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex flex-col gap-3 p-3 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
-                            <div className="flex items-center gap-4 min-w-0">
+                            <div className="flex items-center gap-3 min-w-0">
                                 <div className="w-14 h-14 rounded-xl bg-muted/40 flex-shrink-0 border border-border/50 flex items-center justify-center shadow-sm">
                                     <Icon size={28} className="text-muted-foreground/70 group-hover:text-primary transition-colors" />
                                 </div>
