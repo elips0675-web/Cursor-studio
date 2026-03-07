@@ -24,7 +24,8 @@ import {
   Languages,
   DollarSign,
   Package,
-  Mail
+  Mail,
+  BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -138,6 +139,18 @@ export function AdminSidebar() {
                         <Link href="/admin/messaging">
                             <Mail />
                             <span>{t('admin.messaging.title')}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={isActive('/admin/docs')}
+                        tooltip={t('admin.docs.title')}
+                    >
+                        <Link href="/admin/docs">
+                            <BookOpen />
+                            <span>{t('admin.docs.title')}</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
