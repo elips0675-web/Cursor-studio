@@ -22,6 +22,20 @@
         "pets": { "type": "string" },
         "sleepSchedule": { "type": "string" }
       }
+    },
+    "SystemBroadcast": {
+      "title": "Системная рассылка",
+      "description": "Сообщение, отправленное администратором всем или группе пользователей.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "subject": { "type": "string" },
+        "target": { "type": "string", "enum": ["all", "premium", "new"] },
+        "channel": { "type": "string", "enum": ["app", "email"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "senderId": { "type": "string" }
+      },
+      "required": ["text", "target", "channel", "createdAt"]
     }
   },
   "auth": {
@@ -31,6 +45,10 @@
     "/users/{userId}": {
       "schema": "UserProfile",
       "description": "Данные профиля пользователя"
+    },
+    "/broadcasts/{broadcastId}": {
+      "schema": "SystemBroadcast",
+      "description": "История системных рассылок"
     }
   }
 }

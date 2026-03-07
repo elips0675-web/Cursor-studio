@@ -14,16 +14,23 @@ import { SUPPORT_USER } from '@/lib/demo-data';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useFirestore, useUser } from '@/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function AdminMessagingPage() {
     const { t, language } = useLanguage();
+    const firestore = useFirestore();
+    const { user: currentUser } = useUser();
+    
     const [channel, setChannel] = useState('app');
     const [recipients, setRecipients] = useState('all');
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!message || (channel === 'email' && !subject)) {
             toast({
                 variant: 'destructive',
@@ -33,17 +40,50 @@ export default function AdminMessagingPage() {
             return;
         }
 
-        setIsSending(true);
-        // Simulate sending process
-        setTimeout(() => {
-            setIsSending(false);
+        if (!firestore) {
             toast({
-                title: t('admin.messaging.send_success_title'),
-                description: t('admin.messaging.send_success_desc'),
+                variant: 'destructive',
+                title: 'Database Error',
+                description: 'Firestore is not initialized.',
             });
-            setSubject('');
-            setMessage('');
-        }, 2000);
+            return;
+        }
+
+        setIsSending(true);
+
+        const broadcastData = {
+            text: message,
+            subject: channel === 'email' ? subject : null,
+            target: recipients,
+            channel: channel,
+            createdAt: serverTimestamp(),
+            senderId: currentUser?.uid || 'admin-system',
+            senderName: language === 'RU' ? SUPPORT_USER.name_ru : SUPPORT_USER.name_en
+        };
+
+        const broadcastsRef = collection(firestore, 'broadcasts');
+
+        // Реальная запись в Firestore без ожидания (оптимистично)
+        addDoc(broadcastsRef, broadcastData)
+            .then(() => {
+                toast({
+                    title: t('admin.messaging.send_success_title'),
+                    description: t('admin.messaging.send_success_desc'),
+                });
+                setSubject('');
+                setMessage('');
+            })
+            .catch(async (serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: broadcastsRef.path,
+                    operation: 'create',
+                    requestResourceData: broadcastData,
+                });
+                errorEmitter.emit('permission-error', permissionError);
+            })
+            .finally(() => {
+                setIsSending(false);
+            });
     };
 
     return (
@@ -135,8 +175,8 @@ export default function AdminMessagingPage() {
                 <div className="mr-auto">
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest italic opacity-60">
                         {channel === 'email' 
-                            ? 'Email рассылки могут попасть в спам при злоупотреблении' 
-                            : 'Сообщения в приложении доставляются мгновенно'}
+                            ? 'Email рассылки будут сохранены в историю и отправлены через сервис' 
+                            : 'Сообщения в приложении записываются в базу данных'}
                     </p>
                 </div>
                 <Button 
