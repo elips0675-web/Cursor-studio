@@ -59,7 +59,7 @@ function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
 
     const processedUsers = allUsers
         .filter(user => {
-          if (user.id === (currentUser?.id || 1)) return false;
+          if (user.id === (currentUser?.id || 1) || user.isSystem) return false;
           const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
           const matchesCity = selectedCity === "Все" || user.city === selectedCity;
           const matchesGender = genderPref === "all" || user.gender === genderPref;
@@ -136,11 +136,11 @@ function SearchContent() {
             const filters = JSON.parse(filtersString);
             initialUsers = performAutosearch(filters, ALL_DEMO_USERS, currentUser);
         } else {
-            initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id).slice(0, 10);
+            initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id && !u.isSystem).slice(0, 10);
         }
     } else { // 'nearby' or default
         setPageTitle(t('home.nearby'));
-        initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id).slice(0, 10);
+        initialUsers = ALL_DEMO_USERS.filter(u => u.id !== currentUser.id && !u.isSystem).slice(0, 10);
     }
 
     setUserList(initialUsers);

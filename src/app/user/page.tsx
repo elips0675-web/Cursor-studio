@@ -93,7 +93,7 @@ function UserProfileContent() {
   const { t, language } = useLanguage();
   const { aiCompatibilityEnabled } = useFeatureFlags();
 
-  const user = ALL_DEMO_USERS.find(u => u.id === Number(userId)) || ALL_DEMO_USERS[0];
+  const user = ALL_DEMO_USERS.find(u => u.id === Number(userId)) || ALL_DEMO_USERS[1]; // Avoid falling back to Support User
   
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -119,12 +119,18 @@ function UserProfileContent() {
   };
 
   useEffect(() => {
+    // If it's a system user, we don't show the profile page to normal users
+    if (user && user.isSystem) {
+      router.replace('/');
+      return;
+    }
+
     setPhotos([
       user.img,
       PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl,
       PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)].imageUrl,
     ]);
-  }, [user.img]);
+  }, [user, router]);
 
   useEffect(() => {
     const savedIncognito = localStorage.getItem('incognito-mode');
@@ -175,6 +181,8 @@ function UserProfileContent() {
       </Badge>
     </div>
   );
+
+  if (!user || user.isSystem) return null;
 
   return (
     <div className="flex flex-col min-h-svh bg-[#f8f9fb]">
@@ -306,7 +314,7 @@ function UserProfileContent() {
           <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
             {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
-          <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 text-primary hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
+          <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
             <Link href={`/chats?matchId=${user.id}`}>
               <MessageCircle size={28} />
             </Link>

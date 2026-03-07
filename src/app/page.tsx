@@ -54,18 +54,18 @@ export default function Home() {
     }
   }, []);
 
-  // Top of Week
+  // Top of Week - EXCLUDE SYSTEM USERS
   const topUsers = useMemo(() => {
     return [...ALL_DEMO_USERS]
-      .filter(u => u.id !== (currentUser?.id || 1))
+      .filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
       .sort((a, b) => b.match - a.match)
       .slice(0, 4);
   }, [currentUser]);
 
-  // Recommendations
+  // Recommendations - EXCLUDE SYSTEM USERS
   const recommendedUsers = useMemo(() => {
     const myInterests = currentUser?.interests || ["Фотография", "Кофе", "Музыка", "Путешествия"];
-    return ALL_DEMO_USERS.filter(u => u.id !== (currentUser?.id || 1))
+    return ALL_DEMO_USERS.filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
       .map(u => ({
         ...u,
         commonInterests: u.interests.filter(i => myInterests.includes(i)).length
