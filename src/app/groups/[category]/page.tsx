@@ -10,27 +10,7 @@ import {
     Plus, 
     Gift, 
     Play, 
-    CreditCard,
-    Music,
-    Dumbbell,
-    Palette,
-    Gamepad2,
-    Film,
-    Globe,
-    ChefHat,
-    Cpu,
-    BookOpen,
-    Sparkles,
-    Shirt,
-    HeartPulse,
-    Dog,
-    FlaskConical,
-    Briefcase,
-    Home,
-    Car,
-    Laugh,
-    Star,
-    Scroll
+    CreditCard
 } from 'lucide-react';
 import { GROUP_CATEGORIES } from '@/lib/demo-data';
 import { AppHeader } from '@/components/layout/app-header';
@@ -42,10 +22,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const iconMap: Record<string, React.ElementType> = {
-  Music, Dumbbell, Palette, Gamepad2, Film, Globe, ChefHat, Cpu, BookOpen, Sparkles, Shirt, HeartPulse, Dog, FlaskConical, Briefcase, Home, Car, Laugh, Star, Scroll
-};
 
 function SubGroupsContent() {
     const params = useParams();
@@ -78,8 +54,6 @@ function SubGroupsContent() {
         );
     }
 
-    const Icon = iconMap[category.icon] || Users;
-
     return (
         <div className="flex flex-col h-svh bg-[#f8f9fb]">
             <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50 h-16">
@@ -109,19 +83,21 @@ function SubGroupsContent() {
                 <div className="space-y-3">
                     {category.subgroups.map(subgroup => (
                         <Link href={`/chats?groupId=${subgroup.id}`} key={subgroup.id} className="flex items-center justify-between p-4 bg-white rounded-2xl app-shadow hover:bg-muted/30 transition-all cursor-pointer group border border-white">
-                            <div className="flex-1 min-w-0">
-                                <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{language === 'RU' ? subgroup.name_ru : subgroup.name_en}</h4>
-                                <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
-                                    <div className="flex items-center gap-1.5 font-semibold">
-                                        <Users size={12} /> {subgroup.members}
-                                    </div>
-                                    <div className="flex items-center gap-1.5 font-semibold text-green-600">
-                                        <div className="w-2 h-2 rounded-full bg-current"></div>
-                                        {subgroup.online} {t('chats.online')}
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{language === 'RU' ? subgroup.name_ru : subgroup.name_en}</h4>
+                                    <div className="flex items-center text-muted-foreground text-xs mt-1 gap-3">
+                                        <div className="flex items-center gap-1.5 font-semibold">
+                                            <Users size={12} /> {subgroup.members}
+                                        </div>
+                                        <div className="flex items-center gap-1.5 font-semibold text-green-600">
+                                            <div className="w-2 h-2 rounded-full bg-current"></div>
+                                            {subgroup.online} {t('chats.online')}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <Button variant="secondary" size="sm" className="ml-4 shrink-0 px-6 rounded-lg h-9 text-xs font-black uppercase tracking-widest bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary group-hover:scale-105 transition-transform">
+                            <Button variant="secondary" size="sm" className="ml-4 shrink-0 px-6 rounded-lg h-9 text-xs font-black uppercase tracking-widest bg-orange-500/10 text-orange-600 hover:bg-orange-500/20 group-hover:scale-105 transition-transform">
                                 <Plus size={14} className="mr-1.5" />
                                 {t('button.join') || 'Вступить'}
                             </Button>
