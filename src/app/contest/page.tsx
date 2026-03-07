@@ -233,7 +233,7 @@ export default function ContestPage() {
                         <Crown size={32} fill="currentColor" />
                       </motion.div>
                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[2rem] border-4 border-amber-400 shadow-2xl overflow-hidden bg-muted ring-4 ring-amber-400/20">
-                        <Image src={topThree[0].photo} alt={topThree[0].userName} fill sizes="100px" className="object-cover transition-transform group-hover:scale-110" />
+                        <Image src={topThree[0].photo} alt={topThree[0].userName} fill sizes="100px" className="object-cover transition-transform group-hover:scale-105" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Maximize2 className="text-white" size={24} />
                         </div>
