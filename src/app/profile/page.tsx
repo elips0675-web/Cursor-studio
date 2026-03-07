@@ -3,11 +3,10 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { 
-  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Dog, Ruler, Moon, Sun, Target, Sparkles, Heart, Upload, Info, User, GraduationCap, Bed, Trophy, RotateCcw, Zap, Play, CreditCard, MoreVertical, Users
+  Settings, MapPin, CheckCircle2, Star, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Trash2, Film, Flower2, Briefcase, Gamepad2, Maximize2, X, Ruler, Target, Zap, Play, CreditCard, Users, Upload, Info, User, GraduationCap, Trophy
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { AppHeader } from "@/components/layout/app-header";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -36,15 +35,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { GROUP_CATEGORIES } from "@/lib/demo-data";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
-
-// Canonical group names (using Russian names as identifiers)
 const defaultJoinedGroups = ["Хип-хоп", "Бег", "UI/UX Дизайн"];
 
 export default function ProfilePage() {
@@ -256,7 +255,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Contest Banner in Profile */}
           <div 
             onClick={handleOpenContestDialog}
             className="bg-white rounded-[1.5rem] p-4 border border-amber-500/20 app-shadow mb-6 flex items-center justify-between cursor-pointer hover:bg-amber-50/30 transition-colors"
@@ -270,7 +268,7 @@ export default function ProfilePage() {
                 <p className="text-[9px] text-muted-foreground font-bold">{t('contest.participate_banner')}</p>
               </div>
             </div>
-            <X className="text-muted-foreground/40 -rotate-90" size={18} />
+            <ChevronRight className="text-muted-foreground/40" size={18} />
           </div>
           
           <div className="bg-white rounded-[1.5rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">

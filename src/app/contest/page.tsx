@@ -1,7 +1,7 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { useLanguage } from "@/context/language-context";
@@ -14,11 +14,11 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
-// Динамические импорты для тяжелых компонентов
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const FEMALE_ENTRIES = [
   { id: 'f1', userId: 'u1', userName: 'Алина', photo: PlaceHolderImages[6].imageUrl, votes: 1240, rank: 1, gender: 'female' },
@@ -75,7 +75,6 @@ export default function ContestPage() {
   }, [activeGender]);
 
   const topThree = currentEntries.slice(0, 3);
-  const otherEntries = currentEntries.slice(3);
 
   return (
     <>
@@ -108,7 +107,6 @@ export default function ContestPage() {
           </TabsList>
           
           <TabsContent value={activeGender} className="mt-0 outline-none">
-            {/* Timer Card */}
             <div className="bg-white rounded-3xl p-5 border border-border/40 app-shadow mb-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -124,7 +122,6 @@ export default function ContestPage() {
               </Button>
             </div>
 
-            {/* Podium */}
             <section className="mb-10 pt-10 relative">
               <AnimatePresence mode="wait">
                 <motion.div 
@@ -135,11 +132,10 @@ export default function ContestPage() {
                   transition={{ duration: 0.3 }}
                   className="flex justify-center items-end gap-2 sm:gap-4 relative z-10"
                 >
-                  {/* 2nd Place */}
                   <div className="flex flex-col items-center flex-1 max-w-[100px]">
                     <div className="relative mb-3 cursor-pointer group" onClick={() => setViewerPhoto(topThree[1].photo)}>
                       <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.5rem] border-4 border-slate-300 shadow-lg overflow-hidden bg-muted">
-                        <Image src={topThree[1].photo} alt={topThree[1].userName} fill className="object-cover transition-transform group-hover:scale-110" />
+                        <Image src={topThree[1].photo} alt={topThree[1].userName} fill sizes="80px" className="object-cover transition-transform group-hover:scale-110" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Maximize2 className="text-white" size={16} />
                         </div>
@@ -150,7 +146,6 @@ export default function ContestPage() {
                     <Badge variant="secondary" className="mt-1 bg-slate-100 text-slate-600 text-[8px] font-black">{topThree[1].votes}</Badge>
                   </div>
 
-                  {/* 1st Place */}
                   <div className="flex flex-col items-center flex-1 max-w-[120px] -mt-8">
                     <div className="relative mb-3 cursor-pointer group" onClick={() => setViewerPhoto(topThree[0].photo)}>
                       <motion.div
@@ -161,7 +156,7 @@ export default function ContestPage() {
                         <Crown size={32} fill="currentColor" />
                       </motion.div>
                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[2rem] border-4 border-amber-400 shadow-2xl overflow-hidden bg-muted ring-4 ring-amber-400/20">
-                        <Image src={topThree[0].photo} alt={topThree[0].userName} fill className="object-cover transition-transform group-hover:scale-110" />
+                        <Image src={topThree[0].photo} alt={topThree[0].userName} fill sizes="100px" className="object-cover transition-transform group-hover:scale-110" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Maximize2 className="text-white" size={24} />
                         </div>
@@ -172,11 +167,10 @@ export default function ContestPage() {
                     <Badge className="mt-1 gradient-bg text-white text-[9px] font-black border-0 shadow-lg shadow-primary/20">{topThree[0].votes}</Badge>
                   </div>
 
-                  {/* 3rd Place */}
                   <div className="flex flex-col items-center flex-1 max-w-[100px]">
                     <div className="relative mb-3 cursor-pointer group" onClick={() => setViewerPhoto(topThree[2].photo)}>
                       <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[1.5rem] border-4 border-amber-700/40 shadow-lg overflow-hidden bg-muted">
-                        <Image src={topThree[2].photo} alt={topThree[2].userName} fill className="object-cover transition-transform group-hover:scale-110" />
+                        <Image src={topThree[2].photo} alt={topThree[2].userName} fill sizes="80px" className="object-cover transition-transform group-hover:scale-110" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Maximize2 className="text-white" size={16} />
                         </div>
@@ -191,7 +185,6 @@ export default function ContestPage() {
               <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-muted/30 to-transparent -z-0 rounded-b-[3rem]"></div>
             </section>
 
-            {/* List of others */}
             <section className="space-y-3">
               <div className="flex items-center justify-between px-1 mb-4">
                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('contest.all_participants')}</h4>
@@ -211,7 +204,7 @@ export default function ContestPage() {
                       className="bg-white rounded-3xl overflow-hidden border border-border/40 app-shadow group"
                     >
                       <div className="relative aspect-[4/5] bg-muted cursor-pointer" onClick={() => setViewerPhoto(entry.photo)}>
-                        <Image src={entry.photo} alt={entry.userName} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <Image src={entry.photo} alt={entry.userName} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Maximize2 className="text-white" size={24} />
                         </div>
@@ -249,7 +242,6 @@ export default function ContestPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Rules Banner */}
         <div className="mt-6 p-6 bg-primary/5 rounded-[2rem] border border-primary/10 border-dashed mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -263,13 +255,12 @@ export default function ContestPage() {
         </div>
       </main>
 
-      {/* Просмотрщик фото */}
       <Dialog open={!!viewerPhoto} onOpenChange={(open) => !open && setViewerPhoto(null)}>
         <DialogContent className="max-w-[440px] w-[95vw] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center [&>button]:hidden">
           <DialogTitle className="sr-only">Photo Viewer</DialogTitle>
           <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden app-shadow">
             {viewerPhoto && (
-              <Image src={viewerPhoto} alt="Contest entry" fill className="object-cover" />
+              <Image src={viewerPhoto} alt="Contest entry" fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
             )}
           </div>
           <div className="absolute top-4 right-4 z-50">

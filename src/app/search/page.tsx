@@ -1,9 +1,9 @@
 
 "use client";
 
-import { useState, useMemo, memo, useCallback, useEffect, Suspense } from "react";
+import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, MoreVertical, Flag, Sparkles, Zap, Search as SearchIcon, Cpu } from "lucide-react";
+import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Flag, Sparkles, Zap, Cpu } from "lucide-react";
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,17 +18,18 @@ import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibi
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
-const RadioGroup = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroup));
-const RadioGroupItem = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroupItem));
-const Label = dynamic(() => import("@/components/ui/label").then(mod => mod.Label));
-const Textarea = dynamic(() => import("@/components/ui/textarea").then(mod => mod.Textarea));
 const HeartConfetti = dynamic(() => import("@/components/animations/heart-confetti").then(mod => mod.HeartConfetti), { ssr: false });
 
 const variants = {

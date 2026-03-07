@@ -18,13 +18,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 import { INTEREST_OPTIONS, CAPITALS, DATING_GOALS } from "@/lib/constants";
-
-// Динамические импорты для тяжелых компонентов
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const TopOfWeekSection = dynamic(() => import('@/components/sections/top-of-week').then(mod => mod.TopOfWeekSection), { ssr: false });
 const RecommendationsSection = dynamic(() => import('@/components/sections/recommendations').then(mod => mod.RecommendationsSection), { ssr: false });
@@ -35,7 +35,6 @@ export default function Home() {
   const [showAutosearchDialog, setShowAutosearchDialog] = useState(false);
   const [isAutosearchLoading, setIsAutosearchLoading] = useState(false);
   
-  // Get current authorized user from localStorage or fallback to demo
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
@@ -54,7 +53,6 @@ export default function Home() {
     }
   }, []);
 
-  // Top of Week - EXCLUDE SYSTEM USERS
   const topUsers = useMemo(() => {
     return [...ALL_DEMO_USERS]
       .filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
@@ -62,7 +60,6 @@ export default function Home() {
       .slice(0, 4);
   }, [currentUser]);
 
-  // Recommendations - EXCLUDE SYSTEM USERS
   const recommendedUsers = useMemo(() => {
     const myInterests = currentUser?.interests || ["Фотография", "Кофе", "Музыка", "Путешествия"];
     return ALL_DEMO_USERS.filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
@@ -138,7 +135,6 @@ export default function Home() {
     <>
       <AppHeader />
       <main className="flex-1 overflow-y-auto pb-24 bg-[#f8f9fb]">
-        {/* Banner Section */}
         <section className="px-6 py-10 text-center relative overflow-hidden bg-white border-b border-border/40">
           <div className="absolute top-[-10%] left-[-20%] w-[100%] h-[50%] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
           <div className="absolute bottom-[-10%] right-[-20%] w-[100%] h-[50%] bg-[#ff8e53]/5 rounded-full blur-[120px] -z-10"></div>
@@ -178,7 +174,6 @@ export default function Home() {
 
         <TopOfWeekSection topUsers={topUsers} onLike={handleLikeHomepage} t={t} />
 
-        {/* Contest Entry Banner - Moved here above recommendations */}
         <section className="px-5 pt-8">
           <Link href="/contest" className="block relative h-28 rounded-[2rem] overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600"></div>

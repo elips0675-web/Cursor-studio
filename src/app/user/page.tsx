@@ -39,7 +39,6 @@ import {
   Brush,
   Mountain,
   Wine,
-  MoreVertical,
   Flag,
   Sun,
   GraduationCap,
@@ -62,22 +61,25 @@ import { generateMatchCompatibilityInsight } from "@/ai/flows/ai-match-compatibi
 import { useFeatureFlags } from "@/context/feature-flags-context";
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 import { ZodiacIcon } from "@/components/shared/zodiac-icon";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-const Carousel = dynamic(() => import("@/components/ui/carousel").then(mod => mod.Carousel));
-const CarouselContent = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselContent));
-const CarouselItem = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselItem));
-const CarouselPrevious = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselPrevious));
-const CarouselNext = dynamic(() => import("@/components/ui/carousel").then(mod => mod.CarouselNext));
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
-const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const RadioGroup = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroup));
-const RadioGroupItem = dynamic(() => import("@/components/ui/radio-group").then(mod => mod.RadioGroupItem));
-const Label = dynamic(() => import("@/components/ui/label").then(mod => mod.Label));
-const Textarea = dynamic(() => import("@/components/ui/textarea").then(mod => mod.Textarea));
 const HeartConfetti = dynamic(() => import("@/components/animations/heart-confetti").then(mod => mod.HeartConfetti), { ssr: false });
 
 const interestIcons: Record<string, any> = {
@@ -93,7 +95,7 @@ function UserProfileContent() {
   const { t, language } = useLanguage();
   const { aiCompatibilityEnabled } = useFeatureFlags();
 
-  const user = ALL_DEMO_USERS.find(u => u.id === Number(userId)) || ALL_DEMO_USERS[1]; // Avoid falling back to Support User
+  const user = ALL_DEMO_USERS.find(u => u.id === Number(userId)) || ALL_DEMO_USERS[1]; 
   
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -119,7 +121,6 @@ function UserProfileContent() {
   };
 
   useEffect(() => {
-    // If it's a system user, we don't show the profile page to normal users
     if (user && user.isSystem) {
       router.replace('/');
       return;
@@ -447,4 +448,12 @@ function UserProfileContent() {
       </Dialog>
     </div>
   );
+}
+
+export default function UserProfilePage() {
+    return (
+        <Suspense fallback={null}>
+            <UserProfileContent />
+        </Suspense>
+    );
 }

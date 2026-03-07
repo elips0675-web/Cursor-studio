@@ -17,7 +17,6 @@ import {
   Info
 } from "lucide-react";
 import Image from "next/image";
-import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -28,14 +27,14 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
-
-// Динамические импорты для снижения веса бандла
-const Dialog = dynamic(() => import("@/components/ui/dialog").then(mod => mod.Dialog));
-const DialogContent = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogContent));
-const DialogHeader = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogHeader));
-const DialogTitle = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogTitle));
-const DialogDescription = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogDescription));
-const DialogFooter = dynamic(() => import("@/components/ui/dialog").then(mod => mod.DialogFooter));
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const ACTIVITY_DATA = [
   { id: 1, user: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, type: 'like', time: '5 мин назад', seen: false, blurred: true },
