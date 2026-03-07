@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
@@ -322,24 +323,26 @@ export default function ProfilePage() {
               {photos.map((url, idx) => (
                 <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-muted group shadow-sm border border-border/10">
                   <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                      <Button
-                          variant="outline"
-                          size="icon"
-                          aria-label="Expand photo"
-                          onClick={() => openPhotoViewer(idx)}
-                          className="h-12 w-12 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border-white/30"
-                      >
-                          <Maximize2 size={20} />
-                      </Button>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            aria-label="Expand photo"
+                            onClick={() => openPhotoViewer(idx)}
+                            className="h-12 w-12 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border-white/30"
+                        >
+                            <Maximize2 size={24} />
+                        </Button>
+                      </div>
                       <Button
                           variant="destructive"
                           size="icon"
                           aria-label="Delete photo"
                           onClick={(e) => { e.stopPropagation(); requestDeletePhoto(idx); }}
-                          className="h-12 w-12 rounded-full bg-destructive/80 text-destructive-foreground hover:bg-destructive backdrop-blur-sm border-white/20"
+                          className="absolute top-2 right-2 h-10 w-10 rounded-full bg-destructive/80 text-destructive-foreground hover:bg-destructive backdrop-blur-sm border-white/20 shadow-lg"
                       >
-                          <Trash2 size={20} />
+                          <Trash2 size={18} />
                       </Button>
                   </div>
                 </div>
