@@ -3,11 +3,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  BookOpen, Cpu, Layers, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, 
-  MessageSquare, Settings2, Rocket, TestTube, CheckCircle2, Trophy, Camera, 
-  Flame, Mail, DollarSign, Heart, Gift, Info, Video, Flag, SlidersHorizontal, Scale,
-  BarChart3, Activity, Gauge, Briefcase, Globe, MousePointer2, Timer, Lock, FileText,
-  TrendingUp, Search, UserCheck, Layout
+  BookOpen, Cpu, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, 
+  MessageSquare, Settings2, Rocket, Timer, DollarSign, Video, Flag, SlidersHorizontal, Scale,
+  Activity, Gauge, Briefcase, Globe, MousePointer2, Lock, FileText,
+  TrendingUp, Layout
 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { Badge } from "@/components/ui/badge";
@@ -15,657 +14,584 @@ import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { memo } from "react";
 
-export default function AdminDocsPage() {
-  const { t, language } = useLanguage();
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05
-      }
-    }
-  };
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1 }
-  };
-
-  const ArchitectureContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-primary/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-              <Cpu size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">{t('admin.docs.about_title')}</CardTitle>
-            <CardDescription className="text-lg">Технологический стек проекта</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="space-y-3">
-              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">Frontend (Next.js 15)</h4>
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                Использование <b>React 19</b> и <b>Server Components</b> позволяет минимизировать объем JavaScript на клиенте, обеспечивая мгновенную загрузку даже на слабых устройствах. Оптимизация LCP через приоритетную загрузку фото.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">Backend & DB (Firebase)</h4>
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                <b>Firestore</b> обеспечивает синхронизацию данных в реальном времени (Real-time чаты, уведомления). <b>Firebase Auth</b> управляет безопасным входом через Google и Email.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">AI Engine (Genkit)</h4>
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                Все интеллектуальные функции реализованы через <b>Google Genkit</b> с использованием моделей Gemini 2.5 Flash. Архитектура готова к подключению <b>DeepSeek</b>.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-purple-500/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-600 mb-4">
-              <Rocket size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">CI/CD и Тестирование</CardTitle>
-            <CardDescription className="text-lg">Автоматизация и качество</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="grid gap-6">
-              <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
-                  <MousePointer2 className="text-purple-500" size={24} />
-                </div>
-                <div>
-                  <p className="text-lg font-black">E2E Тесты (Playwright)</p>
-                  <p className="text-base text-muted-foreground font-medium">Автоматическая проверка критических путей: Регистрация -{'>'} Лайк -{et} Мэтч -{'>'} Чат. Гарантия стабильности UI.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
-                  <Timer className="text-purple-500" size={24} />
-                </div>
-                <div>
-                  <p className="text-lg font-black">Load Testing (K6)</p>
-                  <p className="text-base text-muted-foreground font-medium">Проверка выносливости системы при нагрузке до <b>10,000 одновременных пользователей</b>. Response time {'<'} 200ms.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
-                  <ShieldCheck className="text-purple-500" size={24} />
-                </div>
-                <div>
-                  <p className="text-lg font-black">GitHub Actions</p>
-                  <p className="text-base text-muted-foreground font-medium">Автоматическая проверка кода (Lint, Typecheck, Tests) при каждом Push в репозиторий.</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
-  );
-
-  const BusinessContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
-      <div className="grid gap-8 md:grid-cols-2">
-        <motion.div variants={item}>
-          <Card className="border-0 shadow-md h-full bg-slate-900 text-white">
-            <CardHeader className="pb-8">
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white mb-4">
-                <Globe size={32} />
-              </div>
-              <CardTitle className="text-2xl font-black">White-Label Готовность</CardTitle>
-              <CardDescription className="text-slate-400 text-lg">Потенциал масштабирования</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <p className="text-base leading-relaxed text-slate-300 font-medium">
-                Проект изначально спроектирован как универсальная платформа. Благодаря выносу всех справочников (интересы, цели, города) в админку, вы можете запустить клон приложения для новой ниши или региона без написания кода.
-              </p>
-              <ul className="space-y-3">
-                <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Изолированная конфигурация Firebase</li>
-                <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Региональная монетизация (AdMob/Yandex)</li>
-                <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Мультиязычность из коробки (i18n ready)</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div variants={item}>
-          <Card className="border-0 shadow-md h-full border-2 border-primary/20">
-            <CardHeader className="pb-8">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-                <DollarSign size={32} />
-              </div>
-              <CardTitle className="text-2xl font-black">Модель доходности</CardTitle>
-              <CardDescription className="text-lg">Прогноз при 10,000 DAU</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="rounded-xl border overflow-hidden">
-                <Table>
-                  <TableHeader className="bg-muted/50">
-                    <TableRow>
-                      <TableHead className="text-[10px] font-black uppercase">Метрика</TableHead>
-                      <TableHead className="text-[10px] font-black uppercase">Значение</TableHead>
-                      <TableHead className="text-[10px] font-black uppercase">Доход (мес)</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className="font-bold text-xs">Premium (5% conv)</TableCell>
-                      <TableCell className="text-xs">500 sub / $9.99</TableCell>
-                      <TableCell className="font-black text-xs text-primary">$4,995</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-bold text-xs">Boosts (10% conv)</TableCell>
-                      <TableCell className="text-xs">1000 sales / $1.99</TableCell>
-                      <TableCell className="font-black text-xs text-primary">$1,990</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="font-bold text-xs">Rewarded Ads</TableCell>
-                      <TableCell className="text-xs">20k views / $15 CPM</TableCell>
-                      <TableCell className="font-black text-xs text-primary">$300</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </div>
-              <p className="text-[10px] text-muted-foreground font-bold italic text-center leading-relaxed">Модель основана на средних рыночных показателях индустрии Dating. Реальная доходность может варьироваться от региона.</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-
-  const FeaturesContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-600 mb-3">
-              <Heart size={28} />
-            </div>
-            <CardTitle className="text-xl font-black">Чаты и AI</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>Real-time:</b> Мгновенная доставка сообщений через Firestore Listeners.</p>
-            <p>• <b>AI Icebreakers:</b> Генерация персонализированных фраз для начала диалога на основе 6 разных настроений.</p>
-            <p>• <b>Индикация:</b> Статусы "в сети", "печатает", подтверждение прочтения.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 mb-3">
-              <Users size={28} />
-            </div>
-            <CardTitle className="text-xl font-black">Группы (Сообщества)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>20+ категорий:</b> Музыка, Спорт, IT, Путешествия и другие тематические хабы.</p>
-            <p>• <b>Групповые чаты:</b> Массовое общение участников одной категории.</p>
-            <p>• <b>Anti-Spam:</b> Cooldown система (5 секунд) для поддержания чистоты общения.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 mb-3">
-              <Trophy size={28} fill="currentColor" />
-            </div>
-            <CardTitle className="text-xl font-black">Фотоконкурс</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>Голосование:</b> Ежемесячное голосование пользователей за лучшие анкеты.</p>
-            <p>• <b>Пьедестал:</b> Визуальное выделение топ-3 участников с анимациями и коронами.</p>
-            <p>• <b>Квесты:</b> Задание "Проголосуй за 5 человек" для получения бонусов.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-600 mb-3">
-              <Flame size={28} />
-            </div>
-            <CardTitle className="text-xl font-black">Квесты и Звания</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>Daily Quests:</b> Обновляемый список задач для повышения вовлеченности (Retention).</p>
-            <p>• <b>Титулы:</b> Автоматическое присвоение званий ("Король свиданий") на основе активности.</p>
-            <p>• <b>Rewards:</b> Календарь наград за ежедневный вход в приложение.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 mb-3">
-              <Sparkles size={28} />
-            </div>
-            <CardTitle className="text-xl font-black">AI Возможности</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>AI Bio:</b> Генерация креативного описания профиля по интересам пользователя.</p>
-            <p>• <b>Match Insight:</b> Анализ совместимости пары при мэтче с выделением точек соприкосновения.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-600 mb-3">
-              <Video size={28} />
-            </div>
-            <CardTitle className="text-xl font-black">Видеозвонки</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>WebRTC Ready:</b> Интерфейс видеозвонка с управлением камерой и микрофоном.</p>
-            <p>• <b>Интерфейс:</b> Поддержка полноэкранного режима и плавающего окна (PiP).</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
-  );
-
-  const LogicContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
-      <Card className="border-0 shadow-md overflow-hidden">
-        <CardHeader className="bg-orange-500/5 border-b border-orange-500/10 pb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-600">
-              <Target size={32} />
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-black">{t('admin.docs.logic_title')}</CardTitle>
-              <CardDescription className="text-lg font-medium">Многоуровневый алгоритм ранжирования анкет</CardDescription>
-            </div>
+const ArchitectureContent = memo(({ t }: { t: any }) => (
+  <div className="grid gap-8 md:grid-cols-2">
+    <div>
+      <Card className="border-0 shadow-md h-full">
+        <CardHeader className="bg-primary/5 rounded-t-xl pb-8">
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+            <Cpu size={32} />
           </div>
+          <CardTitle className="text-2xl font-black">{t('admin.docs.about_title')}</CardTitle>
+          <CardDescription className="text-lg">Технологический стек проекта</CardDescription>
         </CardHeader>
-        <CardContent className="pt-10 space-y-10">
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="space-y-4 p-6 rounded-3xl bg-muted/30 border border-border/50 relative">
-              <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 1</Badge>
-              <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Жесткий фильтр</h5>
-              <ul className="text-base space-y-3 text-muted-foreground font-medium">
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-[#2ecc71]"/> Пол и ориентация</li>
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-[#2ecc71]"/> Возраст (+/- 5 лет)</li>
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-[#2ecc71]"/> Город / Геолокация</li>
-              </ul>
-            </div>
+        <CardContent className="pt-8 space-y-6">
+          <div className="space-y-3">
+            <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">Frontend (Next.js 15)</h4>
+            <p className="text-base leading-relaxed text-muted-foreground font-medium">
+              Использование <b>React 19</b> и <b>Server Components</b> позволяет минимизировать объем JavaScript на клиенте, обеспечивая мгновенную загрузку даже на слабых устройствах. Оптимизация LCP через приоритетную загрузку фото.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">Backend & DB (Firebase)</h4>
+            <p className="text-base leading-relaxed text-muted-foreground font-medium">
+              <b>Firestore</b> обеспечивает синхронизацию данных в реальном времени (Real-time чаты, уведомления). <b>Firebase Auth</b> управляет безопасным входом через Google и Email.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">AI Engine (Genkit)</h4>
+            <p className="text-base leading-relaxed text-muted-foreground font-medium">
+              Все интеллектуальные функции реализованы через <b>Google Genkit</b> с использованием моделей Gemini 2.5 Flash. Архитектура готова к подключению <b>DeepSeek</b>.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
 
-            <div className="space-y-4 p-6 rounded-3xl bg-white border-2 border-orange-500/20 shadow-2xl shadow-orange-500/5 relative">
-              <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 2</Badge>
-              <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Умный скоринг</h5>
-              <div className="space-y-4 py-2">
-                <div className="flex justify-between items-center text-base font-black">
-                  <span>Совпадение цели</span>
-                  <span className="text-orange-600">+1000 pts</span>
-                </div>
-                <div className="flex justify-between items-center text-base font-black">
-                  <span>Общий интерес</span>
-                  <span className="text-orange-600">+100 pts / шт</span>
-                </div>
+    <div>
+      <Card className="border-0 shadow-md h-full">
+        <CardHeader className="bg-purple-500/5 rounded-t-xl pb-8">
+          <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-600 mb-4">
+            <Rocket size={32} />
+          </div>
+          <CardTitle className="text-2xl font-black">CI/CD и Тестирование</CardTitle>
+          <CardDescription className="text-lg">Автоматизация и качество</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-8 space-y-6">
+          <div className="grid gap-6">
+            <div className="flex gap-4">
+              <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
+                <MousePointer2 className="text-purple-500" size={24} />
               </div>
-              <p className="text-sm leading-relaxed text-muted-foreground font-bold italic pt-2">
-                Алгоритм суммирует очки и ранжирует список. Те, кто больше всего подходит, оказываются в самом верху выдачи.
-              </p>
+              <div>
+                <p className="text-lg font-black">E2E Тесты (Playwright)</p>
+                <p className="text-base text-muted-foreground font-medium">Автоматическая проверка критических путей: Регистрация -{'>'} Лайк -{'>'} Мэтч -{'>'} Чат. Гарантия стабильности UI.</p>
+              </div>
             </div>
-
-            <div className="space-y-4 p-6 rounded-3xl bg-muted/30 border border-border/50 relative">
-              <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 3</Badge>
-              <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Правило пересечения</h5>
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                В выдачу попадают только те, у кого есть <b>хотя бы одно</b> совпадение (по цели ИЛИ интересам). Это гарантирует релевантность ленты.
-              </p>
-              <div className="flex items-center gap-2 text-orange-600 font-black text-xs uppercase tracking-tighter mt-4">
-                <Sparkles size={18} /> Чистая лента без шума
+            <div className="flex gap-4">
+              <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
+                <Timer className="text-purple-500" size={24} />
+              </div>
+              <div>
+                <p className="text-lg font-black">Load Testing (K6)</p>
+                <p className="text-base text-muted-foreground font-medium">Проверка выносливости системы при нагрузке до <b>10,000 одновременных пользователей</b>. Response time {'<' } 200ms.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="mt-1 p-2.5 rounded-lg bg-purple-50 shrink-0">
+                <ShieldCheck className="text-purple-500" size={24} />
+              </div>
+              <div>
+                <p className="text-lg font-black">GitHub Actions</p>
+                <p className="text-base text-muted-foreground font-medium">Автоматическая проверка кода (Lint, Typecheck, Tests) при каждом Push в репозиторий.</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
-    </motion.div>
-  );
+    </div>
+  </div>
+));
+ArchitectureContent.displayName = "ArchitectureContent";
 
-  const PerformanceContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-emerald-500/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 mb-4">
-              <Gauge size={32} />
+const BusinessContent = memo(() => (
+  <div className="space-y-8">
+    <div className="grid gap-8 md:grid-cols-2">
+      <div>
+        <Card className="border-0 shadow-md h-full bg-slate-900 text-white">
+          <CardHeader className="pb-8">
+            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white mb-4">
+              <Globe size={32} />
             </div>
-            <CardTitle className="text-2xl font-black">Производительность</CardTitle>
-            <CardDescription className="text-lg">Ключевые метрики (Core Web Vitals)</CardDescription>
+            <CardTitle className="text-2xl font-black">White-Label Готовность</CardTitle>
+            <CardDescription className="text-slate-400 text-lg">Потенциал масштабирования</CardDescription>
           </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="grid gap-6">
-              <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
-                <div className="space-y-1">
-                  <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">LCP (Загрузка фото)</p>
-                  <p className="text-xs text-muted-foreground font-medium">Оптимизация через AVIF и CDN</p>
-                </div>
-                <Badge className="bg-emerald-500 text-white font-black px-3 py-1">~1.1s</Badge>
-              </div>
-              <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
-                <div className="space-y-1">
-                  <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">Доставка сообщений</p>
-                  <p className="text-xs text-muted-foreground font-medium">Real-time синхронизация Firestore</p>
-                </div>
-                <Badge className="bg-emerald-500 text-white font-black px-3 py-1">&lt; 180ms</Badge>
-              </div>
-              <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
-                <div className="space-y-1">
-                  <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">TBT (Интерактивность)</p>
-                  <p className="text-xs text-muted-foreground font-medium">Dynamic Code Splitting</p>
-                </div>
-                <Badge className="bg-emerald-500 text-white font-black px-3 py-1">{'<'} 150ms</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-indigo-500/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 mb-4">
-              <Activity size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">Mobile Optimization</CardTitle>
-            <CardDescription className="text-lg">Технологии мгновенной работы</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Rocket size={24} className="text-indigo-600" /></div>
-                <div>
-                  <p className="text-lg font-black">AVIF Image Priority</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Использование AVIF вместо WebP снижает вес страницы на 30%, сохраняя четкость портретов при низком трафике.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Layout size={24} className="text-indigo-600" /></div>
-                <div>
-                  <p className="text-lg font-black">Layout Shift Protection</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Жесткое резервирование aspect-ratio для всех медиа-элементов исключает скачки контента при загрузке.</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
-  );
-
-  const AdminContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-slate-900 text-white rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
-              <Settings2 size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">Панель управления</CardTitle>
-            <CardDescription className="text-slate-400 text-lg">Инструменты модератора</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="grid gap-8">
-              <div className="flex gap-4">
-                <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><Users size={24} /></div>
-                <div>
-                  <p className="text-lg font-black">Управление пользователями</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Просмотр, редактирование персональных данных, блокировка нарушителей и удаление аккаунтов.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><SlidersHorizontal size={24} /></div>
-                <div>
-                  <p className="text-lg font-black">Feature Flags (A/B Test)</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Включение и выключение функций (видеозвонки, ИИ-инсайты) в реальном времени через Remote Config.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><DollarSign size={24} /></div>
-                <div>
-                  <p className="text-lg font-black">Монетизация</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Настройка ID рекламных блоков для Google AdMob и Yandex Ads для управления доходностью.</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-blue-600 text-white rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
-              <Mail size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">Коммуникации</CardTitle>
-            <CardDescription className="text-blue-100 text-lg">Рассылки и контент</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="grid gap-8">
-              <div className="flex gap-4">
-                <div className="mt-1 p-3 rounded-xl bg-blue-50 shrink-0"><MessageSquare size={24} className="text-blue-600" /></div>
-                <div>
-                  <p className="text-lg font-black">Массовые рассылки</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Отправка системных уведомлений (In-App) или Email-кампаний по всей базе или сегментам (Premium/New).</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="mt-1 p-3 rounded-xl bg-blue-50 shrink-0"><Layers size={24} className="text-blue-600" /></div>
-                <div>
-                  <p className="text-lg font-black">Управление контентом</p>
-                  <p className="text-base text-muted-foreground leading-relaxed font-medium">Редактирование глобальных справочников: обновляйте списки интересов, целей и уровней образования.</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
-  );
-
-  const SecurityContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-green-500/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600 mb-4">
-              <ShieldAlert size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">Безопасность контента</CardTitle>
-            <CardDescription className="text-lg">Автоматическая фильтрация</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="space-y-4">
-              <h5 className="text-lg font-black flex items-center gap-3"><CheckCircle2 size={24} className="text-green-500" /> Фильтр сообщений (Антимат)</h5>
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                Система в реальном времени анализирует текст всех сообщений. Если обнаружено нарушение, отправка блокируется с уведомлением пользователя.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Нецензурная лексика</Badge>
-                <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Спам / Ссылки</Badge>
-                <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Политика</Badge>
-                <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Оскорбления</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-red-500/5 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-600 mb-4">
-              <Flag size={32} />
-            </div>
-            <CardTitle className="text-2xl font-black">Система жалоб</CardTitle>
-            <CardDescription className="text-lg">Модерация по обращениям</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <p className="text-base leading-relaxed text-muted-foreground font-medium">
-              Каждый пользователь имеет возможность подать анонимную жалобу на анкету или чат. Жалобы мгновенно поступают в раздел <b>«Жалобы»</b> админки для принятия мер.
+          <CardContent className="space-y-6">
+            <p className="text-base leading-relaxed text-slate-300 font-medium">
+              Проект изначально спроектирован как универсальная платформа. Благодаря выносу всех справочников (интересы, цели, города) в админку, вы можете запустить клон приложения для новой ниши или региона без написания кода.
             </p>
-            <ul className="text-base space-y-2 text-muted-foreground font-bold list-disc pl-5 pt-2">
-              <li>История взаимодействий reporter/reported</li>
-              <li>Конкретная причина (Фейк, Спам, Агрессия)</li>
-              <li>Автоматическое логирование даты события</li>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><ShieldCheck size={18}/> Изолированная конфигурация Firebase</li>
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><ShieldCheck size={18}/> Региональная монетизация (AdMob/Yandex)</li>
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><ShieldCheck size={18}/> Мультиязычность из коробки (i18n ready)</li>
             </ul>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.div>
-  );
+      </div>
 
-  const LegalContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader className="bg-slate-100 rounded-t-xl pb-8">
-            <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-slate-600 mb-4 shadow-sm">
-              <Scale size={32} />
+      <div>
+        <Card className="border-0 shadow-md h-full border-2 border-primary/20">
+          <CardHeader className="pb-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+              <DollarSign size={32} />
             </div>
-            <CardTitle className="text-2xl font-black">Юридическая база</CardTitle>
-            <CardDescription className="text-lg">Compliance и документы</CardDescription>
+            <CardTitle className="text-2xl font-black">Модель доходности</CardTitle>
+            <CardDescription className="text-lg">Прогноз при 10,000 DAU</CardDescription>
           </CardHeader>
-          <CardContent className="pt-8 space-y-6">
-            <div className="space-y-4">
-              <p className="text-base leading-relaxed text-muted-foreground font-medium">
-                Проект укомплектован полным набором юридических шаблонов, необходимых для официального запуска в РФ и Европе:
-              </p>
-              <ul className="text-base space-y-3 text-muted-foreground font-bold">
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-blue-500"/> GDPR Compliance (Европа)</li>
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-blue-500"/> 152-ФЗ (Россия)</li>
-                <li className="flex items-center gap-3"><CheckCircle2 size={20} className="text-blue-500"/> Cookie Consent & Privacy</li>
-              </ul>
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-100 text-amber-800 text-sm font-medium leading-relaxed italic">
-                Примечание: Перед продажей необходимо заменить плейсхолдеры в текстах на реальные реквизиты юридического лица.
+          <CardContent className="space-y-6">
+            <div className="rounded-xl border overflow-hidden">
+              <Table>
+                <TableHeader className="bg-muted/50">
+                  <TableRow>
+                    <TableHead className="text-[10px] font-black uppercase">Метрика</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase">Значение</TableHead>
+                    <TableHead className="text-[10px] font-black uppercase">Доход (мес)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-bold text-xs">Premium (5% conv)</TableCell>
+                    <TableCell className="text-xs">500 sub / $9.99</TableCell>
+                    <TableCell className="font-black text-xs text-primary">$4,995</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold text-xs">Boosts (10% conv)</TableCell>
+                    <TableCell className="text-xs">1000 sales / $1.99</TableCell>
+                    <TableCell className="font-black text-xs text-primary">$1,990</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-bold text-xs">Rewarded Ads</TableCell>
+                    <TableCell className="text-xs">20k views / $15 CPM</TableCell>
+                    <TableCell className="font-black text-xs text-primary">$300</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+            <p className="text-[10px] text-muted-foreground font-bold italic text-center leading-relaxed">Модель основана на средних рыночных показателях индустрии Dating. Реальная доходность может варьироваться от региона.</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+));
+BusinessContent.displayName = "BusinessContent";
+
+const FeaturesContent = memo(() => (
+  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
+      <CardHeader>
+        <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-600 mb-3">
+          <Target size={28} />
+        </div>
+        <CardTitle className="text-xl font-black">Чаты и AI</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
+        <p>• <b>Real-time:</b> Мгновенная доставка сообщений через Firestore Listeners.</p>
+        <p>• <b>AI Icebreakers:</b> Генерация персонализированных фраз для начала диалога на основе 6 разных настроений.</p>
+        <p>• <b>Индикация:</b> Статусы "в сети", "печатает", подтверждение прочтения.</p>
+      </CardContent>
+    </Card>
+
+    <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
+      <CardHeader>
+        <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 mb-3">
+          <Users size={28} />
+        </div>
+        <CardTitle className="text-xl font-black">Группы (Сообщества)</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
+        <p>• <b>20+ категорий:</b> Музыка, Спорт, IT, Путешествия и другие тематические хабы.</p>
+        <p>• <b>Групповые чаты:</b> Массовое общение участников одной категории.</p>
+        <p>• <b>Anti-Spam:</b> Cooldown система (5 секунд) для поддержания чистоты общения.</p>
+      </CardContent>
+    </Card>
+
+    <Card className="border-0 shadow-md h-full hover:shadow-lg transition-shadow">
+      <CardHeader>
+        <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 mb-3">
+          <TrendingUp size={28} />
+        </div>
+        <CardTitle className="text-xl font-black">Фотоконкурс</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
+        <p>• <b>Голосование:</b> Ежемесячное голосование пользователей за лучшие анкеты.</p>
+        <p>• <b>Пьедестал:</b> Визуальное выделение топ-3 участников с анимациями и коронами.</p>
+        <p>• <b>Квесты:</b> Задание "Проголосуй за 5 человек" для получения бонусов.</p>
+      </CardContent>
+    </Card>
+  </div>
+));
+FeaturesContent.displayName = "FeaturesContent";
+
+const LogicContent = memo(({ t }: { t: any }) => (
+  <div className="space-y-8">
+    <Card className="border-0 shadow-md overflow-hidden">
+      <CardHeader className="bg-orange-500/5 border-b border-orange-500/10 pb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-600">
+            <Target size={32} />
+          </div>
+          <div>
+            <CardTitle className="text-2xl font-black">{t('admin.docs.logic_title')}</CardTitle>
+            <CardDescription className="text-lg font-medium">Многоуровневый алгоритм ранжирования анкет</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-10 space-y-10">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div className="space-y-4 p-6 rounded-3xl bg-muted/30 border border-border/50 relative">
+            <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 1</Badge>
+            <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Жесткий фильтр</h5>
+            <ul className="text-base space-y-3 text-muted-foreground font-medium">
+              <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-[#2ecc71]"/> Пол и ориентация</li>
+              <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-[#2ecc71]"/> Возраст (+/- 5 лет)</li>
+              <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-[#2ecc71]"/> Город / Геолокация</li>
+            </ul>
+          </div>
+
+          <div className="space-y-4 p-6 rounded-3xl bg-white border-2 border-orange-500/20 shadow-2xl shadow-orange-500/5 relative">
+            <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 2</Badge>
+            <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Умный скоринг</h5>
+            <div className="space-y-4 py-2">
+              <div className="flex justify-between items-center text-base font-black">
+                <span>Совпадение цели</span>
+                <span className="text-orange-600">+1000 pts</span>
+              </div>
+              <div className="flex justify-between items-center text-base font-black">
+                <span>Общий интерес</span>
+                <span className="text-orange-600">+100 pts / шт</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            <p className="text-sm leading-relaxed text-muted-foreground font-bold italic pt-2">
+              Алгоритм суммирует очки и ранжирует список. Те, кто больше всего подходит, оказываются в самом верху выдачи.
+            </p>
+          </div>
 
-      <motion.div variants={item}>
-        <Card className="border-0 shadow-md h-full">
-          <CardHeader>
-            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 mb-3">
-              <ShieldCheck size={28} />
+          <div className="space-y-4 p-6 rounded-3xl bg-muted/30 border border-border/50 relative">
+            <Badge className="absolute -top-3 left-6 bg-orange-500 text-white border-0 font-black px-3 py-1">Этап 3</Badge>
+            <h5 className="font-black text-sm uppercase tracking-widest text-primary pt-2">Правило пересечения</h5>
+            <p className="text-base leading-relaxed text-muted-foreground font-medium">
+              В выдачу попадают только те, у кого есть <b>хотя бы одно</b> совпадение (по цели ИЛИ интересам). Это гарантирует релевантность ленты.
+            </p>
+            <div className="flex items-center gap-2 text-orange-600 font-black text-xs uppercase tracking-tighter mt-4">
+              <Sparkles size={18} /> Чистая лента без шума
             </div>
-            <CardTitle className="text-xl font-black">Обработка данных</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
-            <p>• <b>Контроль:</b> Каждый пользователь может отозвать согласие на обработку данных в настройках.</p>
-            <p>• <b>Прозрачность:</b> Прямые ссылки на политику конфиденциальности в профиле и при регистрации.</p>
-            <p>• <b>Защита:</b> Описание методов хранения данных на базе Google Cloud Trust Center.</p>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
-  );
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+));
+LogicContent.displayName = "LogicContent";
 
-  const InvestorContent = () => (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-10">
-        <Card className="border-0 shadow-xl bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
-            <div className="absolute right-0 top-0 p-10 opacity-10 rotate-12"><DollarSign size={200} /></div>
-            <CardHeader className="pb-8 border-b border-white/10">
-                <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-white shadow-inner"><Lock size={32} /></div>
-                    <div>
-                        <CardTitle className="text-3xl font-black">Investor Due Diligence</CardTitle>
-                        <CardDescription className="text-slate-400 text-lg">Конфиденциальная информация для оценки актива</CardDescription>
-                    </div>
-                </div>
-            </CardHeader>
-            <CardContent className="pt-10 space-y-12 relative z-10">
-                <div className="grid gap-8 md:grid-cols-3">
-                    <div className="space-y-4">
-                        <h5 className="text-sm font-black uppercase text-primary tracking-widest">Stability (K6 Test)</h5>
-                        <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Concurrency</span>
-                                <span className="text-sm font-bold">10,000 Users</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Peak Response</span>
-                                <span className="text-sm font-bold">185ms</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Error Rate</span>
-                                <span className="text-sm font-bold text-[#2ecc71]">0.00%</span>
-                            </div>
-                            <Badge className="w-full justify-center bg-[#2ecc71]/20 text-[#2ecc71] border-[#2ecc71]/30">Pass Verified</Badge>
-                        </div>
-                    </div>
-                    <div className="space-y-4">
-                        <h5 className="text-sm font-black uppercase text-primary tracking-widest">Growth Metrics</h5>
-                        <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Retention (D30)</span>
-                                <span className="text-sm font-bold">28.4%</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Viral Coefficient</span>
-                                <span className="text-sm font-bold">1.2</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">DAU/MAU Ratio</span>
-                                <span className="text-sm font-bold">42%</span>
-                            </div>
-                            <Badge className="w-full justify-center bg-blue-500/20 text-blue-400 border-blue-500/30">Top Tier</Badge>
-                        </div>
-                    </div>
-                    <div className="space-y-4">
-                        <h5 className="text-sm font-black uppercase text-primary tracking-widest">Exit Strategy</h5>
-                        <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Est. 12m Runrate</span>
-                                <span className="text-sm font-bold">$65,000+</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Profit Margin</span>
-                                <span className="text-sm font-bold">84%</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-slate-400">Payback Period</span>
-                                <span className="text-sm font-bold">14 Months</span>
-                            </div>
-                            <Badge className="w-full justify-center bg-amber-500/20 text-amber-400 border-amber-500/30">High ROI</Badge>
-                        </div>
-                    </div>
-                </div>
+const PerformanceContent = memo(() => (
+  <div className="grid gap-8 md:grid-cols-2">
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-emerald-500/5 rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 mb-4">
+          <Gauge size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Производительность</CardTitle>
+        <CardDescription className="text-lg">Ключевые метрики (Core Web Vitals)</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="grid gap-6">
+          <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
+            <div className="space-y-1">
+              <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">LCP (Загрузка фото)</p>
+              <p className="text-xs text-muted-foreground font-medium">Оптимизация через AVIF и CDN</p>
+            </div>
+            <Badge className="bg-emerald-500 text-white font-black px-3 py-1">~1.1s</Badge>
+          </div>
+          <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
+            <div className="space-y-1">
+              <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">Доставка сообщений</p>
+              <p className="text-xs text-muted-foreground font-medium">Real-time синхронизация Firestore</p>
+            </div>
+            <Badge className="bg-emerald-500 text-white font-black px-3 py-1">&lt; 180ms</Badge>
+          </div>
+          <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
+            <div className="space-y-1">
+              <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">TBT (Интерактивность)</p>
+              <p className="text-xs text-muted-foreground font-medium">Dynamic Code Splitting</p>
+            </div>
+            <Badge className="bg-emerald-500 text-white font-black px-3 py-1">{'<' } 150ms</Badge>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
 
-                <div className="p-8 rounded-[2.5rem] bg-white/5 border border-white/10 flex flex-col md:flex-row items-center gap-8">
-                    <div className="w-20 h-20 bg-primary/20 rounded-3xl flex items-center justify-center text-primary shadow-2xl shrink-0 border border-primary/30"><FileText size={40} /></div>
-                    <div className="flex-1 text-center md:text-left space-y-2">
-                        <h4 className="text-xl font-black">Full Valuation Report Available</h4>
-                        <p className="text-slate-400 text-base leading-relaxed font-medium">Включает в себя детальный анализ рынка, стратегию привлечения трафика (CAC/LTV) и 3-летний финансовый план. Готово для загрузки на Acquire.com.</p>
-                    </div>
-                    <Button className="h-14 rounded-2xl bg-white text-slate-900 font-black px-8 uppercase text-[10px] tracking-widest shadow-xl shrink-0 border-0 active:scale-95 transition-all">Download PDF Report</Button>
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-indigo-500/5 rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 mb-4">
+          <Activity size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Mobile Optimization</CardTitle>
+        <CardDescription className="text-lg">Технологии мгновенной работы</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="space-y-6">
+          <div className="flex gap-4">
+            <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Rocket size={24} className="text-indigo-600" /></div>
+            <div>
+              <p className="text-lg font-black">AVIF Image Priority</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Использование AVIF вместо WebP снижает вес страницы на 30%, сохраняя четкость портретов при низком трафике.</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Layout size={24} className="text-indigo-600" /></div>
+            <div>
+              <p className="text-lg font-black">Layout Shift Protection</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Жесткое резервирование aspect-ratio для всех медиа-элементов исключает скачки контента при загрузке.</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+));
+PerformanceContent.displayName = "PerformanceContent";
+
+const AdminFeaturesContent = memo(() => (
+  <div className="grid gap-8 md:grid-cols-2">
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-slate-900 text-white rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+          <Settings2 size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Панель управления</CardTitle>
+        <CardDescription className="text-slate-400 text-lg">Инструменты модератора</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="grid gap-8">
+          <div className="flex gap-4">
+            <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><Users size={24} /></div>
+            <div>
+              <p className="text-lg font-black">Управление пользователями</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Просмотр, редактирование персональных данных, блокировка нарушителей и удаление аккаунтов.</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><SlidersHorizontal size={24} /></div>
+            <div>
+              <p className="text-lg font-black">Feature Flags (A/B Test)</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Включение и выключение функций (видеозвонки, ИИ-инсайты) в реальном времени через Remote Config.</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><DollarSign size={24} /></div>
+            <div>
+              <p className="text-lg font-black">Монетизация</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Настройка ID рекламных блоков для Google AdMob и Yandex Ads для управления доходностью.</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-blue-600 text-white rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+          <MessageSquare size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Коммуникации</CardTitle>
+        <CardDescription className="text-blue-100 text-lg">Рассылки и контент</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="grid gap-8">
+          <div className="flex gap-4">
+            <div className="mt-1 p-3 rounded-xl bg-blue-50 shrink-0"><MessageSquare size={24} className="text-blue-600" /></div>
+            <div>
+              <p className="text-lg font-black">Массовые рассылки</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Отправка системных уведомлений (In-App) или Email-кампаний по всей базе или сегментам (Premium/New).</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 p-3 rounded-xl bg-blue-50 shrink-0"><Briefcase size={24} className="text-blue-600" /></div>
+            <div>
+              <p className="text-lg font-black">Управление контентом</p>
+              <p className="text-base text-muted-foreground leading-relaxed font-medium">Редактирование глобальных справочников: обновляйте списки интересов, целей и уровней образования.</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+));
+AdminFeaturesContent.displayName = "AdminFeaturesContent";
+
+const SecurityContent = memo(({ t }: { t: any }) => (
+  <div className="grid gap-8 md:grid-cols-2">
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-green-500/5 rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600 mb-4">
+          <ShieldAlert size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Безопасность контента</CardTitle>
+        <CardDescription className="text-lg">Автоматическая фильтрация</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="space-y-4">
+          <h5 className="text-lg font-black flex items-center gap-3"><ShieldCheck size={24} className="text-green-500" /> Фильтр сообщений (Антимат)</h5>
+          <p className="text-base leading-relaxed text-muted-foreground font-medium">
+            Система в реальном времени анализирует текст всех сообщений. Если обнаружено нарушение, отправка блокируется с уведомлением пользователя.
+          </p>
+          <div className="flex flex-wrap gap-2 mt-4">
+            <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Нецензурная лексика</Badge>
+            <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Спам / Ссылки</Badge>
+            <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Политика</Badge>
+            <Badge variant="outline" className="text-xs font-black uppercase py-1 px-3">Оскорбления</Badge>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-red-500/5 rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-600 mb-4">
+          <Flag size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Система жалоб</CardTitle>
+        <CardDescription className="text-lg">Модерация по обращениям</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <p className="text-base leading-relaxed text-muted-foreground font-medium">
+          Каждый пользователь имеет возможность подать анонимную жалобу на анкету или чат. Жалобы мгновенно поступают в раздел <b>«Жалобы»</b> админки для принятия мер.
+        </p>
+        <ul className="text-base space-y-2 text-muted-foreground font-bold list-disc pl-5 pt-2">
+          <li>История взаимодействий reporter/reported</li>
+          <li>Конкретная причина (Фейк, Спам, Агрессия)</li>
+          <li>Автоматическое логирование даты события</li>
+        </ul>
+      </CardContent>
+    </Card>
+  </div>
+));
+SecurityContent.displayName = "SecurityContent";
+
+const LegalContent = memo(() => (
+  <div className="grid gap-8 md:grid-cols-2">
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader className="bg-slate-100 rounded-t-xl pb-8">
+        <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-slate-600 mb-4 shadow-sm">
+          <Scale size={32} />
+        </div>
+        <CardTitle className="text-2xl font-black">Юридическая база</CardTitle>
+        <CardDescription className="text-lg">Compliance и документы</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-8 space-y-6">
+        <div className="space-y-4">
+          <p className="text-base leading-relaxed text-muted-foreground font-medium">
+            Проект укомплектован полным набором юридических шаблонов, необходимых для официального запуска в РФ и Европе:
+          </p>
+          <ul className="text-base space-y-3 text-muted-foreground font-bold">
+            <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-blue-500"/> GDPR Compliance (Европа)</li>
+            <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-blue-500"/> 152-ФЗ (Россия)</li>
+            <li className="flex items-center gap-3"><ShieldCheck size={20} className="text-blue-500"/> Cookie Consent & Privacy</li>
+          </ul>
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-100 text-amber-800 text-sm font-medium leading-relaxed italic">
+            Примечание: Перед продажей необходимо заменить плейсхолдеры в текстах на реальные реквизиты юридического лица.
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card className="border-0 shadow-md h-full">
+      <CardHeader>
+        <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 mb-3">
+          <ShieldCheck size={28} />
+        </div>
+        <CardTitle className="text-xl font-black">Обработка данных</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 text-base leading-relaxed text-muted-foreground font-medium">
+        <p>• <b>Контроль:</b> Каждый пользователь может отозвать согласие на обработку данных в настройках.</p>
+        <p>• <b>Прозрачность:</b> Прямые ссылки на политику конфиденциальности в профиле и при регистрации.</p>
+        <p>• <b>Защита:</b> Описание методов хранения данных на базе Google Cloud Trust Center.</p>
+      </CardContent>
+    </Card>
+  </div>
+));
+LegalContent.displayName = "LegalContent";
+
+const InvestorContent = memo(() => (
+  <div className="space-y-10">
+    <Card className="border-0 shadow-xl bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden">
+        <div className="absolute right-0 top-0 p-10 opacity-10 rotate-12"><DollarSign size={200} /></div>
+        <CardHeader className="pb-8 border-b border-white/10">
+            <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-white shadow-inner"><Lock size={32} /></div>
+                <div>
+                    <CardTitle className="text-3xl font-black">Investor Due Diligence</CardTitle>
+                    <CardDescription className="text-slate-400 text-lg">Конфиденциальная информация для оценки актива</CardDescription>
                 </div>
-            </CardContent>
-        </Card>
-    </motion.div>
-  );
+            </div>
+        </CardHeader>
+        <CardContent className="pt-10 space-y-12 relative z-10">
+            <div className="grid gap-8 md:grid-cols-3">
+                <div className="space-y-4">
+                    <h5 className="text-sm font-black uppercase text-primary tracking-widest">Stability (K6 Test)</h5>
+                    <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Concurrency</span>
+                            <span className="text-sm font-bold">10,000 Users</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Peak Response</span>
+                            <span className="text-sm font-bold">185ms</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Error Rate</span>
+                            <span className="text-sm font-bold text-[#2ecc71]">0.00%</span>
+                        </div>
+                        <Badge className="w-full justify-center bg-[#2ecc71]/20 text-[#2ecc71] border-[#2ecc71]/30">Pass Verified</Badge>
+                    </div>
+                </div>
+                <div className="space-y-4">
+                    <h5 className="text-sm font-black uppercase text-primary tracking-widest">Growth Metrics</h5>
+                    <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Retention (D30)</span>
+                            <span className="text-sm font-bold">28.4%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Viral Coefficient</span>
+                            <span className="text-sm font-bold">1.2</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">DAU/MAU Ratio</span>
+                            <span className="text-sm font-bold">42%</span>
+                        </div>
+                        <Badge className="w-full justify-center bg-blue-500/20 text-blue-400 border-blue-500/30">Top Tier</Badge>
+                    </div>
+                </div>
+                <div className="space-y-4">
+                    <h5 className="text-sm font-black uppercase text-primary tracking-widest">Exit Strategy</h5>
+                    <div className="bg-white/5 p-6 rounded-3xl border border-white/10 space-y-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Est. 12m Runrate</span>
+                            <span className="text-sm font-bold">$65,000+</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Profit Margin</span>
+                            <span className="text-sm font-bold">84%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-slate-400">Payback Period</span>
+                            <span className="text-sm font-bold">14 Months</span>
+                        </div>
+                        <Badge className="w-full justify-center bg-amber-500/20 text-amber-400 border-amber-500/30">High ROI</Badge>
+                    </div>
+                </div>
+            </div>
+
+            <div className="p-8 rounded-[2.5rem] bg-white/5 border border-white/10 flex flex-col md:flex-row items-center gap-8">
+                <div className="w-20 h-20 bg-primary/20 rounded-3xl flex items-center justify-center text-primary shadow-2xl shrink-0 border border-primary/30"><FileText size={40} /></div>
+                <div className="flex-1 text-center md:text-left space-y-2">
+                    <h4 className="text-xl font-black">Full Valuation Report Available</h4>
+                    <p className="text-slate-400 text-base leading-relaxed font-medium">Включает в себя детальный анализ рынка, стратегию привлечения трафика (CAC/LTV) и 3-летний финансовый план. Готово для загрузки на Acquire.com.</p>
+                </div>
+                <Button className="h-14 rounded-2xl bg-white text-slate-900 font-black px-8 uppercase text-[10px] tracking-widest shadow-xl shrink-0 border-0 active:scale-95 transition-all">Download PDF Report</Button>
+            </div>
+        </CardContent>
+    </Card>
+  </div>
+));
+InvestorContent.displayName = "InvestorContent";
+
+export default function AdminDocsPage() {
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto pb-24 px-4">
@@ -713,7 +639,7 @@ export default function AdminDocsPage() {
               <Cpu className="text-primary" size={28} />
               <h3 className="text-3xl font-black uppercase tracking-tight">Архитектура и CI/CD</h3>
             </div>
-            <ArchitectureContent />
+            <ArchitectureContent t={t} />
           </section>
 
           <Separator />
@@ -753,7 +679,7 @@ export default function AdminDocsPage() {
               <Target className="text-primary" size={28} />
               <h3 className="text-3xl font-black uppercase tracking-tight">Логика мэтчинга</h3>
             </div>
-            <LogicContent />
+            <LogicContent t={t} />
           </section>
 
           <Separator />
@@ -763,7 +689,7 @@ export default function AdminDocsPage() {
               <Settings2 className="text-primary" size={28} />
               <h3 className="text-3xl font-black uppercase tracking-tight">Инструменты администрирования</h3>
             </div>
-            <AdminContent />
+            <AdminFeaturesContent />
           </section>
 
           <Separator />
@@ -773,7 +699,7 @@ export default function AdminDocsPage() {
               <ShieldAlert className="text-primary" size={28} />
               <h3 className="text-3xl font-black uppercase tracking-tight">Безопасность и Модерация</h3>
             </div>
-            <SecurityContent />
+            <SecurityContent t={t} />
           </section>
 
           <Separator />
@@ -792,7 +718,7 @@ export default function AdminDocsPage() {
         </TabsContent>
 
         <TabsContent value="architecture" className="outline-none">
-          <ArchitectureContent />
+          <ArchitectureContent t={t} />
         </TabsContent>
 
         <TabsContent value="performance" className="outline-none">
@@ -808,15 +734,15 @@ export default function AdminDocsPage() {
         </TabsContent>
 
         <TabsContent value="logic" className="outline-none">
-          <LogicContent />
+          <LogicContent t={t} />
         </TabsContent>
 
         <TabsContent value="admin" className="outline-none">
-          <AdminContent />
+          <AdminFeaturesContent />
         </TabsContent>
 
         <TabsContent value="security" className="outline-none">
-          <SecurityContent />
+          <SecurityContent t={t} />
         </TabsContent>
 
         <TabsContent value="legal" className="outline-none">

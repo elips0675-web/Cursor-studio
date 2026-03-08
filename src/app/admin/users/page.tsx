@@ -14,7 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { MoreHorizontal, X, Plus } from "lucide-react";
+import { MoreHorizontal, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -114,11 +114,11 @@ const UserEditDialog = memo(({ isOpen, onOpenChange, user, onSave, t }: {
   onSave: (user: User) => void;
   t: (key: string) => string;
 }) => {
-  const [editedUser, setEditedUser] = useState<User | null>(user);
+  const [editedUser, setEditedUser] = useState<User | null>(null);
 
-  // Sync state when user changes
+  // Use local state effect to sync with prop
   useMemo(() => {
-    setEditedUser(user);
+    if (user) setEditedUser(user);
   }, [user]);
 
   if (!editedUser) return null;

@@ -3,15 +3,11 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  BarChart, 
-  Bar, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  LineChart, 
-  Line,
   AreaChart,
   Area,
   PieChart,
@@ -19,11 +15,11 @@ import {
   Cell
 } from 'recharts';
 import { useLanguage } from "@/context/language-context";
-import { TrendingUp, Users, Heart, MessageSquare, DollarSign, ArrowUpRight, Calendar, Zap, ShieldCheck } from "lucide-react";
+import { TrendingUp, Users, DollarSign, ArrowUpRight, Zap, ShieldCheck, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { memo, useMemo } from "react";
 
-const registrationData = [
+const REGISTRATION_DATA = [
   { day: 'Пн', users: 120 },
   { day: 'Вт', users: 150 },
   { day: 'Ср', users: 180 },
@@ -33,7 +29,7 @@ const registrationData = [
   { day: 'Вс', users: 310 },
 ];
 
-const retentionData = [
+const RETENTION_DATA = [
   { day: 'Day 1', rate: 100 },
   { day: 'Day 3', rate: 65 },
   { day: 'Day 7', rate: 48 },
@@ -41,11 +37,60 @@ const retentionData = [
   { day: 'Day 30', rate: 28 },
 ];
 
-const revenueSources = [
+const REVENUE_SOURCES = [
   { name: 'Subscriptions', value: 65, color: '#fe3c72' },
   { name: 'Boosts', value: 25, color: '#ff8e53' },
   { name: 'Ads', value: 10, color: '#3b82f6' },
 ];
+
+const StatCard = memo(({ title, value, subtext, icon: Icon, colorClass, borderClass }: any) => (
+  <Card className={`border-0 shadow-sm border-b-4 ${borderClass}`}>
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">{title}</CardTitle>
+      <Icon className={`h-4 w-4 ${colorClass}`} />
+    </CardHeader>
+    <CardContent>
+      <div className="text-3xl font-black tracking-tighter">{value}</div>
+      <div className="flex items-center gap-1 text-[#2ecc71] text-[10px] font-bold mt-1">
+        <ArrowUpRight size={12} /> {subtext}
+      </div>
+    </CardContent>
+  </Card>
+));
+StatCard.displayName = "StatCard";
+
+const RetentionChart = memo(({ language }: any) => (
+  <Card className="border-0 shadow-sm lg:col-span-2">
+    <CardHeader className="flex flex-row items-center justify-between">
+      <div>
+          <CardTitle className="text-lg font-black">{language === 'RU' ? 'Удержание (Retention Rate)' : 'User Retention'}</CardTitle>
+          <CardDescription>{language === 'RU' ? 'Процент вернувшихся пользователей' : '% of users returning to the app'}</CardDescription>
+      </div>
+      <Badge variant="outline" className="font-black text-primary border-primary/20 bg-primary/5">Industry Top 10%</Badge>
+    </CardHeader>
+    <CardContent className="pt-4 h-[300px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={RETENTION_DATA}>
+          <defs>
+            <linearGradient id="colorRetention" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#fe3c72" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#fe3c72" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+          <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 600, fill: '#94a3b8'}} />
+          <YAxis unit="%" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 600, fill: '#94a3b8'}} />
+          <Tooltip 
+            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+            labelStyle={{ fontWeight: 800, color: '#1e293b' }}
+          />
+          <Area type="monotone" dataKey="rate" stroke="#fe3c72" strokeWidth={4} fillOpacity={1} fill="url(#colorRetention)" />
+        </AreaChart>
+      </ResponsiveContainer>
+    </CardContent>
+  </Card>
+));
+RetentionChart.displayName = "RetentionChart";
 
 export default function AdminAnalyticsPage() {
   const { language } = useLanguage();
@@ -74,44 +119,11 @@ export default function AdminAnalyticsPage() {
         </div>
       </header>
 
-      {/* Top Value Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-0 shadow-sm border-b-4 border-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">MAU (Monthly Active)</CardTitle>
-            <Users className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black tracking-tighter">12,480</div>
-            <div className="flex items-center gap-1 text-[#2ecc71] text-[10px] font-bold mt-1">
-              <ArrowUpRight size={12} /> +12% {language === 'RU' ? 'к прошлому месяцу' : 'vs last month'}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-sm border-b-4 border-primary">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conversion Rate</CardTitle>
-            <Zap className="h-4 w-4 text-primary" fill="currentColor" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black tracking-tighter">5.2%</div>
-            <div className="flex items-center gap-1 text-[#2ecc71] text-[10px] font-bold mt-1">
-              <ArrowUpRight size={12} /> 0.8% {language === 'RU' ? 'прирост' : 'improvement'}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 shadow-sm border-b-4 border-amber-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">ARPU (Avg Revenue)</CardTitle>
-            <DollarSign className="h-4 w-4 text-amber-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black tracking-tighter">$8.45</div>
-            <div className="flex items-center gap-1 text-[#2ecc71] text-[10px] font-bold mt-1">
-              <ArrowUpRight size={12} /> {language === 'RU' ? 'Оптимизировано' : 'Optimized'}
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard title="MAU (Monthly Active)" value="12,480" subtext={language === 'RU' ? '+12% к прошлому месяцу' : '+12% vs last month'} icon={Users} colorClass="text-blue-500" borderClass="border-blue-500" />
+        <StatCard title="Conversion Rate" value="5.2%" subtext={language === 'RU' ? '0.8% прирост' : '0.8% improvement'} icon={Zap} colorClass="text-primary" borderClass="border-primary" />
+        <StatCard title="ARPU (Avg Revenue)" value="$8.45" subtext={language === 'RU' ? 'Оптимизировано' : 'Optimized'} icon={DollarSign} colorClass="text-amber-500" borderClass="border-amber-500" />
+        
         <Card className="border-0 shadow-sm bg-slate-900 text-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-slate-400">Total Revenue (Net)</CardTitle>
@@ -127,38 +139,8 @@ export default function AdminAnalyticsPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Retention Chart - THE MOST IMPORTANT FOR INVESTORS */}
-        <Card className="border-0 shadow-sm lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-                <CardTitle className="text-lg font-black">{language === 'RU' ? 'Удержание (Retention Rate)' : 'User Retention'}</CardTitle>
-                <CardDescription>{language === 'RU' ? 'Процент вернувшихся пользователей' : '% of users returning to the app'}</CardDescription>
-            </div>
-            <Badge variant="outline" className="font-black text-primary border-primary/20 bg-primary/5">Industry Top 10%</Badge>
-          </CardHeader>
-          <CardContent className="pt-4 h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={retentionData}>
-                <defs>
-                  <linearGradient id="colorRetention" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#fe3c72" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#fe3c72" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 600, fill: '#94a3b8'}} />
-                <YAxis unit="%" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 600, fill: '#94a3b8'}} />
-                <Tooltip 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-                  labelStyle={{ fontWeight: 800, color: '#1e293b' }}
-                />
-                <Area type="monotone" dataKey="rate" stroke="#fe3c72" strokeWidth={4} fillOpacity={1} fill="url(#colorRetention)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+        <RetentionChart language={language} />
 
-        {/* Revenue Distribution */}
         <Card className="border-0 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg font-black">{language === 'RU' ? 'Источники дохода' : 'Revenue Mix'}</CardTitle>
@@ -168,7 +150,7 @@ export default function AdminAnalyticsPage() {
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
-                  data={revenueSources}
+                  data={REVENUE_SOURCES}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -176,7 +158,7 @@ export default function AdminAnalyticsPage() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {revenueSources.map((entry, index) => (
+                  {REVENUE_SOURCES.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -184,7 +166,7 @@ export default function AdminAnalyticsPage() {
               </PieChart>
             </ResponsiveContainer>
             <div className="w-full space-y-2 mt-4">
-                {revenueSources.map((source) => (
+                {REVENUE_SOURCES.map((source) => (
                     <div key={source.name} className="flex items-center justify-between text-xs font-bold">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: source.color }}></div>
@@ -206,7 +188,7 @@ export default function AdminAnalyticsPage() {
           </CardHeader>
           <CardContent className="pt-4 h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={registrationData}>
+              <AreaChart data={REGISTRATION_DATA}>
                 <defs>
                   <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
