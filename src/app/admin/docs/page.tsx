@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,7 +6,7 @@ import {
   BookOpen, Cpu, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, 
   MessageSquare, Settings2, Rocket, Timer, DollarSign, Video, Flag, SlidersHorizontal, Scale,
   Activity, Gauge, Briefcase, Globe, MousePointer2, Lock, FileText,
-  TrendingUp, Layout
+  TrendingUp, Layout, Download, Archive
 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { Badge } from "@/components/ui/badge";
@@ -585,6 +586,37 @@ const InvestorContent = memo(() => (
                 <Button className="h-14 rounded-2xl bg-white text-slate-900 font-black px-8 uppercase text-[10px] tracking-widest shadow-xl shrink-0 border-0 active:scale-95 transition-all">Download PDF Report</Button>
             </div>
         </CardContent>
+    </Card>
+
+    {/* Export Section */}
+    <Card className="border-0 shadow-md border-l-4 border-blue-500">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm">
+            <Archive size={20} />
+          </div>
+          <CardTitle className="text-xl font-black">Экспорт проекта (ZIP)</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+          Чтобы выгрузить исходный код приложения для передачи покупателю или развертывания на другой платформе:
+        </p>
+        <div className="p-4 rounded-xl bg-muted/30 border space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-sm border">1</div>
+            <p className="text-xs font-bold pt-1">Нажмите на иконку <Download className="inline-block mx-1 text-primary" size={14} /> (Download) в верхней панели или в меню проекта.</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-sm border">2</div>
+            <p className="text-xs font-bold pt-1">Выберите "Download as ZIP". Все файлы проекта будут упакованы в один архив.</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-sm border">3</div>
+            <p className="text-xs font-bold pt-1">Перед отправкой покупателю рекомендуется удалить временные файлы и проверить `docs/RUNBOOK.md` на актуальность.</p>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   </div>
 ));
