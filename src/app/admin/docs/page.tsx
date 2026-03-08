@@ -357,7 +357,7 @@ export default function AdminDocsPage() {
               <div className="flex justify-between items-center p-4 rounded-2xl bg-muted/30">
                 <div className="space-y-1">
                   <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">LCP (Загрузка фото)</p>
-                  <p className="text-xs text-muted-foreground font-medium">Оптимизация через Next/Image и CDN</p>
+                  <p className="text-xs text-muted-foreground font-medium">Оптимизация через AVIF и CDN</p>
                 </div>
                 <Badge className="bg-emerald-500 text-white font-black px-3 py-1">~1.2s</Badge>
               </div>
@@ -386,23 +386,23 @@ export default function AdminDocsPage() {
             <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 mb-4">
               <Activity size={32} />
             </div>
-            <CardTitle className="text-2xl font-black">Мониторинг здоровья</CardTitle>
-            <CardDescription className="text-lg">Инструменты контроля системы</CardDescription>
+            <CardTitle className="text-2xl font-black">Оптимизация на мобильных</CardTitle>
+            <CardDescription className="text-lg">Технологии мгновенной работы</CardDescription>
           </CardHeader>
           <CardContent className="pt-8 space-y-6">
             <div className="space-y-6">
               <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><BarChart3 size={24} className="text-indigo-600" /></div>
+                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Rocket size={24} className="text-indigo-600" /></div>
                 <div>
-                  <p className="text-lg font-black">Google Cloud Operations</p>
-                  <p className="text-base text-muted-foreground leading-relaxed">Дашборды для отслеживания активных соединений, ошибок БД и таймаутов AI-запросов.</p>
+                  <p className="text-lg font-black">Modern Formats (AVIF)</p>
+                  <p className="text-base text-muted-foreground leading-relaxed">Использование AVIF вместо WebP снижает вес страницы на 30%, сохраняя четкость портретов.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><ShieldAlert size={24} className="text-indigo-600" /></div>
+                <div className="mt-1 p-2.5 rounded-lg bg-indigo-50 shrink-0"><Layers size={24} className="text-indigo-600" /></div>
                 <div>
-                  <p className="text-lg font-black">Sentry & Firebase Perf</p>
-                  <p className="text-base text-muted-foreground leading-relaxed">Сбор исключений на клиенте и автоматический замер производительности каждого сетевого запроса.</p>
+                  <p className="text-lg font-black">Dynamic Code Splitting</p>
+                  <p className="text-base text-muted-foreground leading-relaxed">Тяжелые JS-библиотеки подгружаются только при необходимости, минимизируя время до интерактивности (TTI).</p>
                 </div>
               </div>
             </div>
