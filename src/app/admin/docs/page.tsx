@@ -174,7 +174,7 @@ export default function AdminDocsPage() {
               <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 mb-2">
                 <Target size={20} />
               </div>
-              <CardTitle className="text-xl font-bold">{t('admin.docs.logic_title')}</Target>
+              <CardTitle className="text-xl font-bold">{t('admin.docs.logic_title')}</CardTitle>
               <CardDescription>{language === 'RU' ? 'Как работает умный подбор' : 'How smart matching works'}</CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
