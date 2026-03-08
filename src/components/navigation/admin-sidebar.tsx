@@ -25,7 +25,8 @@ import {
   DollarSign,
   Package,
   Mail,
-  BookOpen
+  BookOpen,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -67,6 +68,18 @@ export function AdminSidebar() {
                         <Link href="/admin">
                             <LayoutDashboard />
                             <span>{t('admin.dashboard')}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        asChild
+                        isActive={isActive('/admin/analytics')}
+                        tooltip="Analytics"
+                    >
+                        <Link href="/admin/analytics">
+                            <BarChart3 />
+                            <span>Analytics</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -6,7 +6,7 @@ import {
   BookOpen, Cpu, Layers, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, 
   MessageSquare, Settings2, Rocket, TestTube, CheckCircle2, Trophy, Camera, 
   Flame, Mail, DollarSign, Heart, Gift, Info, Video, Flag, SlidersHorizontal, Scale,
-  BarChart3, Activity, Gauge
+  BarChart3, Activity, Gauge, Briefcase, Globe
 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +15,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
 export default function AdminDocsPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const container = {
     hidden: { opacity: 0 },
@@ -105,6 +105,58 @@ export default function AdminDocsPage() {
                 </div>
               </li>
             </ul>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.div>
+  );
+
+  const BusinessContent = () => (
+    <motion.div variants={container} initial="hidden" animate="show" className="grid gap-8 md:grid-cols-2">
+      <motion.div variants={item}>
+        <Card className="border-0 shadow-md h-full bg-slate-900 text-white">
+          <CardHeader className="pb-8">
+            <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white mb-4">
+              <Globe size={32} />
+            </div>
+            <CardTitle className="text-2xl font-black">White-Label Готовность</CardTitle>
+            <CardDescription className="text-slate-400 text-lg">Потенциал масштабирования</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-base leading-relaxed text-slate-300">
+              Проект изначально спроектирован как универсальная платформа. Благодаря выносу всех справочников (интересы, цели, города) в админку, вы можете запустить клон приложения для новой ниши или региона без написания кода.
+            </p>
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Изолированная конфигурация</li>
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Региональная монетизация</li>
+              <li className="flex items-center gap-3 text-sm font-bold text-[#2ecc71]"><CheckCircle2 size={18}/> Мультиязычность из коробки</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      <motion.div variants={item}>
+        <Card className="border-0 shadow-md h-full border-2 border-primary/20">
+          <CardHeader className="pb-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+              <Briefcase size={32} />
+            </div>
+            <CardTitle className="text-2xl font-black">Документация по запуску</CardTitle>
+            <CardDescription className="text-lg">Runbook для владельца</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-base leading-relaxed text-muted-foreground font-medium">
+              В корне проекта находится файл <b>docs/RUNBOOK.md</b>. Это пошаговое руководство, которое позволит новому владельцу развернуть систему с нуля за 60 минут.
+            </p>
+            <div className="p-4 rounded-xl bg-muted/50 border border-border">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Содержание Runbook:</p>
+              <ul className="text-sm space-y-1 font-bold text-foreground/80">
+                <li>• Настройка Firebase & Auth</li>
+                <li>• Интеграция Gemini API</li>
+                <li>• Настройка AdMob и Yandex Ads</li>
+                <li>• Compliance & Legal Setup</li>
+              </ul>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
@@ -363,8 +415,8 @@ export default function AdminDocsPage() {
               <div className="flex gap-4">
                 <div className="mt-1 p-3 rounded-xl bg-slate-100 shrink-0"><SlidersHorizontal size={24} /></div>
                 <div>
-                  <p className="text-lg font-black">Feature Flags</p>
-                  <p className="text-base text-muted-foreground leading-relaxed">Включение и выключение функций (видеозвонки, ИИ-инсайты) в реальном времени без необходимости деплоя.</p>
+                  <p className="text-lg font-black">Feature Flags (A/B Test)</p>
+                  <p className="text-base text-muted-foreground leading-relaxed">Включение и выключение функций (видеозвонки, ИИ-инсайты) в реальном времени. Инструмент для снижения рисков при релизах.</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -527,6 +579,7 @@ export default function AdminDocsPage() {
           <TabsTrigger value="all" className="flex-1 min-w-[80px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">ВСЕ</TabsTrigger>
           <TabsTrigger value="architecture" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Архитектура</TabsTrigger>
           <TabsTrigger value="performance" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Метрики</TabsTrigger>
+          <TabsTrigger value="business" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Бизнес</TabsTrigger>
           <TabsTrigger value="features" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Функционал</TabsTrigger>
           <TabsTrigger value="logic" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Алгоритмы</TabsTrigger>
           <TabsTrigger value="admin" className="flex-1 min-w-[120px] rounded-lg py-3 font-black text-sm uppercase tracking-wider">Управление</TabsTrigger>
@@ -541,6 +594,16 @@ export default function AdminDocsPage() {
               <h3 className="text-3xl font-black uppercase tracking-tight">Архитектура и CI/CD</h3>
             </div>
             <ArchitectureContent />
+          </section>
+
+          <Separator />
+
+          <section className="space-y-8">
+            <div className="flex items-center gap-3 px-2">
+              <Briefcase className="text-primary" size={28} />
+              <h3 className="text-3xl font-black uppercase tracking-tight">Бизнес-инсайты и White-Label</h3>
+            </div>
+            <BusinessContent />
           </section>
           
           <Separator />
@@ -610,6 +673,10 @@ export default function AdminDocsPage() {
 
         <TabsContent value="performance" className="outline-none">
           <PerformanceContent />
+        </TabsContent>
+
+        <TabsContent value="business" className="outline-none">
+          <BusinessContent />
         </TabsContent>
 
         <TabsContent value="features" className="outline-none">
