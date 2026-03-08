@@ -1,11 +1,10 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   BookOpen, Cpu, Layers, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, 
   MessageSquare, Settings2, Rocket, TestTube, CheckCircle2, Trophy, Camera, 
-  Flame, Mail, DollarSign, Heart, Gift, Info
+  Flame, Mail, DollarSign, Heart, Gift, Info, Video, Flag, SlidersHorizontal
 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { Badge } from "@/components/ui/badge";
