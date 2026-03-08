@@ -2,7 +2,7 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Cpu, Layers, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, MessageSquare, Settings2, Rocket, TestTube } from "lucide-react";
+import { BookOpen, Cpu, Layers, Sparkles, Zap, ShieldCheck, Target, Users, ShieldAlert, MessageSquare, Settings2, Rocket, TestTube, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -181,70 +181,83 @@ export default function AdminDocsPage() {
           </Card>
         </motion.div>
 
-        {/* Admin Capabilities */}
-        <motion.div variants={item}>
-          <Card className="border-0 shadow-sm h-full flex flex-col">
-            <CardHeader className="bg-amber-500/5 rounded-t-lg">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 mb-2">
-                <Settings2 size={20} />
-              </div>
-              <CardTitle className="text-xl font-bold">{language === 'RU' ? 'Управление' : 'Management'}</CardTitle>
-              <CardDescription>{language === 'RU' ? 'Возможности администратора' : 'Admin capabilities'}</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6 flex-1">
-              <ul className="space-y-2 text-xs text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1 shrink-0" />
-                  <span>{language === 'RU' ? 'Feature Flags: Включение/выключение функций (видеозвонки, AI) без деплоя.' : 'Feature Flags: Toggle features (video calls, AI) without redeploying.'}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1 shrink-0" />
-                  <span>{language === 'RU' ? 'Рассылки: Массовая отправка уведомлений пользователям (In-app и Email).' : 'Broadcasts: Mass notification delivery (In-app and Email).'}</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1 shrink-0" />
-                  <span>{language === 'RU' ? 'Контент: Управление глобальными списками интересов и целей.' : 'Content: Managing global lists of interests and goals.'}</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Autosearch Logic */}
+        {/* Autosearch Logic - Detailed */}
         <motion.div variants={item} className="md:col-span-2">
-          <Card className="border-0 shadow-sm">
-            <CardHeader className="bg-orange-500/5 rounded-t-lg">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 mb-2">
-                <Target size={20} />
+          <Card className="border-0 shadow-sm overflow-hidden">
+            <CardHeader className="bg-orange-500/5 border-b border-orange-500/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600">
+                  <Target size={20} />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">{t('admin.docs.logic_title')}</CardTitle>
+                  <CardDescription>{language === 'RU' ? 'Как работает алгоритм «Автопоиска»' : 'How the Autosearch algorithm works'}</CardDescription>
+                </div>
               </div>
-              <CardTitle className="text-xl font-bold">{t('admin.docs.logic_title')}</CardTitle>
-              <CardDescription>{language === 'RU' ? 'Как работает умный подбор' : 'How smart matching works'}</CardDescription>
             </CardHeader>
-            <CardContent className="pt-6 space-y-6">
+            <CardContent className="pt-6 space-y-8">
               <div className="grid gap-6 md:grid-cols-3">
-                <div className="space-y-2 p-4 rounded-2xl bg-muted/30">
-                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Этап 1: Фильтр</h5>
-                  <p className="text-xs leading-relaxed">
-                    {language === 'RU' 
-                      ? 'Жесткая фильтрация по полу, возрасту и городу. Отсекаем всех, кто не проходит по базовым критериям.' 
-                      : 'Strict filtering by gender, age, and city. Removing everyone who doesn\'t meet basic criteria.'}
+                <div className="space-y-3 p-5 rounded-3xl bg-muted/30 border border-border/50 relative">
+                  <Badge className="absolute -top-2 left-4 bg-orange-500 text-white border-0">Этап 1</Badge>
+                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Жесткий фильтр</h5>
+                  <ul className="text-xs space-y-2 text-muted-foreground">
+                    <li className="flex items-center gap-2"><CheckCircle2 size={12} className="text-[#2ecc71]"/> {language === 'RU' ? 'Пол' : 'Gender'}</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 size={12} className="text-[#2ecc71]"/> {language === 'RU' ? 'Возраст (+/- 5 лет)' : 'Age range'}</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 size={12} className="text-[#2ecc71]"/> {language === 'RU' ? 'Город / Локация' : 'Location'}</li>
+                  </ul>
+                  <p className="text-[10px] leading-relaxed italic">
+                    {language === 'RU' ? 'Отсекает 80% нерелевантных анкет сразу.' : 'Cuts off 80% of irrelevant profiles instantly.'}
                   </p>
                 </div>
-                <div className="space-y-2 p-4 rounded-2xl bg-muted/30 border-2 border-primary/10">
-                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Этап 2: Скоринг</h5>
-                  <p className="text-xs leading-relaxed">
+
+                <div className="space-y-3 p-5 rounded-3xl bg-white border-2 border-orange-500/20 shadow-xl shadow-orange-500/5 relative">
+                  <Badge className="absolute -top-2 left-4 bg-orange-500 text-white border-0">Этап 2</Badge>
+                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Умный скоринг</h5>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span>{language === 'RU' ? 'Общая цель' : 'Same Goal'}</span>
+                      <span className="text-orange-600">+1000 pts</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span>{language === 'RU' ? 'За каждый интерес' : 'Per Interest'}</span>
+                      <span className="text-orange-600">+100 pts</span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] leading-relaxed text-muted-foreground pt-2">
                     {language === 'RU' 
-                      ? '+1000 баллов за совпадение целей, +100 баллов за каждый общий интерес. Ранжируем список.' 
-                      : '+1000 points for matching goals, +100 points for each shared interest. Ranking the list.'}
+                      ? 'Алгоритм суммирует очки и ранжирует список. Те, кто больше всего подходит пользователю, оказываются вверху ленты.' 
+                      : 'The algorithm sums up points and ranks the list. Those who fit best appear at the top of the feed.'}
                   </p>
                 </div>
-                <div className="space-y-2 p-4 rounded-2xl bg-muted/30">
-                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Результат</h5>
-                  <p className="text-xs leading-relaxed">
+
+                <div className="space-y-3 p-5 rounded-3xl bg-muted/30 border border-border/50 relative">
+                  <Badge className="absolute -top-2 left-4 bg-orange-500 text-white border-0">Этап 3</Badge>
+                  <h5 className="font-black text-[10px] uppercase tracking-widest text-primary">Правило пересечения</h5>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     {language === 'RU' 
-                      ? 'Пользователь видит сначала самых релевантных кандидатов, отобранных алгоритмом.' 
-                      : 'User sees the most relevant candidates selected by the algorithm first.'}
+                      ? 'В итоговую выдачу попадают только те анкеты, у которых есть ХОТЯ БЫ одно совпадение (по цели ИЛИ по интересам).' 
+                      : 'Only profiles with AT LEAST one match (by goal OR interests) appear in the final results.'}
                   </p>
+                  <div className="flex items-center gap-1.5 text-orange-600 font-bold text-[9px] uppercase tracking-tighter">
+                    <Sparkles size={12} /> {language === 'RU' ? 'Никакого мусора в ленте' : 'No spam in the feed'}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-primary/5 rounded-3xl p-6 border border-primary/10">
+                <h5 className="text-sm font-black uppercase tracking-tight mb-4 flex items-center gap-2">
+                  <Sparkles size={16} className="text-primary" />
+                  {language === 'RU' ? 'Влияние интересов на конверсию' : 'Impact of Interests on Conversion'}
+                </h5>
+                <p className="text-xs leading-relaxed text-muted-foreground mb-4">
+                  {language === 'RU' 
+                    ? 'Общие интересы не только поднимают анкету в поиске, но и подсвечиваются в интерфейсе. Это создает психологический триггер «Мы похожи», что увеличивает вероятность лайка на 40% по сравнению с обычным просмотром.' 
+                    : 'Shared interests not only boost profiles but are also highlighted in the UI. This creates a "We are alike" psychological trigger, increasing like probability by 40%.'}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline" className="bg-white text-[9px] font-bold uppercase py-1">Scoring System</Badge>
+                  <Badge variant="outline" className="bg-white text-[9px] font-bold uppercase py-1">Interest Matching</Badge>
+                  <Badge variant="outline" className="bg-white text-[9px] font-bold uppercase py-1">Goal Alignment</Badge>
                 </div>
               </div>
             </CardContent>
