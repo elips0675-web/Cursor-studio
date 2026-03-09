@@ -113,13 +113,19 @@ export default function OnboardingPage() {
       return;
     }
     setIsDetectingLocation(true);
-    toast({ title: t('onboarding.loc.detecting') });
+    
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
-          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=10`);
-          const data = await response.json();
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}&zoom=10`, {
+            signal: AbortSignal.timeout(5000) // Таймаут для предотвращения бесконечного ожидания
+          });
+          
+          if (!res.ok) throw new Error('Network response was not ok');
+          
+          const data = await res.json();
           const city = data.address.city || data.address.town || data.address.village || data.address.state || "";
+          
           if (city) {
             setFormData(prev => ({ ...prev, city }));
             toast({ title: `${t('onboarding.loc.success')}${city}` });
@@ -127,15 +133,22 @@ export default function OnboardingPage() {
             toast({ title: t('onboarding.loc.fail'), variant: "destructive" });
           }
         } catch (error) {
-          toast({ title: t('onboarding.loc.fail'), variant: "destructive" });
+          console.error("Geocoding error:", error);
+          toast({ 
+            title: t('onboarding.loc.fail'), 
+            description: language === 'RU' ? "Пожалуйста, введите город вручную." : "Please enter city manually.",
+            variant: "destructive" 
+          });
         } finally {
           setIsDetectingLocation(false);
         }
       },
-      () => {
+      (geoError) => {
+        console.error("Geolocation error:", geoError);
         setIsDetectingLocation(false);
         toast({ title: t('onboarding.loc.denied'), variant: "destructive" });
-      }
+      },
+      { timeout: 10000 }
     );
   };
 
@@ -147,10 +160,13 @@ export default function OnboardingPage() {
     setIsGeneratingBio(true);
     try {
       const result = await generateProfileBio({ keywords: formData.interests });
-      setFormData(prev => ({ ...prev, bio: result.bio }));
-      toast({ title: t('onboarding.toast.bio_ai') });
+      if (result && result.bio) {
+        setFormData(prev => ({ ...prev, bio: result.bio }));
+        toast({ title: t('onboarding.toast.bio_ai') });
+      }
     } catch (error) {
-      toast({ variant: "destructive", title: "AI Error" });
+      console.error("AI Bio Generation error:", error);
+      toast({ variant: "destructive", title: "AI Error", description: "Could not generate bio at this moment." });
     } finally {
       setIsGeneratingBio(false);
     }
@@ -167,6 +183,10 @@ export default function OnboardingPage() {
         setFormData(prev => ({ ...prev, photo: reader.result as string }));
         setIsUploading(false);
         toast({ title: t('onboarding.toast.photo_added'), description: t('onboarding.toast.photo_desc') });
+      };
+      reader.onerror = () => {
+        setIsUploading(false);
+        toast({ title: "Error", description: "Failed to read file", variant: "destructive" });
       };
       reader.readAsDataURL(file);
     }
@@ -197,7 +217,6 @@ export default function OnboardingPage() {
         
         await setDoc(userDocRef, profileForDb);
 
-        // Save to localStorage for client-side access
         localStorage.setItem('userProfile', JSON.stringify({ uid: user.uid, ...profileForDb }));
         localStorage.setItem('userProfileGallery', JSON.stringify([formData.photo]));
 
@@ -352,9 +371,9 @@ export default function OnboardingPage() {
               <div className="flex justify-between items-center">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step5.bio_label')}</Label>
                 <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-widest bg-muted/50 px-3 py-1.5 rounded-full hover:bg-muted transition-colors shadow-sm">
-                  <p className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5">
                     <Sparkles size={12} className={cn(isGeneratingBio && "animate-spin")} /> AI {t('button.save')}
-                  </p>
+                  </div>
                 </button>
               </div>
               <Textarea value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder={t('onboarding.step5.bio_placeholder')} className="min-h-[120px] rounded-2xl bg-muted/30 border-0 text-sm font-medium p-4 resize-none focus-visible:ring-primary/10" />

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
@@ -28,11 +27,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Ленивая загрузка тяжелых визуальных эффектов
+// Ленивая загрузка визуальных эффектов (оставляем только действительно тяжелые компоненты)
 const HeartConfetti = dynamic(() => import("@/components/animations/heart-confetti").then(mod => mod.HeartConfetti), { ssr: false });
-const MotionDiv = dynamic(() => import('framer-motion').then(mod => mod.motion.div), { ssr: false });
-const AnimatePresence = dynamic(() => import('framer-motion').then(mod => mod.AnimatePresence), { ssr: false });
 
 const cardVariants = {
   enter: (direction: number) => ({ x: direction > 0 ? 300 : -300, opacity: 0 }),
@@ -114,24 +112,49 @@ function SearchContent() {
   
   const user = userList[currentIndex] || null;
 
-  const handleNext = useCallback(() => { setDirection(1); setCurrentIndex(prev => prev + 1); }, []);
-  const handlePrev = useCallback(() => { if (currentIndex > 0) { setDirection(-1); setCurrentIndex(prev => prev - 1); } }, [currentIndex]);
+  const handleNext = useCallback(() => { 
+    if (currentIndex < userList.length - 1) {
+      setDirection(1); 
+      setCurrentIndex(prev => prev + 1); 
+    } else {
+      setCurrentIndex(prev => prev + 1); // Trigger "no more profiles" state
+    }
+  }, [currentIndex, userList.length]);
+
+  const handlePrev = useCallback(() => { 
+    if (currentIndex > 0) { 
+      setDirection(-1); 
+      setCurrentIndex(prev => prev - 1); 
+    } 
+  }, [currentIndex]);
 
   const handleLike = async () => {
     if (!user) return;
     toast({ title: "Лайк!", description: `${language === 'RU' ? 'Вы лайкнули' : 'You liked'} ${user.name}` });
+    
+    // Simulate a match
     if (Math.random() > 0.7) {
       setMatchUser(user);
       setLoadingAi(true);
       try {
         const res = await generateMatchCompatibilityInsight({
-          currentUser: { name: "Вы", age: 25, interests: ["Спорт"], bio: "Активный пользователь." },
+          currentUser: { 
+            name: currentUser?.name || "Вы", 
+            age: currentUser?.age || 25, 
+            interests: currentUser?.interests || ["Спорт"], 
+            bio: currentUser?.bio || "Активный пользователь." 
+          },
           matchUser: { name: user.name, age: user.age, interests: user.interests, bio: user.bio || "" }
         });
         setCompatibility(res.explanation);
-      } catch (e) { setCompatibility(t('match.insight_default')); }
+      } catch (e) { 
+        console.error("AI Insight Error:", e);
+        setCompatibility(t('match.insight_default')); 
+      }
       finally { setLoadingAi(false); }
-    } else handleNext();
+    } else {
+      handleNext();
+    }
   };
 
   const handleReportSubmit = () => {
@@ -145,10 +168,10 @@ function SearchContent() {
     setReportDescription('');
   };
 
-  if (isLoading) return <div className="flex-1 flex items-center justify-center"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>;
+  if (isLoading) return <div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>;
 
   if (!user) return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center h-full">
       <Sparkles size={48} className="text-muted-foreground opacity-20 mb-4" />
       <h4 className="text-xl font-black uppercase">{language === 'RU' ? 'Анкеты закончились' : 'No more profiles'}</h4>
       <Button variant="outline" onClick={() => router.push('/')} className="mt-8 rounded-full px-8 uppercase text-[10px] font-black">На главную</Button>
@@ -165,17 +188,21 @@ function SearchContent() {
         </div>
         
         <div className="relative w-full flex-1 mb-10 max-w-[420px] flex items-center justify-center">
-          <Button variant="ghost" size="icon" onClick={handlePrev} disabled={currentIndex === 0} className="absolute -left-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg"><ChevronLeft size={24} /></Button>
-          <Button variant="ghost" size="icon" onClick={handleNext} className="absolute -right-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg"><ChevronRight size={24} /></Button>
+          <Button variant="ghost" size="icon" onClick={handlePrev} disabled={currentIndex === 0} className="absolute -left-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg border-0"><ChevronLeft size={24} /></Button>
+          <Button variant="ghost" size="icon" onClick={handleNext} className="absolute -right-4 z-20 w-10 h-10 rounded-full bg-white/80 shadow-lg border-0"><ChevronRight size={24} /></Button>
 
-          <Suspense fallback={<Skeleton className="w-full h-full rounded-[2.5rem]" />}>
-            <MotionDiv
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
               key={user.id}
               custom={direction}
               variants={cardVariants}
               initial="enter"
               animate="center"
               exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
               className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow border-4 border-white cursor-pointer group"
               onClick={() => router.push(`/user?id=${user.id}`)}
             >
@@ -185,7 +212,6 @@ function SearchContent() {
                 fill 
                 sizes="(max-width: 480px) 100vw, 420px" 
                 priority
-                loading="eager"
                 className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
@@ -209,8 +235,8 @@ function SearchContent() {
                   })}
                 </div>
               </div>
-            </MotionDiv>
-          </Suspense>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         <div className="flex justify-center items-center gap-4 w-full max-w-[400px]">
@@ -262,12 +288,12 @@ function SearchContent() {
             <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div className="flex items-center justify-center gap-0 relative">
-                    <MotionDiv initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
+                    <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
                         <Image src={ALL_DEMO_USERS[1].img} alt="Вы" fill sizes="144px" className="object-cover" />
-                    </MotionDiv>
-                    <MotionDiv initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
+                    </motion.div>
+                    <motion.div initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
                         <Image src={matchUser?.img || ALL_DEMO_USERS[0].img} alt={matchUser?.name || "Matched user photo"} fill sizes="144px" className="object-cover" />
-                    </MotionDiv>
+                    </motion.div>
                 </div>
             </div>
 
@@ -277,7 +303,7 @@ function SearchContent() {
                 {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}
               </DialogDescription>
               
-              <MotionDiv initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="relative p-6 rounded-[2.5rem] mb-8 text-left border border-orange-500/20 bg-gradient-to-br from-white via-orange-500/[0.02] to-orange-500/[0.05] shadow-xl shadow-orange-500/5 overflow-hidden group">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="relative p-6 rounded-[2.5rem] mb-8 text-left border border-orange-500/20 bg-gradient-to-br from-white via-orange-500/[0.02] to-orange-500/[0.05] shadow-xl shadow-orange-500/5 overflow-hidden group">
                   <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
                   <div className="flex items-center justify-between mb-4 relative z-10">
                     <div className="flex items-center gap-2">
@@ -298,7 +324,7 @@ function SearchContent() {
                       <p className="text-[13px] leading-relaxed text-foreground/90 font-semibold italic border-l-4 border-orange-500/30 pl-4 py-1">"{compatibility}"</p>
                     </div>
                   )}
-              </MotionDiv>
+              </motion.div>
 
               <div className="flex flex-col gap-4 w-full">
                 <Button onClick={() => matchUser?.id && router.push(`/chats?matchId=${matchUser.id}`)} className="w-full h-16 rounded-full gradient-bg text-white font-black app-shadow hover:scale-[1.02] active:scale-95 transition-all border-0 uppercase tracking-[0.2em] text-[11px] shadow-primary/30">
@@ -348,5 +374,5 @@ function SearchContent() {
 }
 
 export default function SearchPage() {
-    return <Suspense fallback={<div className="flex-1 flex items-center justify-center"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>}><SearchContent /></Suspense>;
+    return <Suspense fallback={<div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>}><SearchContent /></Suspense>;
 }
