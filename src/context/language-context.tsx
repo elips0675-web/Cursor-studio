@@ -325,7 +325,7 @@ const translations = {
     'admin.delete_user': 'Удалить пользователя',
     'admin.no_reports': 'Жалоб пока нет',
     'admin.monetization.title': 'Монетизация',
-    'admin.monetization.description': 'Настройте рекламные сети для вознаждений.',
+    'admin.monetization.description': 'Настройте рекламные сети для вознаграждений.',
     'admin.monetization.google_desc': 'Показывать рекламу из Google AdMob.',
     'admin.monetization.yandex_desc': 'Показывать рекламу из Рекламной сети Яндекса.',
     'admin.monetization.ad_unit_id': 'ID рекламного блока',
@@ -374,6 +374,13 @@ const translations = {
     'groups.ad.description': 'Посмотрите короткую рекламу и получите доступ.',
     'groups.ad.toast.title': 'Демонстрация рекламы',
     'groups.ad.toast.description': 'Здесь мог бы быть просмотр видео для получения бонуса!',
+    // PWA Install
+    'pwa.install.title': 'Установить приложение?',
+    'pwa.install.description': 'Добавьте SwiftMatch на главный экран для быстрого доступа и лучшего опыта.',
+    'pwa.install.button': 'Установить',
+    'pwa.install.cancel': 'Позже',
+    'pwa.install.success': 'Приложение успешно установлено!',
+    'pwa.install.dismissed': 'Вы можете установить приложение позже из меню браузера.',
   },
   EN: {
     // Landing / SEO
@@ -735,6 +742,13 @@ const translations = {
     'groups.ad.description': 'Watch a short ad to get access.',
     'groups.ad.toast.title': 'Ad Demonstration',
     'groups.ad.toast.description': 'A video could be playing here to get a bonus!',
+    // PWA Install
+    'pwa.install.title': 'Install App?',
+    'pwa.install.description': 'Add SwiftMatch to your home screen for quick access and a better experience.',
+    'pwa.install.button': 'Install',
+    'pwa.install.cancel': 'Later',
+    'pwa.install.success': 'App installed successfully!',
+    'pwa.install.dismissed': 'You can install the app later from your browser menu.',
   }
 };
 

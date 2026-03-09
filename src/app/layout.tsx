@@ -7,6 +7,7 @@ import { Poppins, Quicksand } from 'next/font/google';
 import { AppContainer } from '@/components/layout/app-container';
 import { FeatureFlagsProvider } from '@/context/feature-flags-context';
 import { CookieConsent } from '@/components/shared/cookie-consent';
+import { PwaInstallBanner } from '@/components/shared/pwa-install-banner';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -58,6 +59,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://picsum.photos" />
         <link rel="dns-prefetch" href="https://picsum.photos" />
         <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${quicksand.variable} ${poppins.variable} font-body antialiased selection:bg-primary/20`}>
         <LanguageProvider>
@@ -66,6 +68,7 @@ export default function RootLayout({
               <AppContainer>
                 {children}
                 <CookieConsent />
+                <PwaInstallBanner />
               </AppContainer>
               <Toaster />
             </FeatureFlagsProvider>
