@@ -43,7 +43,7 @@ const ArchitectureContent = memo(({ t }: { t: any }) => (
           <div className="space-y-3">
             <h4 className="text-sm font-black uppercase tracking-[0.2em] text-primary">AI Engine (Genkit)</h4>
             <p className="text-base leading-relaxed text-muted-foreground font-medium">
-              Все интеллектуальные функции реализованы через <b>Google Genkit</b> с использованием моделей Gemini 2.5 Flash. Архитектура готова к подключению <b>DeepSeek</b>.
+              Все интеллектуальные функции реализованы через <b>Google Genkit</b> с использованием моделей Gemini 2.5 Flash.
             </p>
           </div>
         </CardContent>
