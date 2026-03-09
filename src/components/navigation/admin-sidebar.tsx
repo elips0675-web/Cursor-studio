@@ -158,18 +158,6 @@ export function AdminSidebar() {
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         asChild
-                        isActive={isActive('/admin/docs')}
-                        tooltip={t('admin.docs.title')}
-                    >
-                        <Link href="/admin/docs">
-                            <BookOpen />
-                            <span>{t('admin.docs.title')}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton
-                        asChild
                         isActive={isActive('/support-chat')}
                         tooltip="Support Chat"
                     >

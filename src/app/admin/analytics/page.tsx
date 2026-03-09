@@ -15,9 +15,9 @@ import {
   Cell
 } from 'recharts';
 import { useLanguage } from "@/context/language-context";
-import { TrendingUp, Users, DollarSign, ArrowUpRight, Zap, ShieldCheck, Lock } from "lucide-react";
+import { TrendingUp, Users, DollarSign, ArrowUpRight, Zap, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 const REGISTRATION_DATA = [
   { day: 'Пн', users: 120 },
@@ -106,36 +106,16 @@ export default function AdminAnalyticsPage() {
           <h2 className="text-3xl font-black tracking-tight">{language === 'RU' ? 'Аналитика и Метрики' : 'Growth & Analytics'}</h2>
           <p className="text-muted-foreground font-medium">{language === 'RU' ? 'Ключевые показатели эффективности бизнеса' : 'Key Business Performance Indicators'}</p>
         </div>
-        <div className="flex items-center gap-3">
-            <div className="flex flex-col items-end">
-                <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Estimated Exit Value</span>
-                <span className="text-2xl font-black text-primary">$120,000+</span>
-            </div>
-            <div className="h-10 w-px bg-border mx-2 hidden md:block"></div>
-            <div className="flex items-center gap-2 bg-[#2ecc71]/10 text-[#2ecc71] px-4 py-2.5 rounded-2xl border border-[#2ecc71]/20">
-              <TrendingUp size={20} />
-              <span className="font-black text-sm uppercase tracking-wider">+24.8% MoM</span>
-            </div>
+        <div className="flex items-center gap-2 bg-[#2ecc71]/10 text-[#2ecc71] px-4 py-2.5 rounded-2xl border border-[#2ecc71]/20">
+          <TrendingUp size={20} />
+          <span className="font-black text-sm uppercase tracking-wider">+24.8% MoM</span>
         </div>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <StatCard title="MAU (Monthly Active)" value="12,480" subtext={language === 'RU' ? '+12% к прошлому месяцу' : '+12% vs last month'} icon={Users} colorClass="text-blue-500" borderClass="border-blue-500" />
         <StatCard title="Conversion Rate" value="5.2%" subtext={language === 'RU' ? '0.8% прирост' : '0.8% improvement'} icon={Zap} colorClass="text-primary" borderClass="border-primary" />
         <StatCard title="ARPU (Avg Revenue)" value="$8.45" subtext={language === 'RU' ? 'Оптимизировано' : 'Optimized'} icon={DollarSign} colorClass="text-amber-500" borderClass="border-amber-500" />
-        
-        <Card className="border-0 shadow-sm bg-slate-900 text-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-black uppercase tracking-widest text-slate-400">Total Revenue (Net)</CardTitle>
-            <DollarSign className="h-4 w-4 text-[#2ecc71]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black tracking-tighter text-[#2ecc71]">$5,420.00</div>
-            <div className="flex items-center gap-1 text-slate-400 text-[10px] font-bold mt-1">
-              {language === 'RU' ? 'За последние 30 дней' : 'Last 30 days'}
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
