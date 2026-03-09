@@ -245,10 +245,10 @@ export default function ProfilePage() {
         <div className="px-5 -mt-10">
           <div className="text-center mb-6">
             <div className="relative inline-block mb-4">
-              <div className="relative w-32 h-32 rounded-[2.5rem] border-[6px] border-white app-shadow overflow-hidden bg-muted">
+              <div className="relative w-32 h-32 rounded-xl border-[6px] border-white app-shadow overflow-hidden bg-muted">
                 <Image src={photos[0] || PlaceHolderImages[0].imageUrl} alt={profile.name} fill sizes="128px" className="object-cover" priority />
               </div>
-              <Link href="/profile/edit" className="absolute -bottom-2 -right-2 gradient-bg text-white p-3 rounded-2xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-90"><Edit2 size={18} /></Link>
+              <Link href="/profile/edit" className="absolute -bottom-2 -right-2 gradient-bg text-white p-3 rounded-xl shadow-xl border-4 border-white hover:scale-110 transition-transform active:scale-90"><Edit2 size={18} /></Link>
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-black font-headline tracking-tight flex items-center justify-center gap-2">{profile.name}, {profile.age} <CheckCircle2 size={20} className="text-primary" fill="currentColor" /></h3>
@@ -256,17 +256,17 @@ export default function ProfilePage() {
             </div>
             
             <div className="grid grid-cols-3 gap-2 mt-6 max-w-sm mx-auto">
-              <div className="bg-white rounded-2xl p-3 shadow-sm border border-border/40">
+              <div className="bg-white rounded-xl p-3 shadow-sm border border-border/40">
                 <p className="text-lg font-black tracking-tight">{stats.likes}</p>
                 <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.likes')}</p>
               </div>
-              <div className="bg-white rounded-2xl p-3 shadow-sm border border-border/40">
+              <div className="bg-white rounded-xl p-3 shadow-sm border border-border/40">
                 <p className="text-lg font-black tracking-tight">{stats.matches}</p>
                 <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{t('profile.matches')}</p>
               </div>
               <button 
                 onClick={() => setShowBoostDialog(true)}
-                className="gradient-bg rounded-2xl p-3 shadow-lg shadow-primary/20 text-white flex flex-col items-center justify-center group active:scale-95 transition-all"
+                className="gradient-bg rounded-xl p-3 shadow-lg shadow-primary/20 text-white flex flex-col items-center justify-center group active:scale-95 transition-all"
               >
                 <Zap size={18} className="animate-pulse" fill="currentColor" />
                 <p className="text-[8px] font-black uppercase tracking-widest mt-1">Boost</p>
@@ -274,11 +274,11 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Gamification Tasks Accordion - Moved here above Photo Contest */}
+          {/* Gamification Tasks Accordion */}
           <div className="mb-6">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="tasks" className="border-0">
-                <AccordionTrigger className="bg-white text-foreground rounded-[1.5rem] px-6 py-4 hover:no-underline hover:bg-muted/30 transition-all app-shadow border border-border/40 [&[data-state=open]]:rounded-b-none [&[data-state=open]]:shadow-none">
+                <AccordionTrigger className="bg-white text-foreground rounded-xl px-6 py-4 hover:no-underline hover:bg-muted/30 transition-all app-shadow border border-border/40 [&[data-state=open]]:rounded-b-none [&[data-state=open]]:shadow-none">
                   <div className="flex items-center gap-3 w-full text-left">
                     <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shadow-sm border border-amber-200">
                       <Target size={16} />
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="bg-white text-foreground rounded-b-[1.5rem] px-6 pb-6 pt-2 border-x border-b border-border/40 app-shadow space-y-6">
+                <AccordionContent className="bg-white text-foreground rounded-b-xl px-6 pb-6 pt-2 border-x border-b border-border/40 app-shadow space-y-6">
                   {/* Daily Rewards */}
                   <div className="space-y-4 pt-4">
                     <div className="flex items-center justify-between">
@@ -307,7 +307,7 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-7 gap-1.5">
                       {Array.from({ length: 7 }).map((_, i) => (
                         <div key={i} className={cn(
-                          "aspect-square rounded-xl flex flex-col items-center justify-center gap-1 border transition-all",
+                          "aspect-square rounded-lg flex flex-col items-center justify-center gap-1 border transition-all",
                           i < 2 ? "bg-green-50 border-green-200 text-green-600" : 
                           i === 2 ? "gradient-bg border-0 text-white scale-110 shadow-lg shadow-primary/20" : 
                           "bg-muted/30 border-transparent text-muted-foreground/40"
@@ -335,9 +335,9 @@ export default function ProfilePage() {
                         const Icon = quest.icon;
                         const isDone = quest.progress >= quest.total;
                         return (
-                          <div key={quest.id} className="bg-muted/30 rounded-2xl p-3 border border-transparent">
+                          <div key={quest.id} className="bg-muted/30 rounded-xl p-3 border border-transparent">
                             <div className="flex items-center gap-3 mb-2.5">
-                              <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center bg-white shadow-sm", quest.color)}>
+                              <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center bg-white shadow-sm", quest.color)}>
                                 <Icon size={16} fill={isDone ? "currentColor" : "none"} />
                               </div>
                               <div className="flex-1">
@@ -360,7 +360,7 @@ export default function ProfilePage() {
 
           <div 
             onClick={handleOpenContestDialog}
-            className="bg-white rounded-[1.5rem] p-4 border border-amber-500/20 app-shadow mb-6 flex items-center justify-between cursor-pointer hover:bg-amber-50/30 transition-colors"
+            className="bg-white rounded-xl p-4 border border-amber-500/20 app-shadow mb-6 flex items-center justify-between cursor-pointer hover:bg-amber-50/30 transition-colors"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600">
@@ -374,7 +374,7 @@ export default function ProfilePage() {
             <ChevronRight className="text-muted-foreground/40" size={18} />
           </div>
           
-          <div className="bg-white rounded-[1.5rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
+          <div className="bg-white rounded-xl p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
             {earnedTitles.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Мое звание</h4></div>
@@ -444,11 +444,11 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-[1.5rem] p-6 app-shadow border border-border/40 mb-6 text-left">
+          <div className="bg-white rounded-xl p-6 app-shadow border border-border/40 mb-6 text-left">
             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><Camera size={18} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4></div><input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" /></div>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, idx) => (
-                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-muted group shadow-sm border border-border/10">
+                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-muted group shadow-sm border border-border/10">
                   <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button
@@ -473,7 +473,7 @@ export default function ProfilePage() {
                 </div>
               ))}
               {photos.length < 10 && (
-                <div onClick={handleTriggerFileInput} className="relative aspect-square rounded-2xl border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/50 hover:border-primary/50 hover:text-primary cursor-pointer transition-colors group">
+                <div onClick={handleTriggerFileInput} className="relative aspect-square rounded-lg border-2 border-dashed border-muted flex flex-col items-center justify-center text-muted-foreground hover:bg-muted/50 hover:border-primary/50 hover:text-primary cursor-pointer transition-colors group">
                   <div className="p-4 bg-muted/60 rounded-full group-hover:bg-primary/10 transition-colors"><Upload size={24} /></div>
                   <span className="mt-3 text-[9px] font-black uppercase tracking-widest">{t('profile.add')}</span>
                 </div>
@@ -486,7 +486,7 @@ export default function ProfilePage() {
       <AnimatePresence>
         {showBoostDialog && (
           <Dialog open={showBoostDialog} onOpenChange={setShowBoostDialog}>
-            <DialogContent className="max-w-[340px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
+            <DialogContent className="max-w-[340px] rounded-xl p-0 overflow-hidden border-0 bg-white app-shadow">
               <div className="relative h-40 gradient-bg flex flex-col items-center justify-center text-white p-6 overflow-hidden">
                  <div className="absolute inset-0 bg-black/5"></div>
                  <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }} transition={{ duration: 2, repeat: Infinity }} className="absolute"><Zap size={160} fill="currentColor" /></motion.div>
@@ -495,11 +495,11 @@ export default function ProfilePage() {
                  <p className="text-[10px] text-white/90 font-bold uppercase tracking-[0.1em] relative z-10 mt-1 text-center px-4 leading-relaxed">{t('boost.desc')}</p>
               </div>
               <div className="p-6 space-y-4">
-                <Button onClick={handleBoostAd} disabled={isBoostLoading} variant="outline" className="w-full h-16 rounded-2xl border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center gap-1 group hover:bg-primary/10 transition-all border-dashed">
+                <Button onClick={handleBoostAd} disabled={isBoostLoading} variant="outline" className="w-full h-16 rounded-xl border-2 border-primary/20 bg-primary/5 flex flex-col items-center justify-center gap-1 group hover:bg-primary/10 transition-all border-dashed">
                   {isBoostLoading ? (<div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div><span className="text-[10px] font-black uppercase tracking-widest text-primary">{language === 'RU' ? 'Загрузка...' : 'Loading...'}</span></div>) : (<><div className="flex items-center gap-2 text-primary"><Play size={14} fill="currentColor" /><span className="text-[11px] font-black uppercase tracking-widest">{t('boost.free')}</span></div><span className="text-[8px] text-muted-foreground font-bold uppercase tracking-tighter opacity-60">{language === 'RU' ? '1 Буст за видео' : '1 Boost for 1 Video'}</span></>)}
                 </Button>
                 <div className="relative py-2"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-muted"></span></div><div className="relative flex justify-center text-[8px] uppercase font-black tracking-widest text-muted-foreground bg-white px-4">или</div></div>
-                <Button onClick={handleBoostPaid} className="w-full h-16 rounded-2xl gradient-bg text-white shadow-xl shadow-primary/20 flex flex-col items-center justify-center gap-1 active:scale-95 transition-all border-0">
+                <Button onClick={handleBoostPaid} className="w-full h-16 rounded-xl gradient-bg text-white shadow-xl shadow-primary/20 flex flex-col items-center justify-center gap-1 active:scale-95 transition-all border-0">
                   <div className="flex items-center gap-2">
                     <CreditCard size={16} />
                     <span className="text-xs font-black uppercase tracking-widest">{t('boost.paid')}</span>
@@ -516,7 +516,7 @@ export default function ProfilePage() {
       <AnimatePresence>
         {showContestDialog && (
           <Dialog open={showContestDialog} onOpenChange={setShowContestDialog}>
-            <DialogContent className="max-w-[360px] rounded-[2.5rem] p-0 overflow-hidden border-0 bg-white app-shadow">
+            <DialogContent className="max-w-[360px] rounded-xl p-0 overflow-hidden border-0 bg-white app-shadow">
               <div className="relative h-32 bg-gradient-to-r from-amber-500 to-orange-600 flex flex-col items-center justify-center text-white p-6">
                  <Trophy className="text-white/40 absolute -right-4 -bottom-4" size={100} fill="currentColor" />
                  <DialogTitle className="text-xl font-black uppercase tracking-tighter relative z-10">{t('contest.select_photo')}</DialogTitle>
@@ -527,13 +527,13 @@ export default function ProfilePage() {
                     <div 
                       key={idx} 
                       onClick={() => handleSubmitToContest(url)}
-                      className="relative aspect-square rounded-xl overflow-hidden cursor-pointer hover:ring-4 ring-primary/20 transition-all bg-muted"
+                      className="relative aspect-square rounded-lg overflow-hidden cursor-pointer hover:ring-4 ring-primary/20 transition-all bg-muted"
                     >
                       <Image src={url} alt={`Gallery photo ${idx}`} fill sizes="100px" className="object-cover" />
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 p-4 bg-muted/30 rounded-2xl">
+                <div className="mt-6 p-4 bg-muted/30 rounded-xl">
                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{t('contest.rules')}</p>
                   <p className="text-[10px] text-muted-foreground leading-snug">{t('contest.rules_desc')}</p>
                 </div>
@@ -555,7 +555,7 @@ export default function ProfilePage() {
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
                 <CarouselItem key={idx} className="h-[80vh] flex items-center justify-center p-4 pl-4">
-                  <div className="relative w-full h-full rounded-2xl overflow-hidden app-shadow">
+                  <div className="relative w-full h-full rounded-xl overflow-hidden app-shadow">
                     <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
                   </div>
                 </CarouselItem>
@@ -571,7 +571,7 @@ export default function ProfilePage() {
       </Dialog>
       
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent className="rounded-3xl">
+        <AlertDialogContent className="rounded-2xl">
             <AlertDialogHeader>
             <AlertDialogTitle>{t('dialog.delete_photo.title')}</AlertDialogTitle>
             <AlertDialogDescription>

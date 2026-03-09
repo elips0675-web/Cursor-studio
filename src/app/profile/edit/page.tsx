@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -168,15 +169,15 @@ export default function EditProfilePage() {
       <main className="flex-1 overflow-y-auto p-4 space-y-5 pb-6">
         <div className="flex flex-col items-center gap-2 pt-2">
           <div className="relative group cursor-pointer" onClick={handleChangeMainPhoto}>
-            <div className="w-40 h-40 rounded-[2.5rem] border-4 border-white overflow-hidden relative shadow-lg transform transition-transform group-hover:scale-[1.02]">
+            <div className="w-40 h-40 rounded-xl border-4 border-white overflow-hidden relative shadow-lg transform transition-transform group-hover:scale-[1.02]">
               <Image src={mainPhoto} alt="Profile" fill className="object-cover" />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]"><Camera className="text-white" size={24} /></div>
             </div>
-            <button className="absolute bottom-1 right-1 bg-primary text-white p-2.5 rounded-2xl shadow-md border-2 border-white active:scale-95 transition-transform"><Camera size={16} /></button>
+            <button className="absolute bottom-1 right-1 bg-primary text-white p-2.5 rounded-xl shadow-md border-2 border-white active:scale-95 transition-transform"><Camera size={16} /></button>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 app-shadow space-y-6 border border-border/40">
+        <div className="bg-white rounded-xl p-6 app-shadow space-y-6 border border-border/40">
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
@@ -189,7 +190,7 @@ export default function EditProfilePage() {
                 </p>
               </button>
             </div>
-            <Textarea value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-2xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
+            <Textarea value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
           </div>
 
           <div className="flex items-center gap-2">
@@ -227,7 +228,7 @@ export default function EditProfilePage() {
               </div>
             </div>
             
-            <div className="space-y-1.5 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+            <div className="space-y-1.5 p-4 bg-primary/5 rounded-xl border border-primary/10">
               <Label className="text-[9px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
               <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
                 <SelectTrigger className="rounded-xl bg-white border-0 h-11 font-bold px-4 shadow-sm"><SelectValue /></SelectTrigger>
@@ -304,7 +305,7 @@ export default function EditProfilePage() {
                 </div>
             </div>
         </div>
-        <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 hover:brightness-110">Сохранить</Button>
+        <Button onClick={handleSave} className="w-full h-14 rounded-xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 hover:brightness-110">Сохранить</Button>
       </main>
     </div>
   );
