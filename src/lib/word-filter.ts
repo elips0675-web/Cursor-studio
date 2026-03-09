@@ -51,39 +51,53 @@ export const containsForbiddenWords = (text: string): boolean => {
  * Checks if the text is likely a nonsensical keyboard mash (gibberish).
  */
 export const isGibberish = (text: string): boolean => {
-  const normalized = text.toLowerCase();
-  // Remove non-letter characters for ratio check
-  const lettersOnly = normalized.replace(/[^a-zа-яё]/g, '');
+  const normalized = text.toLowerCase().trim();
+  if (!normalized) return false;
 
-  if (lettersOnly.length > 6) {
-    const vowels = lettersOnly.match(/[aeiouyаеёиоуыэюя]/g);
-    // If letters only but vowel count is extremely low (< 10%)
-    if (!vowels || vowels.length < lettersOnly.length * 0.1) {
-      return true;
-    }
-  }
+  // 1. Repeating characters like "aaaaaaa" or "!!!!! "
+  if (/(.)\1{4,}/.test(normalized)) return true;
 
-  const words = normalized.split(/\s+/).filter(w => w.length > 3);
-  const mashPatterns = [
-    'asdf', 'sdfg', 'dfgh', 'fghj', 'ghjk', 'hjkl', 
-    'йцук', 'цуке', 'укен', 'кенг', 'фыва', 'ывап', 'вапр', 'апро', 'прол', 'ролд', 'олдж',
-    'ячсм', 'чсми', 'смит', 'мить'
-  ];
+  const words = normalized.split(/\s+/).filter(w => w.length >= 4);
 
   for (const word of words) {
-    // Single word with no vowels and length > 4 (e.g. "sdfgh")
-    if (/^[a-zа-яё]+$/.test(word) && !/[aeiouyаеёиоуыэюя]/.test(word) && word.length > 4) {
-      return true;
+    // Strip non-letters for analysis
+    const letters = word.replace(/[^a-zа-яё]/g, '');
+    if (letters.length < 4) continue;
+
+    const vowelsMatch = letters.match(/[aeiouyаеёиоуыэюя]/g);
+    const vowelsCount = vowelsMatch ? vowelsMatch.length : 0;
+    
+    // 2. No vowels at all in a 4+ letter word (e.g. "sdfg", "прлш")
+    if (vowelsCount === 0) return true;
+
+    // 3. Very low vowel-to-letter ratio (e.g. 1 vowel in 7 letters)
+    // Most real words have at least 25-30% vowels.
+    if (vowelsCount < letters.length * 0.2) return true;
+
+    // 4. Excessive consonant clusters
+    // Russian "всплеск" has 4 consonants. 5+ is almost always gibberish.
+    // Also catch "шрлш" type sequences which are rare in real speech.
+    const consonantClusters = word.match(/[bcdfghjklmnpqrstvwxzбвгджзйклмнпрстфхцчшщ]{4,}/g);
+    if (consonantClusters) {
+      for (const cluster of consonantClusters) {
+        // Specifically block "шрлш" and other keyboard-heavy clusters
+        const suspiciousClusters = ['шрлш', 'рлши', 'ишрл', 'фыва', 'йцук', 'ячсм', 'jklm', 'sdfg'];
+        if (cluster.length >= 5 || suspiciousClusters.some(sc => cluster.includes(sc))) {
+          return true;
+        }
+      }
     }
 
-    // Common keyboard row sequences
+    // 5. Common keyboard row sequences
+    const mashPatterns = [
+      'asdf', 'sdfg', 'dfgh', 'fghj', 'ghjk', 'hjkl', 
+      'йцук', 'цуке', 'укен', 'кенг', 'фыва', 'ывап', 'вапр', 'апро', 'прол', 'ролд', 'олдж',
+      'ячсм', 'чсми', 'смит', 'мить',
+      'ишрл', 'шрлш', 'рлши' // Patterns reported by users
+    ];
+
     for (const pattern of mashPatterns) {
       if (word.includes(pattern)) return true;
-    }
-
-    // Repetitive mash like "aaaaaaaa"
-    if (/(.)\1{4,}/.test(word)) {
-      return true;
     }
   }
 
