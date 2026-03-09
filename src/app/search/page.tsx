@@ -243,6 +243,17 @@ function SearchContent() {
           >
             <X size={28} strokeWidth={3} />
           </Button>
+
+          <Button 
+            asChild 
+            variant="outline" 
+            size="icon" 
+            className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all"
+          >
+            <Link href={`/user?id=${user.id}`}>
+              <User size={28} strokeWidth={3} />
+            </Link>
+          </Button>
           
           <Button 
             size="icon" 
