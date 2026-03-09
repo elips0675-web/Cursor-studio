@@ -245,17 +245,14 @@ function UserProfileContent() {
             <div className="h-px bg-border/50"></div>
 
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Info size={16} className="text-primary" />
-                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
-              </div>
+              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
               <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
                 "{user.bio}"
               </p>
             </div>
-
+            
             <div className="h-px bg-border/50"></div>
-
+            
             <div>
               <div className="flex items-center gap-2 mb-4">
                  <User size={16} className="text-primary" />
@@ -269,7 +266,7 @@ function UserProfileContent() {
                 <LifestyleItem label={t('profile.label.job')} value={language === 'RU' ? 'Дизайнер' : 'Designer'} icon={Briefcase} />
               </div>
             </div>
-
+            
             <div className="h-px bg-border/50"></div>
 
             <div>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
@@ -124,7 +125,7 @@ function SearchContent() {
   const handlePrev = useCallback(() => { 
     if (currentIndex > 0) { 
       setDirection(-1); 
-      setCurrentIndex(prev => prev - 1); 
+      setCurrentIndex(prev => prev + 1); 
     } 
   }, [currentIndex]);
 

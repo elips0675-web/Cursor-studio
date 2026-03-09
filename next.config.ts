@@ -25,7 +25,9 @@ const nextConfig: NextConfig = {
       'lucide-react', 
       'framer-motion', 
       '@radix-ui/react-icons',
-      'embla-carousel-react'
+      'embla-carousel-react',
+      'react-dom',
+      'recharts'
     ],
   },
   compiler: {
