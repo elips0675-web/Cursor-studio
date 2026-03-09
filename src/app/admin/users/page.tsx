@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useCallback, memo } from "react";
+import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Table,
@@ -116,9 +116,11 @@ const UserEditDialog = memo(({ isOpen, onOpenChange, user, onSave, t }: {
 }) => {
   const [editedUser, setEditedUser] = useState<User | null>(null);
 
-  // Use local state effect to sync with prop
-  useMemo(() => {
-    if (user) setEditedUser(user);
+  // Use effect to sync local state with prop
+  useEffect(() => {
+    if (user) {
+      setEditedUser(user);
+    }
   }, [user]);
 
   if (!editedUser) return null;

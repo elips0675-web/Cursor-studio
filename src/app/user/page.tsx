@@ -294,7 +294,7 @@ function UserProfileContent() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
-                <div key={idx} onClick={() => { setActivePhotoIndex(idx); setIsViewerOpen(true); }} className="relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer group shadow-sm border border-border/10">
+                <div key={url} onClick={() => { setActivePhotoIndex(idx); setIsViewerOpen(true); }} className="relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer group shadow-sm border border-border/10">
                   <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
                     <Maximize2 size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -325,10 +325,10 @@ function UserProfileContent() {
           <DialogTitle className="sr-only">Viewer</DialogTitle>
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
-              {photos.map((url, idx) => (
-                <CarouselItem key={idx} className="h-[80vh] flex items-center justify-center p-4 pl-4">
+              {photos.map((url) => (
+                <CarouselItem key={url} className="h-[80vh] flex items-center justify-center p-4 pl-4">
                   <div className="relative w-full h-full rounded-2xl overflow-hidden app-shadow">
-                    <Image src={url} alt={`Gallery view ${idx}`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
+                    <Image src={url} alt={`Gallery view`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
                   </div>
                 </CarouselItem>
               ))}

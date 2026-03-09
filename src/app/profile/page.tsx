@@ -97,7 +97,7 @@ export default function ProfilePage() {
   const [showContestDialog, setShowContestDialog] = useState(false);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [photoToDeleteIndex, setPhotoToDeleteIndex] = useState<number | null>(null);
+  const [photoToDeleteUrl, setPhotoToDeleteUrl] = useState<string | null>(null);
 
   const stats = { likes: 124, matches: 15 };
   const earnedTitles = useMemo(() => getUserTitles(profile, language), [profile, language]);
@@ -159,13 +159,13 @@ export default function ProfilePage() {
     }
   };
 
-  const requestDeletePhoto = (index: number) => {
-    setPhotoToDeleteIndex(index);
+  const requestDeletePhoto = (url: string) => {
+    setPhotoToDeleteUrl(url);
     setShowDeleteConfirm(true);
   };
 
   const executeDeletePhoto = () => {
-    if (photoToDeleteIndex === null) return;
+    if (photoToDeleteUrl === null) return;
 
     if (photos.length <= 1) {
         toast({
@@ -174,17 +174,17 @@ export default function ProfilePage() {
             description: t('delete_photo_error.description'),
         });
         setShowDeleteConfirm(false);
-        setPhotoToDeleteIndex(null);
+        setPhotoToDeleteUrl(null);
         return;
     }
 
-    const newPhotos = photos.filter((_, i) => i !== photoToDeleteIndex);
+    const newPhotos = photos.filter((p) => p !== photoToDeleteUrl);
     setPhotos(newPhotos);
     localStorage.setItem('userProfileGallery', JSON.stringify(newPhotos));
     toast({ title: language === 'RU' ? "Фото удалено" : "Photo deleted" });
     
     setShowDeleteConfirm(false);
-    setPhotoToDeleteIndex(null);
+    setPhotoToDeleteUrl(null);
   };
 
   const handleBoostAd = () => {
@@ -448,7 +448,7 @@ export default function ProfilePage() {
             <div className="flex justify-between items-center mb-6"><div className="flex items-center gap-2"><Camera size={18} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4></div><input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" /></div>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, idx) => (
-                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden bg-muted group shadow-sm border border-border/10">
+                <div key={url} className="relative aspect-square rounded-lg overflow-hidden bg-muted group shadow-sm border border-border/10">
                   <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover" />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Button
@@ -464,7 +464,7 @@ export default function ProfilePage() {
                           variant="destructive"
                           size="icon"
                           aria-label="Delete photo"
-                          onClick={(e) => { e.stopPropagation(); requestDeletePhoto(idx); }}
+                          onClick={(e) => { e.stopPropagation(); requestDeletePhoto(url); }}
                           className="absolute top-2 right-2 h-9 w-9 rounded-full bg-destructive/80 text-destructive-foreground hover:bg-destructive backdrop-blur-sm border-white/20 shadow-lg"
                       >
                           <Trash2 size={16} />
@@ -553,10 +553,10 @@ export default function ProfilePage() {
           <DialogTitle className="sr-only">Viewer</DialogTitle>
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
-              {photos.map((url, idx) => (
-                <CarouselItem key={idx} className="h-[80vh] flex items-center justify-center p-4 pl-4">
-                  <div className="relative w-full h-full rounded-xl overflow-hidden app-shadow">
-                    <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
+              {photos.map((url) => (
+                <CarouselItem key={url} className="h-[80vh] flex items-center justify-center p-4 pl-4">
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden app-shadow">
+                    <Image src={url} alt={`Photo viewer`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
                   </div>
                 </CarouselItem>
               ))}
@@ -579,7 +579,7 @@ export default function ProfilePage() {
             </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setPhotoToDeleteIndex(null)}>{t('dialog.delete_photo.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setPhotoToDeleteUrl(null)}>{t('dialog.delete_photo.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={executeDeletePhoto} className="bg-destructive hover:bg-destructive/90">
                 {t('dialog.delete_photo.confirm')}
             </AlertDialogAction>
