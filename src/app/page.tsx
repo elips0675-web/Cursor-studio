@@ -121,9 +121,9 @@ export default function Home() {
         </Suspense>
 
         <section className="px-5 pt-8">
-          <Link href="/contest" className="block relative h-28 rounded-[2rem] overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600">
+          <Link href="/contest" className="block relative h-28 rounded-xl overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600">
             <div className="relative h-full flex items-center p-6 text-white">
-              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center mr-4">
+              <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center mr-4">
                 <Trophy size={24} fill="currentColor" />
               </div>
               <div className="flex-1">
