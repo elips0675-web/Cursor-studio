@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
 import { motion, AnimatePresence } from "framer-motion";
+import { containsForbiddenWords, isGibberish } from "@/lib/word-filter";
+import { toast } from "@/hooks/use-toast";
 
 const SUPPORT_AGENT = { 
   name: 'Support', 
@@ -40,6 +42,24 @@ export default function SupportChatPage() {
   const handleSendMessage = (textOverride?: string) => {
     const textToSend = textOverride || inputValue;
     if (!textToSend.trim()) return;
+
+    if (containsForbiddenWords(textToSend)) {
+      toast({
+        variant: 'destructive',
+        title: t('filter.toast.title'),
+        description: t('filter.toast.description'),
+      });
+      return;
+    }
+
+    if (isGibberish(textToSend)) {
+      toast({
+        variant: 'destructive',
+        title: t('filter.toast.title'),
+        description: t('filter.toast.gibberish_description'),
+      });
+      return;
+    }
 
     const newMessage = {
       id: Date.now(),

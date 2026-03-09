@@ -34,13 +34,58 @@ const FORBIDDEN_WORD_ROOTS = [
   'tinder', 'badoo', 'mamba', 'pure', 'тиндер', 'баду', 'мамба'
 ];
 
+/**
+ * Checks if the text contains forbidden words.
+ */
 export const containsForbiddenWords = (text: string): boolean => {
   const lowerCaseText = text.toLowerCase();
-  // Using a loop for clarity and performance over regex for this simple case.
   for (const root of FORBIDDEN_WORD_ROOTS) {
     if (lowerCaseText.includes(root)) {
       return true;
     }
   }
+  return false;
+};
+
+/**
+ * Checks if the text is likely a nonsensical keyboard mash (gibberish).
+ */
+export const isGibberish = (text: string): boolean => {
+  const normalized = text.toLowerCase();
+  // Remove non-letter characters for ratio check
+  const lettersOnly = normalized.replace(/[^a-zа-яё]/g, '');
+
+  if (lettersOnly.length > 6) {
+    const vowels = lettersOnly.match(/[aeiouyаеёиоуыэюя]/g);
+    // If letters only but vowel count is extremely low (< 10%)
+    if (!vowels || vowels.length < lettersOnly.length * 0.1) {
+      return true;
+    }
+  }
+
+  const words = normalized.split(/\s+/).filter(w => w.length > 3);
+  const mashPatterns = [
+    'asdf', 'sdfg', 'dfgh', 'fghj', 'ghjk', 'hjkl', 
+    'йцук', 'цуке', 'укен', 'кенг', 'фыва', 'ывап', 'вапр', 'апро', 'прол', 'ролд', 'олдж',
+    'ячсм', 'чсми', 'смит', 'мить'
+  ];
+
+  for (const word of words) {
+    // Single word with no vowels and length > 4 (e.g. "sdfgh")
+    if (/^[a-zа-яё]+$/.test(word) && !/[aeiouyаеёиоуыэюя]/.test(word) && word.length > 4) {
+      return true;
+    }
+
+    // Common keyboard row sequences
+    for (const pattern of mashPatterns) {
+      if (word.includes(pattern)) return true;
+    }
+
+    // Repetitive mash like "aaaaaaaa"
+    if (/(.)\1{4,}/.test(word)) {
+      return true;
+    }
+  }
+
   return false;
 };

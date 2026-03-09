@@ -176,6 +176,7 @@ const translations = {
     'filter.gender.female': 'Женщины',
     'filter.toast.title': 'Сообщение не отправлено',
     'filter.toast.description': 'Пожалуйста, избегайте ненормативной лексики, политических тем и ссылок.',
+    'filter.toast.gibberish_description': 'Пожалуйста, пишите осмысленные сообщения. Бессмысленный набор букв запрещен.',
     // Onboarding
     'onboarding.step1.title': 'Как тебя зовут?',
     'onboarding.step1.desc': 'Имя будет отображаться в твоем профиле.',
@@ -536,6 +537,7 @@ const translations = {
     'filter.gender.female': 'Women',
     'filter.toast.title': 'Message Not Sent',
     'filter.toast.description': 'Please avoid profanity, political topics, and links.',
+    'filter.toast.gibberish_description': 'Please write meaningful messages. Gibberish is not allowed.',
     // Onboarding
     'onboarding.step1.title': "What's your name?",
     'onboarding.step1.desc': 'Name will be displayed in your profile.',

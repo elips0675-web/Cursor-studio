@@ -27,7 +27,7 @@ import { VideoCallDialog } from "@/components/video-call";
 import { VoiceCallDialog } from "@/components/voice-call";
 import { useFeatureFlags } from "@/context/feature-flags-context";
 import { ALL_DEMO_USERS, GROUP_CATEGORIES, SUPPORT_USER } from "@/lib/demo-data";
-import { containsForbiddenWords } from "@/lib/word-filter";
+import { containsForbiddenWords, isGibberish } from "@/lib/word-filter";
 
 const CHAT_THEMES = [
   { id: 'romantic', label_ru: 'Романтика', label_en: 'Romantic', icon: Heart, color: 'text-pink-500', mood: 'Romantic, sweet and poetic' },
@@ -205,6 +205,15 @@ function ChatsContent() {
       return;
     }
 
+    if (isGibberish(textToSend)) {
+      toast({
+        variant: 'destructive',
+        title: t('filter.toast.title'),
+        description: t('filter.toast.gibberish_description'),
+      });
+      return;
+    }
+
     const newMessage = { id: Date.now(), text: textToSend, sender: "me", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
     setMessages([...messages, newMessage]); if (!textOverride) setInputValue(""); setShowThemeGrid(false);
     
@@ -290,7 +299,7 @@ function ChatsContent() {
 
     return (
       <div className="flex flex-col h-svh bg-[#f8f9fb]">
-        <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50">
+        <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50 h-16">
           <Button variant="ghost" size="icon" onClick={handleBack} className="rounded-full hover:bg-muted/50"><ChevronLeft size={24} /></Button>
           <div className="relative">
             <div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm">
