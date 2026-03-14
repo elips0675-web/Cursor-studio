@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import { Zap, Search, Sparkles, Trophy, ChevronRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
