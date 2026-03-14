@@ -8,7 +8,6 @@ import {
   Sparkles, 
   Trophy, 
   ChevronRight, 
-  ShieldCheck,
   Music,
   Dumbbell,
   Palette,
@@ -120,27 +119,21 @@ export default function Home() {
     router.push('/search?mode=autosearch');
   }, [currentUser, router]);
 
-  // FULL SCREEN SPLASH TO PREVENT BROKEN TEXT/STYLES (FOUC)
+  // FULL SCREEN SPLASH TO PREVENT FOUC
   if (!isMounted) {
     return (
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white">
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
           className="relative flex flex-col items-center"
         >
-          <div className="w-20 h-20 rounded-[2.5rem] gradient-bg flex items-center justify-center shadow-2xl shadow-primary/20 mb-6">
+          <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center shadow-2xl shadow-primary/20 mb-6">
             <Zap className="text-white" size={40} fill="currentColor" />
           </div>
           <h1 className="text-4xl font-black font-headline tracking-tighter gradient-text">
             SwiftMatch
           </h1>
-          <div className="mt-8 flex gap-1">
-            <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce"></span>
-            <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-            <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-          </div>
         </motion.div>
       </div>
     );
@@ -172,9 +165,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Photo Month Section */}
+        {/* Contest Banner */}
         <section className="px-5 pt-8">
-          <Link href="/contest" prefetch={true} className="block relative h-28 rounded-[2.5rem] overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600 shadow-xl shadow-amber-500/20">
+          <Link href="/contest" prefetch={true} className="block relative h-28 rounded-[2rem] overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600 shadow-xl shadow-amber-500/20">
             <div className="relative h-full flex items-center p-6 text-white">
               <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center mr-4">
                 <Trophy size={24} fill="currentColor" />
@@ -188,11 +181,11 @@ export default function Home() {
           </Link>
         </section>
 
-        <Suspense fallback={<div className="px-5 pt-8 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[4/3] rounded-xl" /><Skeleton className="aspect-[4/3] rounded-xl" /></div></div>}>
+        <Suspense fallback={<div className="px-5 pt-8 space-y-4"><Skeleton className="h-8 w-40" /></div>}>
           <TopOfWeekSection topUsers={topUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
 
-        {/* Popular Groups Section - MOVED ABOVE RECOMMENDATIONS & STYLED LIKE GROUPS PAGE */}
+        {/* Popular Groups Section */}
         <section className="px-5 pt-10">
           <div className="flex items-center justify-between mb-4 px-1">
             <div className="flex items-center gap-2">
@@ -210,7 +203,7 @@ export default function Home() {
                 <Link 
                   href={`/groups/${group.id}`} 
                   key={group.id} 
-                  className="bg-white rounded-2xl app-shadow border border-white overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
+                  className="bg-white rounded-xl app-shadow border border-white overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
                 >
                   <div className="h-16 w-full bg-muted flex items-center justify-center">
                     <Icon size={24} className="text-orange-500 group-hover:scale-110 transition-transform duration-300" />
@@ -228,7 +221,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
+        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /></div>}>
           <RecommendationsSection recommendedUsers={recommendedUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
       </main>

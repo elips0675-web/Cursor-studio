@@ -13,11 +13,9 @@ import {
   ChevronLeft,
   Navigation,
   Target,
-  Stars,
-  Upload,
-  Languages,
   Search,
-  VenetianMask
+  VenetianMask,
+  Upload
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -32,18 +30,12 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { generateProfileBio } from "@/ai/flows/ai-generate-profile-bio";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
-import { INTEREST_OPTIONS, DATING_GOALS, ZODIAC_SIGNS } from "@/lib/constants";
+import { INTEREST_OPTIONS, DATING_GOALS } from "@/lib/constants";
 
 const GENDER_OPTIONS = [
   { id: 'male', labelKey: 'onboarding.step1.male' },
@@ -52,7 +44,7 @@ const GENDER_OPTIONS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(1);
   const totalSteps = 5;
@@ -194,7 +186,7 @@ export default function OnboardingPage() {
         localStorage.setItem('userProfile', JSON.stringify({ uid: user.uid, ...profileForDb }));
         
         toast({ title: t('onboarding.toast.finish_title'), description: t('onboarding.toast.finish_desc') });
-        router.push("/"); // REDIRECT TO HOME AFTER FINISH
+        router.push("/"); 
     } catch (error) {
         console.error("Error saving profile:", error);
         toast({ title: "Ошибка сохранения", variant: "destructive" });
@@ -213,7 +205,7 @@ export default function OnboardingPage() {
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step1.label')}</Label>
-                <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder={t('onboarding.step1.placeholder')} className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6" />
+                <Input value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder={t('onboarding.step1.placeholder')} className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6" />
               </div>
               <div className="space-y-2 pt-4">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
@@ -221,7 +213,7 @@ export default function OnboardingPage() {
                 </Label>
                 <div className="grid grid-cols-1 gap-3">
                   {GENDER_OPTIONS.map(opt => (
-                    <button key={opt.id} onClick={() => setFormData({...formData, gender: opt.id})} className={cn("h-14 rounded-2xl border-2 transition-all font-bold flex items-center px-6 gap-3", formData.gender === opt.id ? "border-primary bg-primary/5 text-primary" : "border-muted text-muted-foreground bg-transparent hover:bg-muted/30")}>
+                    <button key={opt.id} onClick={() => setFormData({...formData, gender: opt.id})} className={cn("h-14 rounded-xl border-2 transition-all font-bold flex items-center px-6 gap-3", formData.gender === opt.id ? "border-primary bg-primary/5 text-primary" : "border-muted text-muted-foreground bg-transparent hover:bg-muted/30")}>
                       <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", formData.gender === opt.id ? "border-primary bg-primary" : "border-muted")}>
                         {formData.gender === opt.id && <div className="w-2 h-2 bg-white rounded-full"></div>}
                       </div>
@@ -244,18 +236,18 @@ export default function OnboardingPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step2.age')}</Label>
-                  <Input type="number" value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})} placeholder="25" className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6" />
+                  <Input type="number" value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})} placeholder="25" className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6" />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step2.height')}</Label>
-                  <Input type="number" value={formData.height} onChange={e => setFormData({...formData, height: e.target.value})} placeholder="175" className="h-14 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold px-6" />
+                  <Input type="number" value={formData.height} onChange={e => setFormData({...formData, height: e.target.value})} placeholder="175" className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6" />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step2.city')}</Label>
                 <div className="relative">
                   <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-primary" size={20} />
-                  <Input value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} placeholder={t('onboarding.step2.city_placeholder')} className="h-14 pl-14 pr-16 rounded-2xl bg-muted/30 border-0 focus-visible:ring-primary/20 font-bold" />
+                  <Input value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} placeholder={t('onboarding.step2.city_placeholder')} className="h-14 pl-14 pr-16 rounded-xl bg-muted/30 border-0 font-bold" />
                   <button onClick={handleDetectLocation} disabled={isDetectingLocation} type="button" className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:bg-muted p-2 rounded-xl transition-colors active:scale-90">
                     <Navigation size={20} className={cn(isDetectingLocation && "animate-pulse")} fill={isDetectingLocation ? "currentColor" : "none"} />
                   </button>
@@ -277,10 +269,10 @@ export default function OnboardingPage() {
                   <Target size={14} className="text-primary" /> {t('onboarding.step3.goal_label')}
                 </Label>
                 <Select value={formData.datingGoal} onValueChange={(val) => setFormData({...formData, datingGoal: val})}>
-                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6 focus:ring-primary/20">
+                  <SelectTrigger className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6">
                     <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
                     {DATING_GOALS.map(goal => <SelectItem key={goal} value={goal} className="font-bold py-3">{goal}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -290,10 +282,10 @@ export default function OnboardingPage() {
                   <Search size={14} className="text-primary" /> {language === 'RU' ? 'Кого вы ищете?' : 'Who are you looking for?'}
                 </Label>
                 <Select value={formData.lookingFor} onValueChange={(val) => setFormData({...formData, lookingFor: val})}>
-                  <SelectTrigger className="h-14 rounded-2xl bg-muted/30 border-0 font-bold px-6 focus:ring-primary/20">
+                  <SelectTrigger className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                  <SelectContent className="rounded-xl border-0 shadow-2xl">
                     <SelectItem value="male" className="font-bold py-3">{language === 'RU' ? 'Мужчин' : 'Men'}</SelectItem>
                     <SelectItem value="female" className="font-bold py-3">{language === 'RU' ? 'Женщин' : 'Women'}</SelectItem>
                     <SelectItem value="all" className="font-bold py-3">{language === 'RU' ? 'Всех' : 'All'}</SelectItem>
@@ -312,7 +304,7 @@ export default function OnboardingPage() {
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
               {INTEREST_OPTIONS.map(interest => (
-                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={formData.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-4 py-2.5 rounded-xl transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", formData.interests.includes(interest) ? "gradient-bg text-white shadow-md hover:brightness-110" : "bg-muted text-muted-foreground hover:bg-border")}>
+                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={formData.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-4 py-2.5 rounded-xl transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", formData.interests.includes(interest) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground hover:bg-border")}>
                   {t(interest)}
                 </Badge>
               ))}
@@ -324,14 +316,14 @@ export default function OnboardingPage() {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2 text-center">
               <div className="relative inline-block mx-auto mb-4">
-                <div onClick={handleTriggerFileInput} className="w-40 h-40 rounded-2xl border-[6px] border-white shadow-2xl overflow-hidden relative group cursor-pointer transition-transform active:scale-95">
+                <div onClick={handleTriggerFileInput} className="w-40 h-40 rounded-xl border-[6px] border-white shadow-2xl overflow-hidden relative group cursor-pointer">
                   <Image src={formData.photo} alt="Me" fill className={cn("object-cover transition-all", isUploading && "blur-sm grayscale")} />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
                     <Camera className="text-white mb-1" size={32} />
                     <span className="text-white text-[9px] font-black uppercase tracking-widest">{t('onboarding.step5.photo_label')}</span>
                   </div>
                 </div>
-                <button onClick={handleTriggerFileInput} className="absolute -bottom-1 -right-1 bg-primary text-white p-3 rounded-xl shadow-xl border-2 border-white hover:scale-110 transition-transform active:scale-90">
+                <button onClick={handleTriggerFileInput} className="absolute -bottom-1 -right-1 bg-primary text-white p-3 rounded-xl shadow-xl border-2 border-white">
                   <Upload size={18} />
                 </button>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
@@ -339,29 +331,20 @@ export default function OnboardingPage() {
               <h2 className="text-3xl font-black font-headline tracking-tight">{t('onboarding.step5.title')}</h2>
               <p className="text-muted-foreground text-sm px-4">{t('onboarding.step5.desc')}</p>
             </div>
-            <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-4">
+            <div className="bg-white rounded-xl p-6 app-shadow border border-border/40 space-y-4">
               <div className="flex justify-between items-center">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step5.bio_label')}</Label>
-                <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-widest bg-muted/50 px-3 py-1.5 rounded-full hover:bg-muted transition-colors shadow-sm">
+                <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-widest bg-muted/50 px-3 py-1.5 rounded-full shadow-sm">
                   <Sparkles size={12} className={cn(isGeneratingBio && "animate-spin")} /> AI {t('button.save')}
                 </button>
               </div>
-              <Textarea value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder={t('onboarding.step5.bio_placeholder')} className="min-h-[120px] rounded-2xl bg-muted/30 border-0 text-sm font-medium p-4 resize-none focus-visible:ring-primary/10" />
+              <Textarea value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} placeholder={t('onboarding.step5.bio_placeholder')} className="min-h-[120px] rounded-xl bg-muted/30 border-0 text-sm font-medium p-4 resize-none" />
             </div>
           </div>
         );
       default:
         return null;
     }
-  };
-
-  const isStepValid = () => {
-    if (step === 1) return formData.name.length > 1 && formData.gender !== "";
-    if (step === 2) return formData.age !== "";
-    if (step === 3) return formData.datingGoal !== "";
-    if (step === 4) return formData.interests.length >= 1;
-    if (step === 5) return formData.bio.length > 5;
-    return true;
   };
 
   return (
@@ -380,7 +363,7 @@ export default function OnboardingPage() {
       </header>
       <main className="flex-1 px-8 pt-4 pb-24 max-w-md mx-auto w-full">{renderStep()}</main>
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 bg-white/80 backdrop-blur-md">
-        <Button onClick={nextStep} disabled={!isStepValid()} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all">
+        <Button onClick={nextStep} disabled={formData.gender === "" && step === 1} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all">
           {step === totalSteps ? t('button.start') : t('button.continue')} <ArrowRight size={20} className="ml-2" />
         </Button>
       </div>
