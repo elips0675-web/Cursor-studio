@@ -75,6 +75,7 @@ export default function RootLayout({
               <PwaRegistry />
               <AppContainer>
                 {children}
+                {/* Оборачиваем в ClientOnly компоненты, вызывающие ошибки гидратации (Toast, Cookie и т.д.) */}
                 <ClientOnly>
                   <CookieConsent />
                   <PwaInstallBanner />

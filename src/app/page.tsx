@@ -65,6 +65,7 @@ export default function Home() {
   const [showAutosearchDialog, setShowAutosearchDialog] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [popularGroups, setPopularGroups] = useState<any[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -78,6 +79,12 @@ export default function Home() {
     } else {
       setCurrentUser(ALL_DEMO_USERS[1]);
     }
+
+    // Рандомизация данных только на клиенте для избежания ошибок гидратации
+    setPopularGroups(GROUP_CATEGORIES.slice(0, 4).map(cat => ({
+      ...cat,
+      onlineCount: Math.floor(Math.random() * 50) + 10
+    })));
   }, []);
 
   const topUsers = useMemo(() => {
@@ -98,13 +105,6 @@ export default function Home() {
       .slice(0, 4);
   }, [currentUser]);
 
-  const popularGroups = useMemo(() => {
-    return GROUP_CATEGORIES.slice(0, 4).map(cat => ({
-      ...cat,
-      onlineCount: Math.floor(Math.random() * 50) + 10
-    }));
-  }, []);
-
   const runAutosearch = useCallback(() => {
     if (!currentUser) return;
     const filters = {
@@ -119,35 +119,30 @@ export default function Home() {
     router.push('/search?mode=autosearch');
   }, [currentUser, router]);
 
+  // Защита от FOUC и Hydration Error: показываем чистый Splash Screen до монтирования
+  if (!isMounted) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="relative flex flex-col items-center"
+        >
+          <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center shadow-2xl shadow-primary/20 mb-6">
+            <Zap className="text-white" size={40} fill="currentColor" />
+          </div>
+          <h1 className="text-4xl font-black font-headline tracking-tighter gradient-text">
+            SwiftMatch
+          </h1>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-svh bg-[#f8f9fb] relative">
-      <AnimatePresence>
-        {!isMounted && (
-          <motion.div 
-            key="splash"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
-          >
-            <motion.div 
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="relative flex flex-col items-center"
-            >
-              <div className="w-20 h-20 rounded-2xl gradient-bg flex items-center justify-center shadow-2xl shadow-primary/20 mb-6">
-                <Zap className="text-white" size={40} fill="currentColor" />
-              </div>
-              <h1 className="text-4xl font-black font-headline tracking-tighter gradient-text">
-                SwiftMatch
-              </h1>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <AppHeader />
-      <main className={cn("flex-1 overflow-y-auto pb-24 transition-opacity duration-500", isMounted ? "opacity-100" : "opacity-0")}>
+      <main className="flex-1 overflow-y-auto pb-24">
         {/* Hero Section */}
         <section className="px-6 py-10 text-center relative overflow-hidden bg-white border-b border-border/40">
           <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary border-0 gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]">
@@ -172,7 +167,7 @@ export default function Home() {
 
         {/* Contest Banner */}
         <section className="px-5 pt-8">
-          <Link href="/contest" prefetch={true} className="block relative h-28 rounded-[2rem] overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600 shadow-xl shadow-amber-500/20">
+          <Link href="/contest" prefetch={true} className="block relative h-28 rounded-2xl overflow-hidden group bg-gradient-to-r from-amber-500 to-orange-600 shadow-xl shadow-amber-500/20">
             <div className="relative h-full flex items-center p-6 text-white">
               <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center mr-4">
                 <Trophy size={24} fill="currentColor" />
@@ -186,11 +181,11 @@ export default function Home() {
           </Link>
         </section>
 
-        <Suspense fallback={<div className="px-5 pt-8 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[4/3] rounded-xl" /><Skeleton className="aspect-[4/3] rounded-xl" /></div></div>}>
+        <Suspense fallback={<div className="px-5 pt-8 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[4/3] rounded-xl" /></div></div>}>
           <TopOfWeekSection topUsers={topUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
 
-        {/* Popular Groups Section */}
+        {/* Popular Groups Section - MOVED ABOVE RECOMMENDATIONS */}
         <section className="px-5 pt-10">
           <div className="flex items-center justify-between mb-4 px-1">
             <div className="flex items-center gap-2">
@@ -226,7 +221,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
+        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
           <RecommendationsSection recommendedUsers={recommendedUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
       </main>

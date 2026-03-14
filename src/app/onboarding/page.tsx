@@ -316,7 +316,7 @@ export default function OnboardingPage() {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             <div className="space-y-2 text-center">
               <div className="relative inline-block mx-auto mb-4">
-                <div onClick={handleTriggerFileInput} className="w-40 h-40 rounded-xl border-[6px] border-white shadow-2xl overflow-hidden relative group cursor-pointer">
+                <div onClick={handleTriggerFileInput} className="w-40 h-40 rounded-2xl border-[6px] border-white shadow-2xl overflow-hidden relative group cursor-pointer">
                   <Image src={formData.photo} alt="Me" fill className={cn("object-cover transition-all", isUploading && "blur-sm grayscale")} />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
                     <Camera className="text-white mb-1" size={32} />
@@ -331,7 +331,7 @@ export default function OnboardingPage() {
               <h2 className="text-3xl font-black font-headline tracking-tight">{t('onboarding.step5.title')}</h2>
               <p className="text-muted-foreground text-sm px-4">{t('onboarding.step5.desc')}</p>
             </div>
-            <div className="bg-white rounded-xl p-6 app-shadow border border-border/40 space-y-4">
+            <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-4">
               <div className="flex justify-between items-center">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">{t('onboarding.step5.bio_label')}</Label>
                 <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-widest bg-muted/50 px-3 py-1.5 rounded-full shadow-sm">
