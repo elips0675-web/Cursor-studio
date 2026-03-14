@@ -1,61 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from '@/hooks/use-toast';
-import { Plus, Trash2, Package } from 'lucide-react';
+import { Plus, Trash2, Package, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import { INTEREST_OPTIONS, DATING_GOALS, EDUCATION_OPTIONS } from '@/lib/constants';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-const EditableList = ({ initialItems, onSave, noun_ru, noun_en }: { initialItems: string[], onSave: (items: string[]) => void, noun_ru: string, noun_en: string }) => {
+const EditableList = ({ 
+    items, 
+    onUpdate, 
+    noun_ru, 
+    noun_en,
+    isSaving
+}: { 
+    items: string[], 
+    onUpdate: (items: string[]) => void, 
+    noun_ru: string, 
+    noun_en: string,
+    isSaving: boolean
+}) => {
     const { language } = useLanguage();
-    const [items, setItems] = useState(initialItems);
     const [newItem, setNewItem] = useState("");
     const noun = language === 'RU' ? noun_ru : noun_en;
 
     const handleAddItem = () => {
         if (newItem.trim() && !items.includes(newItem.trim())) {
             const updatedItems = [...items, newItem.trim()];
-            setItems(updatedItems);
+            onUpdate(updatedItems);
             setNewItem("");
-            onSave(updatedItems);
-            toast({ title: `${noun} добавлен` });
         }
     };
 
     const handleDeleteItem = (itemToDelete: string) => {
         const updatedItems = items.filter(item => item !== itemToDelete);
-        setItems(updatedItems);
-        onSave(updatedItems);
-        toast({ title: `${noun} удален`, variant: 'destructive' });
+        onUpdate(updatedItems);
     };
 
     return (
-        <div>
+        <div className="space-y-4">
             <div className="flex flex-wrap gap-2 p-4 rounded-2xl border bg-muted/30 min-h-[120px]">
                 {items.map((item, index) => (
                     <Badge key={index} variant="secondary" className="text-sm font-semibold py-1.5 px-3 flex items-center gap-2 border bg-white shadow-sm h-fit">
                         {item}
-                        <button onClick={() => handleDeleteItem(item)} className="text-muted-foreground hover:text-destructive transition-colors -mr-1">
+                        <button 
+                            onClick={() => handleDeleteItem(item)} 
+                            disabled={isSaving}
+                            className="text-muted-foreground hover:text-destructive transition-colors -mr-1 disabled:opacity-50"
+                        >
                             <Trash2 size={13} />
                         </button>
                     </Badge>
                 ))}
             </div>
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-3">
                 <Input
                     placeholder={`${language === 'RU' ? 'Новый' : 'New'} ${noun.toLowerCase()}...`}
                     value={newItem}
                     onChange={(e) => setNewItem(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddItem()}
+                    disabled={isSaving}
                     className="h-11 rounded-xl"
                 />
-                <Button onClick={handleAddItem} className="rounded-xl h-11 shrink-0">
-                    <Plus size={16} className="mr-2" /> {language === 'RU' ? 'Добавить' : 'Add'}
+                <Button onClick={handleAddItem} disabled={isSaving || !newItem.trim()} className="rounded-xl h-11 shrink-0 px-6">
+                    {isSaving ? <Loader2 className="animate-spin" size={16} /> : <Plus size={16} className="mr-2" />}
+                    {language === 'RU' ? 'Добавить' : 'Add'}
                 </Button>
             </div>
         </div>
@@ -64,54 +79,108 @@ const EditableList = ({ initialItems, onSave, noun_ru, noun_en }: { initialItems
 
 export default function ContentManagementPage() {
     const { t, language } = useLanguage();
-    const [interests, setInterests] = useState(INTEREST_OPTIONS);
-    const [datingGoals, setDatingGoals] = useState(DATING_GOALS);
-    const [educationLevels, setEducationLevels] = useState(EDUCATION_OPTIONS);
+    const firestore = useFirestore();
+    
+    const [interests, setInterests] = useState<string[]>([]);
+    const [datingGoals, setDatingGoals] = useState<string[]>([]);
+    const [educationLevels, setEducationLevels] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
 
-    const handleSave = (type: string) => {
-        // In a real app, this would save to a database.
-        // Here we just show a toast.
-        toast({ title: t(`admin.content.${type}.save_toast`) });
+    const configRef = useMemo(() => {
+        if (!firestore) return null;
+        return doc(firestore, 'config', 'content');
+    }, [firestore]);
+
+    useEffect(() => {
+        if (!configRef) return;
+
+        const unsubscribe = onSnapshot(configRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setInterests(data.interests || INTEREST_OPTIONS);
+                setDatingGoals(data.datingGoals || DATING_GOALS);
+                setEducationLevels(data.educationLevels || EDUCATION_OPTIONS);
+            } else {
+                setInterests(INTEREST_OPTIONS);
+                setDatingGoals(DATING_GOALS);
+                setEducationLevels(EDUCATION_OPTIONS);
+            }
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, [configRef]);
+
+    const updateConfig = async (key: string, newItems: string[]) => {
+        if (!configRef) return;
+        setIsSaving(true);
+        try {
+            const dataToUpdate = {
+                interests: key === 'interests' ? newItems : interests,
+                datingGoals: key === 'goals' ? newItems : datingGoals,
+                educationLevels: key === 'education' ? newItems : educationLevels,
+            };
+            await setDoc(configRef, dataToUpdate, { merge: true });
+            toast({ title: t(`admin.content.${key}.save_toast`) });
+        } catch (error) {
+            console.error("Error updating config:", error);
+            toast({ variant: 'destructive', title: 'Error', description: 'Failed to save content changes.' });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-64 gap-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Загрузка контента...</p>
+            </div>
+        );
     }
 
     return (
         <Card className="border-0 shadow-sm">
             <CardHeader>
                 <CardTitle className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
-                    <Package className="h-5 w-5" />
+                    <Package className="h-5 w-5 text-primary" />
                     {t('admin.content.title')}
                 </CardTitle>
                 <CardDescription>{t('admin.content.description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="interests" className="w-full">
-                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
-                        <TabsTrigger value="interests">{t('admin.content.interests.title')}</TabsTrigger>
-                        <TabsTrigger value="goals">{t('admin.content.dating_goals.title')}</TabsTrigger>
-                        <TabsTrigger value="education">{t('admin.content.education.title')}</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto p-1 bg-muted/50 rounded-xl mb-6">
+                        <TabsTrigger value="interests" className="rounded-lg py-2 font-bold">{t('admin.content.interests.title')}</TabsTrigger>
+                        <TabsTrigger value="goals" className="rounded-lg py-2 font-bold">{t('admin.content.dating_goals.title')}</TabsTrigger>
+                        <TabsTrigger value="education" className="rounded-lg py-2 font-bold">{t('admin.content.education.title')}</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="interests" className="pt-6">
+                    <TabsContent value="interests" className="outline-none">
                         <EditableList 
-                            initialItems={interests} 
-                            onSave={(items) => { setInterests(items); handleSave('interests'); }}
+                            items={interests} 
+                            onUpdate={(items) => updateConfig('interests', items)}
                             noun_ru="Интерес"
                             noun_en="Interest"
+                            isSaving={isSaving}
                         />
                     </TabsContent>
-                    <TabsContent value="goals" className="pt-6">
+                    <TabsContent value="goals" className="outline-none">
                         <EditableList 
-                            initialItems={datingGoals}
-                            onSave={(items) => { setDatingGoals(items); handleSave('goals'); }}
+                            items={datingGoals}
+                            onUpdate={(items) => updateConfig('goals', items)}
                             noun_ru="Цель"
                             noun_en="Goal"
+                            isSaving={isSaving}
                         />
                     </TabsContent>
-                    <TabsContent value="education" className="pt-6">
+                    <TabsContent value="education" className="outline-none">
                         <EditableList 
-                            initialItems={educationLevels}
-                            onSave={(items) => { setEducationLevels(items); handleSave('education'); }}
+                            items={educationLevels}
+                            onUpdate={(items) => updateConfig('education', items)}
                             noun_ru="Уровень"
                             noun_en="Level"
+                            isSaving={isSaving}
                         />
                     </TabsContent>
                 </Tabs>

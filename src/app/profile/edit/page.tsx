@@ -1,11 +1,10 @@
-
-"use client";
+'use client';
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { Sparkles, Camera, User, MapPin, Info, GraduationCap, Dog, Briefcase, Bed, Target, Heart, Users, Trash2, Maximize2 } from "lucide-react";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { Sparkles, Camera, User, MapPin, Info, GraduationCap, Dog, Briefcase, Bed, Target, Heart, Users, Trash2, Maximize2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
@@ -27,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { INTEREST_OPTIONS, DATING_GOALS, ZODIAC_SIGNS, PET_OPTIONS, SLEEP_SCHEDULE_OPTIONS, EDUCATION_OPTIONS } from "@/lib/constants";
 import { GROUP_CATEGORIES } from "@/lib/demo-data";
 import { useLanguage } from "@/context/language-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultProfile = {
     displayName: "Анна",
@@ -49,12 +49,37 @@ const defaultProfile = {
 export default function EditProfilePage() {
   const router = useRouter();
   const { t, language } = useLanguage();
+  const firestore = useFirestore();
+  const { user } = useUser();
+
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
   const [mainPhoto, setMainPhoto] = useState(PlaceHolderImages[0].imageUrl);
   const [profile, setProfile] = useState(defaultProfile as any);
   
-  const { user } = useUser();
-  const firestore = useFirestore();
+  // Dynamic config from Firestore
+  const [dynamicInterests, setDynamicInterests] = useState<string[]>([]);
+  const [dynamicGoals, setDynamicGoals] = useState<string[]>([]);
+  const [dynamicEducation, setDynamicEducation] = useState<string[]>([]);
+  const [isConfigLoading, setIsConfigLoading] = useState(true);
+
+  useEffect(() => {
+    if (!firestore) return;
+    const configRef = doc(firestore, 'config', 'content');
+    const unsubscribe = onSnapshot(configRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setDynamicInterests(data.interests || INTEREST_OPTIONS);
+        setDynamicGoals(data.datingGoals || DATING_GOALS);
+        setDynamicEducation(data.educationLevels || EDUCATION_OPTIONS);
+      } else {
+        setDynamicInterests(INTEREST_OPTIONS);
+        setDynamicGoals(DATING_GOALS);
+        setDynamicEducation(EDUCATION_OPTIONS);
+      }
+      setIsConfigLoading(false);
+    });
+    return () => unsubscribe();
+  }, [firestore]);
 
   const groupDataMap = useMemo(() => {
     const map = new Map<string, { ru: string; en: string; id: number }>();
@@ -111,7 +136,7 @@ export default function EditProfilePage() {
 
     localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
 
-    if (user) {
+    if (user && firestore) {
       try {
         const userDocRef = doc(firestore, 'users', user.uid);
         await setDoc(userDocRef, updatedProfile, { merge: true });
@@ -213,8 +238,12 @@ export default function EditProfilePage() {
             <div className="space-y-1.5 p-4 bg-primary/5 rounded-xl border border-primary/10">
               <Label className="text-[9px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
               <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
-                <SelectTrigger className="rounded-xl bg-white border-0 h-11 font-bold px-4 shadow-sm"><SelectValue /></SelectTrigger>
-                <SelectContent className="rounded-xl border-0 shadow-2xl">{DATING_GOALS.map(goal => <SelectItem key={goal} value={goal} className="font-bold text-xs">{goal}</SelectItem>)}</SelectContent>
+                <SelectTrigger className="rounded-xl bg-white border-0 h-11 font-bold px-4 shadow-sm">
+                    {isConfigLoading ? <Loader2 size={14} className="animate-spin" /> : <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />}
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-0 shadow-2xl">
+                    {dynamicGoals.map(goal => <SelectItem key={goal} value={goal} className="font-bold text-xs">{goal}</SelectItem>)}
+                </SelectContent>
               </Select>
             </div>
 
@@ -243,7 +272,14 @@ export default function EditProfilePage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
-                <Select value={profile.education || ''} onValueChange={(val) => setProfile({...profile, education: val})}><SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger><SelectContent className="rounded-xl border-0 shadow-2xl">{EDUCATION_OPTIONS.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}</SelectContent></Select>
+                <Select value={profile.education || ''} onValueChange={(val) => setProfile({...profile, education: val})}>
+                    <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4">
+                        {isConfigLoading ? <Loader2 size={14} className="animate-spin" /> : <SelectValue />}
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-0 shadow-2xl">
+                        {dynamicEducation.map(opt => <SelectItem key={opt} value={opt} className="font-bold text-xs">{opt}</SelectItem>)}
+                    </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -251,9 +287,23 @@ export default function EditProfilePage() {
           <div className="space-y-3">
             <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
             <div className="flex flex-wrap gap-2">
-              {INTEREST_OPTIONS.map(interest => (
-                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={profile.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", profile.interests.includes(interest) ? "gradient-bg text-white shadow-md hover:brightness-110" : "bg-muted text-muted-foreground hover:bg-border")}>{t(interest)}</Badge>
-              ))}
+              {isConfigLoading ? (
+                  <Skeleton className="h-20 w-full rounded-xl" />
+              ) : (
+                dynamicInterests.map(interest => (
+                    <Badge 
+                        key={interest} 
+                        onClick={() => toggleInterest(interest)} 
+                        variant={profile.interests.includes(interest) ? "default" : "secondary"} 
+                        className={cn(
+                            "cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", 
+                            profile.interests.includes(interest) ? "gradient-bg text-white shadow-md hover:brightness-110" : "bg-muted text-muted-foreground hover:bg-border"
+                        )}
+                    >
+                        {t(interest)}
+                    </Badge>
+                ))
+              )}
             </div>
           </div>
 

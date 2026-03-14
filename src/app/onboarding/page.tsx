@@ -1,10 +1,9 @@
-
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { 
   ArrowRight, 
   Sparkles, 
@@ -15,7 +14,8 @@ import {
   Target,
   Search,
   VenetianMask,
-  Upload
+  Upload,
+  Loader2
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ import { generateProfileBio } from "@/ai/flows/ai-generate-profile-bio";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
 import { INTEREST_OPTIONS, DATING_GOALS } from "@/lib/constants";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const GENDER_OPTIONS = [
   { id: 'male', labelKey: 'onboarding.step1.male' },
@@ -51,6 +52,11 @@ export default function OnboardingPage() {
 
   const { user } = useUser();
   const firestore = useFirestore();
+
+  // Dynamic config from Firestore
+  const [dynamicInterests, setDynamicInterests] = useState<string[]>([]);
+  const [dynamicGoals, setDynamicGoals] = useState<string[]>([]);
+  const [isConfigLoading, setIsConfigLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     gender: "",
@@ -75,6 +81,23 @@ export default function OnboardingPage() {
       }));
     }
   }, [user]);
+
+  useEffect(() => {
+    if (!firestore) return;
+    const configRef = doc(firestore, 'config', 'content');
+    const unsubscribe = onSnapshot(configRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setDynamicInterests(data.interests || INTEREST_OPTIONS);
+        setDynamicGoals(data.datingGoals || DATING_GOALS);
+      } else {
+        setDynamicInterests(INTEREST_OPTIONS);
+        setDynamicGoals(DATING_GOALS);
+      }
+      setIsConfigLoading(false);
+    });
+    return () => unsubscribe();
+  }, [firestore]);
 
   const [isGeneratingBio, setIsGeneratingBio] = useState(false);
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
@@ -270,10 +293,10 @@ export default function OnboardingPage() {
                 </Label>
                 <Select value={formData.datingGoal} onValueChange={(val) => setFormData({...formData, datingGoal: val})}>
                   <SelectTrigger className="h-14 rounded-xl bg-muted/30 border-0 font-bold px-6">
-                    <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />
+                    {isConfigLoading ? <Loader2 size={14} className="animate-spin" /> : <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />}
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
-                    {DATING_GOALS.map(goal => <SelectItem key={goal} value={goal} className="font-bold py-3">{goal}</SelectItem>)}
+                    {dynamicGoals.map(goal => <SelectItem key={goal} value={goal} className="font-bold py-3">{goal}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -303,11 +326,15 @@ export default function OnboardingPage() {
               <p className="text-muted-foreground text-sm">{t('onboarding.step4.desc')}</p>
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
-              {INTEREST_OPTIONS.map(interest => (
-                <Badge key={interest} onClick={() => toggleInterest(interest)} variant={formData.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-4 py-2.5 rounded-xl transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", formData.interests.includes(interest) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground hover:bg-border")}>
-                  {t(interest)}
-                </Badge>
-              ))}
+              {isConfigLoading ? (
+                  <Skeleton className="h-32 w-full rounded-2xl" />
+              ) : (
+                dynamicInterests.map(interest => (
+                    <Badge key={interest} onClick={() => toggleInterest(interest)} variant={formData.interests.includes(interest) ? "default" : "secondary"} className={cn("cursor-pointer px-4 py-2.5 rounded-xl transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", formData.interests.includes(interest) ? "gradient-bg text-white shadow-md" : "bg-muted text-muted-foreground hover:bg-border")}>
+                      {t(interest)}
+                    </Badge>
+                ))
+              )}
             </div>
           </div>
         );
@@ -363,7 +390,7 @@ export default function OnboardingPage() {
       </header>
       <main className="flex-1 px-8 pt-4 pb-24 max-w-md mx-auto w-full">{renderStep()}</main>
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 bg-white/80 backdrop-blur-md">
-        <Button onClick={nextStep} disabled={formData.gender === "" && step === 1} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all">
+        <Button onClick={nextStep} disabled={(formData.gender === "" && step === 1) || isConfigLoading} className="w-full h-16 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all">
           {step === totalSteps ? t('button.start') : t('button.continue')} <ArrowRight size={20} className="ml-2" />
         </Button>
       </div>
