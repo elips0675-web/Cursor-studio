@@ -1,27 +1,6 @@
 import { PlaceHolderImages } from "./placeholder-images";
 
-export const SUPPORT_USER = {
-  id: 0,
-  name: 'Команда SwiftMatch',
-  name_en: 'SwiftMatch Team',
-  img: 'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=128&h=128&auto=format&fit=crop',
-  hint: 'support agent',
-  online: true,
-  distance: 0,
-  match: 100,
-  city: 'SwiftMatch HQ',
-  zodiac: 'Shield',
-  interests: ['Помощь', 'Безопасность', 'Обновления'],
-  bio: 'Официальный аккаунт команды SwiftMatch. Мы здесь, чтобы помочь вам 24/7 и сделать ваш опыт знакомств лучше.',
-  height: 0,
-  goal: 'Помощь пользователям',
-  gender: 'system',
-  lookingFor: 'all',
-  isSystem: true
-};
-
 export const ALL_DEMO_USERS = [
-  SUPPORT_USER,
   { id: 1, name: 'Анна', age: 24, img: PlaceHolderImages[0].imageUrl, hint: PlaceHolderImages[0].imageHint, online: true, distance: 2, match: 87, city: 'Москва', zodiac: 'Лев', interests: ['Фотография', 'Путешествия', 'Кофе', 'Музыка', 'Спорт'], bio: 'Люблю закаты, хороший кофе и интересные разговоры.', height: 172, goal: 'Серьезные отношения', gender: 'female', lookingFor: 'male' },
   
   // 5 Men for Anna
@@ -124,7 +103,7 @@ export const GROUP_CATEGORIES = [
       { id: 609, name_ru: 'Круизы', name_en: 'Cruises', members: 90, online: 15 }, { id: 610, name_ru: 'Гастро-туры', name_en: 'Food Tours', members: 160, online: 35 },
       { id: 611, name_ru: 'По России', name_en: 'Around Russia', members: 320, online: 65 }, { id: 612, name_ru: 'США и Канада', name_en: 'USA & Canada', members: 190, online: 38 },
       { id: 613, name_ru: 'Латинская Америка', name_en: 'Latin America', members: 140, online: 28 }, { id: 614, name_ru: 'Африка', name_en: 'Africa', members: 70, online: 12 },
-      { id: 615, 'name_ru': 'Работа в путешествии', 'name_en': 'Work & Travel', members: 210, online: 45 }, { id: 616, name_ru: 'С палатками', name_en: 'Camping', members: 170, online: 34 },
+      { id: 615, name_ru: 'Работа в путешествии', name_en: 'Work & Travel', members: 210, online: 45 }, { id: 616, name_ru: 'С палатками', name_en: 'Camping', members: 170, online: 34 },
       { id: 617, name_ru: 'Экотуризм', name_en: 'Ecotourism', members: 130, online: 26 }, { id: 618, name_ru: 'Города-миллионники', name_en: 'Big Cities', members: 380, online: 78 },
       { id: 619, name_ru: 'Острова', name_en: 'Islands', members: 230, online: 47 }, { id: 620, name_ru: 'Необычные отели', name_en: 'Unique Hotels', members: 110, online: 21 },
     ]

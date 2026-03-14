@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,9 +11,7 @@ import {
   LogOut, 
   Trash2,
   MapPin,
-  MessageSquare,
   ChevronRight,
-  HelpCircle,
   Mail,
   Info,
   Scale
@@ -226,7 +223,7 @@ export default function SettingsPage() {
           </section>
 
           <section className="space-y-4">
-            <h5 className="text-[10px] font-black uppercase tracking-[2px] text-muted-foreground">{t('settings.support') || 'Поддержка'}</h5>
+            <h5 className="text-[10px] font-black uppercase tracking-[2px] text-muted-foreground">{t('settings.about_app')}</h5>
             <div className="space-y-1">
               <div className="flex items-center justify-between py-3 border-b border-border/50 cursor-pointer hover:bg-muted/30 -mx-6 px-6 transition-colors" onClick={() => router.push('/about')}>
                 <div className="flex items-center gap-3">
@@ -236,30 +233,6 @@ export default function SettingsPage() {
                   <div>
                     <p className="text-sm font-bold">{t('settings.about_app')}</p>
                     <p className="text-xs text-muted-foreground">{t('settings.about_app_desc')}</p>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground" />
-              </div>
-              <div className="flex items-center justify-between py-3 border-b border-border/50 cursor-pointer hover:bg-muted/30 -mx-6 px-6 transition-colors" onClick={() => router.push('/faq')}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-500">
-                    <HelpCircle size={18} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">{t('faq.title') || 'Часто задаваемые вопросы'}</p>
-                    <p className="text-xs text-muted-foreground">{t('faq.description') || 'Ответы на популярные вопросы'}</p>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground" />
-              </div>
-              <div className="flex items-center justify-between py-3 border-b border-border/50 cursor-pointer hover:bg-muted/30 -mx-6 px-6 transition-colors" onClick={() => router.push('/support-chat')}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
-                    <MessageSquare size={18} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">{t('settings.support.chat_title') || 'Написать в поддержку'}</p>
-                    <p className="text-xs text-muted-foreground">{t('settings.support.chat_desc') || 'Чат с нашей командой'}</p>
                   </div>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground" />
@@ -285,5 +258,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    

@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -19,13 +18,11 @@ import {
   LogOut, 
   ChevronsLeft, 
   ChevronsRight, 
-  MessageSquare, 
   SlidersHorizontal,
   Languages,
   DollarSign,
   Package,
   Mail,
-  BookOpen,
   BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
@@ -152,18 +149,6 @@ export function AdminSidebar() {
                         <Link href="/admin/messaging">
                             <Mail />
                             <span>{t('admin.messaging.title')}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton
-                        asChild
-                        isActive={isActive('/support-chat')}
-                        tooltip="Support Chat"
-                    >
-                        <Link href="/support-chat">
-                            <MessageSquare />
-                            <span>Support Chat</span>
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

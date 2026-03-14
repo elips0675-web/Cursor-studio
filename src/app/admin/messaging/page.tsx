@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,9 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from '@/hooks/use-toast';
-import { Mail, Send, Loader2, ShieldCheck, MessageSquare, Users, Globe } from 'lucide-react';
+import { Mail, Send, Loader2, MessageSquare, Users, Globe } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
-import { SUPPORT_USER } from '@/lib/demo-data';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -58,12 +56,11 @@ export default function AdminMessagingPage() {
             channel: channel,
             createdAt: serverTimestamp(),
             senderId: currentUser?.uid || 'admin-system',
-            senderName: language === 'RU' ? SUPPORT_USER.name_ru : SUPPORT_USER.name_en
+            senderName: language === 'RU' ? 'Система' : 'System'
         };
 
         const broadcastsRef = collection(firestore, 'broadcasts');
 
-        // Реальная запись в Firestore без ожидания (оптимистично)
         addDoc(broadcastsRef, broadcastData)
             .then(() => {
                 toast({
@@ -94,7 +91,7 @@ export default function AdminMessagingPage() {
                     {t('admin.messaging.title')}
                 </CardTitle>
                 <CardDescription>{t('admin.messaging.description')}</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent className="space-y-6">
                 <Tabs defaultValue="app" className="w-full" onValueChange={setChannel}>
                     <TabsList className="grid w-full grid-cols-2 mb-6 h-12 bg-muted/50 p-1 rounded-xl">
@@ -107,22 +104,6 @@ export default function AdminMessagingPage() {
                     </TabsList>
 
                     <div className="space-y-6">
-                        <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm flex-shrink-0">
-                                <img src={SUPPORT_USER.img} alt="Support" className="w-full h-full object-cover" />
-                            </div>
-                            <div>
-                                <div className="flex items-center gap-1.5">
-                                    <h4 className="font-black text-sm">{language === 'RU' ? SUPPORT_USER.name_ru : SUPPORT_USER.name_en}</h4>
-                                    <ShieldCheck size={14} className="text-primary" />
-                                </div>
-                                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-                                    {channel === 'app' ? 'Системный отправитель' : 'Email SMTP Сервис'}
-                                </p>
-                            </div>
-                            <Badge variant="outline" className="ml-auto bg-white text-[9px] font-black uppercase tracking-tighter text-primary border-primary/20">Verified</Badge>
-                        </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-1.5">
@@ -163,7 +144,7 @@ export default function AdminMessagingPage() {
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 placeholder={channel === 'app' 
-                                    ? 'Текст сообщения, которое появится в чате ТП...' 
+                                    ? 'Текст системного сообщения...' 
                                     : 'Уважаемый пользователь, мы подготовили для вас...'}
                                 className="min-h-[200px] rounded-2xl p-4 bg-muted/30 border-0 focus-visible:ring-primary/20 font-medium"
                             />
@@ -175,7 +156,7 @@ export default function AdminMessagingPage() {
                 <div className="mr-auto">
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest italic opacity-60">
                         {channel === 'email' 
-                            ? 'Email рассылки будут сохранены в историю и отправлены через сервис' 
+                            ? 'Email рассылки отправляются через внешний сервис' 
                             : 'Сообщения в приложении записываются в базу данных'}
                     </p>
                 </div>
