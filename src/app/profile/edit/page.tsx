@@ -75,18 +75,12 @@ export default function EditProfilePage() {
         setProfile((prev: any) => ({ 
           ...prev, 
           ...loadedProfile,
+          // Синхронизация имен полей для Анны
           displayName: loadedProfile.displayName || loadedProfile.name || prev.displayName 
         }));
         if(loadedProfile.photoURL) {
           setMainPhoto(loadedProfile.photoURL);
         }
-      } catch(e) {}
-    }
-    const savedGallery = localStorage.getItem('userProfileGallery');
-    if (savedGallery) {
-      try {
-        const photos = JSON.parse(savedGallery);
-        if (photos.length > 0) setMainPhoto(photos[0]);
       } catch(e) {}
     }
   }, []);
@@ -116,7 +110,6 @@ export default function EditProfilePage() {
       photoURL: mainPhoto,
     };
 
-    // Всегда сохраняем локально для демо-режима и немедленного обновления UI
     localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
 
     if (user) {
@@ -294,7 +287,7 @@ export default function EditProfilePage() {
                 </div>
             </div>
         </div>
-        <Button onClick={handleSave} className="w-full h-14 rounded-xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 hover:brightness-110">Сохранить</Button>
+        <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 hover:brightness-110">Сохранить</Button>
       </main>
     </div>
   );

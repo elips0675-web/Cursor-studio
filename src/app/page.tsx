@@ -68,7 +68,11 @@ export default function Home() {
   const [popularGroups, setPopularGroups] = useState<any[]>([]);
 
   useEffect(() => {
-    setIsMounted(true);
+    // Ждем полной монтировки клиента, чтобы избежать битого контента
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 500);
+
     const saved = localStorage.getItem('userProfile');
     if (saved) {
       try {
@@ -84,6 +88,8 @@ export default function Home() {
       ...cat,
       onlineCount: Math.floor(Math.random() * 50) + 10
     })));
+
+    return () => clearTimeout(timer);
   }, []);
 
   const topUsers = useMemo(() => {
@@ -118,9 +124,10 @@ export default function Home() {
     router.push('/search?mode=autosearch');
   }, [currentUser, router]);
 
+  // Чистый Splash Screen до полной готовности
   if (!isMounted) {
     return (
-      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white">
+      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -132,6 +139,11 @@ export default function Home() {
           <h1 className="text-4xl font-black font-headline tracking-tighter gradient-text">
             SwiftMatch
           </h1>
+          <div className="mt-8 flex gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
+            <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.4s]"></div>
+          </div>
         </motion.div>
       </div>
     );
@@ -181,6 +193,7 @@ export default function Home() {
           <TopOfWeekSection topUsers={topUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
 
+        {/* Популярные группы ПЕРЕМЕЩЕНЫ НАД РЕКОМЕНДАЦИЯМИ */}
         <section className="px-5 pt-10">
           <div className="flex items-center justify-between mb-4 px-1">
             <div className="flex items-center gap-2">

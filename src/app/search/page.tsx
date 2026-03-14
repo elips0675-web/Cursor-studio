@@ -39,6 +39,11 @@ const cardVariants = {
 
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
 
+/**
+ * Логика Автопоиска:
+ * 1. Фильтрация по базе (возраст, пол, город).
+ * 2. Ранжирование: Расстояние -> Цель -> Совпадение интересов.
+ */
 function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
     if (!filters) return [];
     const { ageRange, selectedCity, distance, genderPref, selectedDatingGoal, selectedInterests } = filters;
@@ -52,21 +57,29 @@ function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
           return matchesAge && matchesCity && matchesGender && matchesDistance;
         })
         .map(user => {
-          let score = 0;
           const commonInterests = user.interests.filter((i: string) => selectedInterests.includes(i)).length;
           const hasMatchingGoal = selectedDatingGoal !== "all" && user.goal === selectedDatingGoal;
-
-          if (hasMatchingGoal) {
-            score += 1000;
-          }
-          score += commonInterests * 100;
           
+          // Для попадания в кандидаты нужно либо совпадение цели, либо общие интересы
           const isCandidate = hasMatchingGoal || (commonInterests > 0);
 
-          return { ...user, score, isCandidate };
+          return { ...user, isCandidate, commonInterests, hasMatchingGoal };
         })
         .filter(user => user.isCandidate)
-        .sort((a, b) => b.score - a.score);
+        .sort((a, b) => {
+            // ПРИОРИТЕТ 1: Расстояние (сначала ближайшие)
+            if (a.distance !== b.distance) {
+                return a.distance - b.distance;
+            }
+            
+            // ПРИОРИТЕТ 2: Совпадение цели (сначала совпадающие)
+            if (a.hasMatchingGoal !== b.hasMatchingGoal) {
+                return a.hasMatchingGoal ? -1 : 1;
+            }
+            
+            // ПРИОРИТЕТ 3: Количество интересов (сначала больше)
+            return b.commonInterests - a.commonInterests;
+        });
 }
 
 function SearchContent() {
@@ -163,13 +176,13 @@ function SearchContent() {
     setReportDescription('');
   };
 
-  if (isLoading) return <div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>;
+  if (isLoading) return <div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-2xl" /></div>;
 
   if (!user) return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center h-full">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center h-full bg-[#f8f9fb]">
       <Sparkles size={48} className="text-muted-foreground opacity-20 mb-4" />
       <h4 className="text-xl font-black uppercase">{language === 'RU' ? 'Анкеты закончились' : 'No more profiles'}</h4>
-      <Button variant="outline" onClick={() => router.push('/')} className="mt-8 rounded-full px-8 uppercase text-[10px] font-black">На главную</Button>
+      <Button variant="outline" onClick={() => router.push('/')} className="mt-8 rounded-xl px-8 uppercase text-[10px] font-black">На главную</Button>
     </div>
   );
 
@@ -198,7 +211,7 @@ function SearchContent() {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 }
               }}
-              className="absolute w-full h-full bg-white rounded-[2.5rem] overflow-hidden app-shadow border-4 border-white cursor-pointer group"
+              className="absolute w-full h-full bg-white rounded-2xl overflow-hidden app-shadow border-4 border-white cursor-pointer group"
               onClick={() => router.push(`/user?id=${user.id}`)}
             >
               <Image 
@@ -320,5 +333,5 @@ function SearchContent() {
 }
 
 export default function SearchPage() {
-    return <Suspense fallback={<div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-[2.5rem]" /></div>}><SearchContent /></Suspense>;
+    return <Suspense fallback={<div className="flex-1 flex items-center justify-center h-full"><Skeleton className="w-[90%] h-[70vh] rounded-2xl" /></div>}><SearchContent /></Suspense>;
 }
