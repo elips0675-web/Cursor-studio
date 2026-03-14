@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -14,7 +15,8 @@ import {
   Target,
   Stars,
   Upload,
-  Languages
+  Languages,
+  Search
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";

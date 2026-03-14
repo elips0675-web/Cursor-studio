@@ -180,7 +180,7 @@ export default function Home() {
           <TopOfWeekSection topUsers={topUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
 
-        {/* Popular Groups Section - Moved here */}
+        {/* Popular Groups Section */}
         <section className="px-5 pt-8">
           <div className="flex items-center justify-between mb-4 px-1">
             <h2 className="font-black text-lg font-headline tracking-tight">Популярные группы</h2>
@@ -193,13 +193,13 @@ export default function Home() {
                 <Link 
                   href={`/groups/${group.id}`} 
                   key={group.id} 
-                  className="bg-white p-4 rounded-xl app-shadow border border-white hover:bg-primary/5 transition-all flex flex-col items-center text-center gap-2 group"
+                  className="bg-white rounded-xl app-shadow border border-white overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
-                    <Icon size={20} />
+                  <div className="h-16 w-full bg-muted flex items-center justify-center">
+                    <Icon size={20} className="text-orange-500 group-hover:scale-110 transition-transform" />
                   </div>
-                  <div>
-                    <h4 className="font-bold text-xs leading-tight">{language === 'RU' ? group.name_ru : group.name_en}</h4>
+                  <div className="p-3 text-center">
+                    <h4 className="font-bold text-xs leading-tight truncate">{language === 'RU' ? group.name_ru : group.name_en}</h4>
                     <p className="text-[9px] text-green-600 font-bold uppercase mt-1 flex items-center justify-center gap-1">
                       <span className="w-1 h-1 bg-current rounded-full"></span>
                       {group.onlineCount} {t('chats.online')}
