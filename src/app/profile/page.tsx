@@ -60,11 +60,15 @@ export default function ProfilePage() {
     setIsMounted(true);
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
-      const parsed = JSON.parse(savedProfile);
-      setProfile({
-        ...parsed,
-        displayName: parsed.displayName || parsed.name || "Пользователь"
-      });
+      try {
+        const parsed = JSON.parse(savedProfile);
+        setProfile({
+          ...parsed,
+          displayName: parsed.displayName || parsed.name || "Пользователь"
+        });
+      } catch (e) {
+        console.error("Failed to parse profile", e);
+      }
     } else {
       setProfile({
         displayName: "Анна",
@@ -90,8 +94,6 @@ export default function ProfilePage() {
       localStorage.setItem('userProfileGallery', JSON.stringify(defaultPhotos));
     }
   }, []);
-
-  const earnedTitles = useMemo(() => getUserTitles(profile, language), [profile, language]);
 
   const handleDeletePhoto = () => {
     if (photoToDelete === null) return;
@@ -149,41 +151,41 @@ export default function ProfilePage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
-                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Данные и Интересы</h4>
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Данные и Интересы</h4>
               </div>
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <span className="text-[8px] font-black uppercase text-muted-foreground ml-1">Мой пол</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[10px] gap-2">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Мой пол</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <VenetianMask size={12} className="text-primary" />
                     {profile.gender === 'female' ? 'Женщина' : 'Мужчина'}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[8px] font-black uppercase text-muted-foreground ml-1">Ищу</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[10px] gap-2">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Ищу</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <Search size={12} className="text-primary" />
                     {profile.lookingFor === 'male' ? 'Мужчину' : profile.lookingFor === 'female' ? 'Женщину' : 'Всех'}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[8px] font-black uppercase text-muted-foreground ml-1">Зодиак</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[10px] gap-2">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Зодиак</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <ZodiacIcon sign={profile.zodiac} />
                     {profile.zodiac}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[8px] font-black uppercase text-muted-foreground ml-1">Рост</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[10px] gap-2">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Рост</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <Ruler size={12} className="text-primary" />
                     {profile.height} см
                   </Badge>
                 </div>
                 <div className="col-span-2 space-y-1">
-                  <span className="text-[8px] font-black uppercase text-muted-foreground ml-1">Цель</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[10px] gap-2 text-primary">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
                     <Target size={12} />
                     {profile.datingGoal}
                   </Badge>
@@ -194,7 +196,7 @@ export default function ProfilePage() {
                 {profile.interests?.map((interest: string) => {
                   const Icon = interestIconsMap[interest] || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-3 font-bold text-[10px] rounded-lg transition-all hover:bg-muted/70 shadow-sm">
+                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-3 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70 shadow-sm">
                       <Icon size={12} className="text-primary" /> {interest}
                     </Badge>
                   );
@@ -207,13 +209,12 @@ export default function ProfilePage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
-                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
               </div>
               <p className="text-xs text-foreground/80 leading-relaxed font-medium italic">"{profile.bio}"</p>
             </div>
           </div>
 
-          {/* GALLERY SECTION (Transferred from Edit with Slider added) */}
           <div className="mt-6 bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-8">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
@@ -238,7 +239,7 @@ export default function ProfilePage() {
                     </button>
                   </div>
 
-                  {/* Top Right Trash Icon (Editable feature transferred) */}
+                  {/* Top Right Trash Icon */}
                   <button 
                     onClick={() => setPhotoToDelete(idx)}
                     className="absolute top-2 right-2 w-8 h-8 rounded-xl bg-white shadow-lg flex items-center justify-center text-destructive hover:scale-110 active:scale-95 transition-all z-20 opacity-0 group-hover:opacity-100"

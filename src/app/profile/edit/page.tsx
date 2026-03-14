@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
@@ -68,11 +69,13 @@ export default function EditProfilePage() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.interests) {
-            setDynamicInterests(data.interests);
-            // Reactive cleanup: ensure profile interests match global config
+            const globalInterests = data.interests as string[];
+            setDynamicInterests(globalInterests);
+            
+            // REAKTIVE CLEANUP: If an interest was deleted in Admin, remove it from profile
             setProfile((prev: any) => ({
                 ...prev,
-                interests: prev.interests.filter((i: string) => data.interests.includes(i))
+                interests: prev.interests.filter((i: string) => globalInterests.includes(i))
             }));
         }
         if (data.datingGoals) setDynamicGoals(data.datingGoals);
@@ -131,9 +134,11 @@ export default function EditProfilePage() {
 
   const handleAddCustomInterest = async () => {
     if (!customInterest.trim() || !firestore) return;
-    if (dynamicInterests.includes(customInterest.trim())) {
-        if (!profile.interests.includes(customInterest.trim())) {
-            toggleInterest(customInterest.trim());
+    const trimmedInterest = customInterest.trim();
+    
+    if (dynamicInterests.includes(trimmedInterest)) {
+        if (!profile.interests.includes(trimmedInterest)) {
+            toggleInterest(trimmedInterest);
         }
         setCustomInterest("");
         return;
@@ -141,11 +146,16 @@ export default function EditProfilePage() {
 
     setIsAddingInterest(true);
     try {
-        const updatedList = [...dynamicInterests, customInterest.trim()];
+        const updatedList = [...dynamicInterests, trimmedInterest];
         const configRef = doc(firestore, 'config', 'content');
         await setDoc(configRef, { interests: updatedList }, { merge: true });
         
-        // No need to manually setProfile interests here as onSnapshot will handle it
+        // Toggle it for current user too
+        setProfile((prev: any) => ({
+            ...prev,
+            interests: [...prev.interests, trimmedInterest]
+        }));
+        
         setCustomInterest("");
         toast({ title: "Интерес добавлен и выбран" });
     } catch (e) {
@@ -234,13 +244,13 @@ export default function EditProfilePage() {
 
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Имя</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Имя</Label>
               <Input value={profile.displayName || ''} onChange={e => setProfile({...profile, displayName: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Ваш пол</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Ваш пол</Label>
                 <Select value={profile.gender || ''} onValueChange={(val) => setProfile({...profile, gender: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
@@ -250,7 +260,7 @@ export default function EditProfilePage() {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1">Кого ищу</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1">Кого ищу</Label>
                 <Select value={profile.lookingFor || ''} onValueChange={(val) => setProfile({...profile, lookingFor: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
@@ -263,7 +273,7 @@ export default function EditProfilePage() {
             </div>
             
             <div className="space-y-1.5 p-4 bg-primary/5 rounded-xl border border-primary/10">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
               <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
                 <SelectTrigger className="rounded-xl bg-white border-0 h-11 font-bold px-4 shadow-sm">
                     <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />
@@ -276,29 +286,29 @@ export default function EditProfilePage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Возраст</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Возраст</Label>
                 <Input type="number" value={profile.age || ''} onChange={e => setProfile({...profile, age: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Рост</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Рост</Label>
                 <Input type="number" value={profile.height || ''} onChange={e => setProfile({...profile, height: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Город</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Город</Label>
               <div className="relative"><MapPin size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" /><Input value={profile.city || ''} onChange={e => setProfile({...profile, city: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4 focus-visible:ring-primary/20" /></div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Профессия</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Профессия</Label>
               <div className="relative"><Briefcase size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" /><Input value={profile.work || ''} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4 focus-visible:ring-primary/20" placeholder="Напр. Дизайнер" /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
                 <Select value={profile.zodiac || ''} onValueChange={(val) => setProfile({...profile, zodiac: val})}><SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger><SelectContent className="rounded-xl border-0 shadow-2xl">{ZODIAC_SIGNS.map(sign => <SelectItem key={sign} value={sign} className="font-bold text-xs">{t(sign)}</SelectItem>)}</SelectContent></Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
                 <Select value={profile.education || ''} onValueChange={(val) => setProfile({...profile, education: val})}>
                     <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4">
                         <SelectValue />
@@ -312,7 +322,7 @@ export default function EditProfilePage() {
           </div>
 
           <div className="space-y-4">
-            <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
+            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
             <div className="flex flex-wrap gap-2">
               {dynamicInterests.map(interest => (
                   <Badge 
@@ -320,7 +330,7 @@ export default function EditProfilePage() {
                       onClick={() => toggleInterest(interest)} 
                       variant={profile.interests.includes(interest) ? "default" : "secondary"} 
                       className={cn(
-                          "cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[10px] uppercase tracking-tight shadow-sm", 
+                          "cursor-pointer px-3 py-1.5 rounded-lg transition-all border-0 font-bold text-[11px] uppercase tracking-tight shadow-sm", 
                           profile.interests.includes(interest) ? "gradient-bg text-white shadow-md hover:brightness-110" : "bg-muted text-muted-foreground hover:bg-border"
                       )}
                   >
@@ -350,7 +360,7 @@ export default function EditProfilePage() {
           <div className="h-px bg-border/50 my-6"></div>
 
             <div className="space-y-3">
-                <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1.5"><Users size={12}/> Мои группы</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1.5"><Users size={12}/> Мои группы</Label>
                 <div className="flex flex-wrap gap-2">
                 {(profile.joinedGroups && profile.joinedGroups.length > 0) ? (
                     profile.joinedGroups.map((groupName: string) => {
@@ -359,7 +369,7 @@ export default function EditProfilePage() {
                     const displayName = language === 'RU' ? groupInfo.ru : groupInfo.en;
 
                     return (
-                        <Badge key={groupName} variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 border gap-2 py-1.5 px-3 font-bold text-[10px] rounded-lg shadow-sm hover:bg-blue-200 transition-colors">
+                        <Badge key={groupName} variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 border gap-2 py-1.5 px-3 font-bold text-[11px] rounded-lg shadow-sm hover:bg-blue-200 transition-colors">
                         <Users size={12} />
                         <span>{displayName}</span>
                         <button

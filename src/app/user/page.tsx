@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, Suspense, useMemo } from "react";
@@ -86,8 +87,8 @@ const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.rea
 
 const LifestyleItem = React.memo(({ label, value, icon: Icon, className }: { label: string, value: any, icon?: any, className?: string }) => (
     <div className={cn("flex flex-col gap-1", className)}>
-      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{label}</span>
-      <Badge variant="secondary" className="bg-muted/40 text-foreground border-0 gap-1.5 py-2 px-3 font-bold text-[10px] rounded-lg shadow-sm justify-start w-full transition-all hover:bg-muted/60">
+      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{label}</span>
+      <Badge variant="secondary" className="bg-muted/40 text-foreground border-0 gap-1.5 py-2 px-3 font-bold text-[11px] rounded-lg shadow-sm justify-start w-full transition-all hover:bg-muted/60">
         {Icon && (typeof Icon === 'string' ? <ZodiacIcon sign={Icon} /> : <Icon size={12} className="text-primary/70" />)}
         <span className="truncate">{value}</span>
       </Badge>
@@ -210,7 +211,7 @@ function UserProfileContent() {
                 </h3>
              </div>
              <p className="text-muted-foreground text-sm font-bold flex items-center gap-1.5 uppercase tracking-widest">
-                <MapPin size={14} className="text-primary" /> {language === 'RU' ? user.city : 'Moscow'} • {user.distance} км {language === 'RU' ? 'от вас' : 'from you'}
+                <MapPin size={14} className="text-primary" /> {language === 'RU' ? user.city : 'Москва'} • {user.distance} км {language === 'RU' ? 'от вас' : 'from you'}
              </p>
           </div>
         </div>
