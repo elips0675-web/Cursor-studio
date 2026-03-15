@@ -171,7 +171,24 @@ export default function ProfilePage() {
           </div>
 
           <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-6">
-            {/* О себе Section - Now at the Top */}
+            {/* Звания Section - NOW AT THE TOP */}
+            {earnedTitles.length > 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <Trophy size={16} className="text-primary" />
+                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {earnedTitles.map((title) => (
+                    <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm", title.color)}>
+                      <Star size={12} fill="currentColor" className="opacity-70" /> {title.displayName}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* О себе Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
@@ -227,19 +244,6 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
               </div>
-
-              {earnedTitles.length > 0 && (
-                <div className="pt-2">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1 block mb-2">Звание</span>
-                  <div className="flex flex-wrap gap-2">
-                    {earnedTitles.map((title) => (
-                      <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm", title.color)}>
-                        <Star size={12} fill="currentColor" className="opacity-70" /> {title.displayName}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               <div className="pt-2 flex flex-wrap gap-2">
                 {profile.interests?.map((interest: string) => {

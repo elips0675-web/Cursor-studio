@@ -219,20 +219,10 @@ function UserProfileContent() {
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
-            {/* О себе Section - Now at the Top */}
-            <div>
-              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
-              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
-                "{user.bio}"
-              </p>
-            </div>
-
-            <div className="h-px bg-border/50"></div>
-
-            {/* Звания (if any) */}
+            {/* Звания (NOW AT THE TOP) */}
             {earnedTitles.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4></div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-2"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4></div>
                 <div className="flex flex-wrap gap-2">
                   {earnedTitles.map((title) => (
                     <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm transition-all hover:scale-105", title.color)}>
@@ -242,6 +232,16 @@ function UserProfileContent() {
                 </div>
               </div>
             )}
+
+            {/* О себе Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
+              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
+                "{user.bio}"
+              </p>
+            </div>
+
+            <div className="h-px bg-border/50"></div>
             
             {/* Данные Section */}
             <div>
