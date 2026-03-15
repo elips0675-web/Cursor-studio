@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -154,7 +153,6 @@ export default function ProfilePage() {
       <main className="flex-1 overflow-y-auto pb-24 px-5">
         <div className="h-24 gradient-bg relative -mx-5 mb-10">
           <div className="absolute top-4 right-6 flex gap-2">
-            {/* Added FAQ Button near Settings */}
             <Link href="/faq" className="text-white/90 p-2 bg-black/10 rounded-full backdrop-blur-md transition-all active:scale-95"><HelpCircle size={18} /></Link>
             <Link href="/settings" className="text-white/90 p-2 bg-black/10 rounded-full backdrop-blur-md transition-all active:scale-95"><Settings size={18} /></Link>
           </div>
@@ -173,6 +171,18 @@ export default function ProfilePage() {
           </div>
 
           <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-6">
+            {/* О себе Section - Now at the Top */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
+              </div>
+              <p className="text-xs text-foreground/80 leading-relaxed font-medium italic">"{profile.bio}"</p>
+            </div>
+
+            <div className="h-px bg-border/50"></div>
+
+            {/* Данные и Интересы Section */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
@@ -208,13 +218,6 @@ export default function ProfilePage() {
                     {profile.height} см
                   </Badge>
                 </div>
-                <div className="col-span-2 space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель</span>
-                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
-                    <Target size={12} />
-                    {profile.datingGoal}
-                  </Badge>
-                </div>
               </div>
 
               {earnedTitles.length > 0 && (
@@ -240,16 +243,15 @@ export default function ProfilePage() {
                   );
                 })}
               </div>
-            </div>
 
-            <div className="h-px bg-border/50"></div>
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
-                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4>
+              {/* Цель знакомства Section - Now Under Interests */}
+              <div className="pt-2 space-y-1">
+                <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель знакомства</span>
+                <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
+                  <Target size={12} />
+                  {profile.datingGoal}
+                </Badge>
               </div>
-              <p className="text-xs text-foreground/80 leading-relaxed font-medium italic">"{profile.bio}"</p>
             </div>
           </div>
 

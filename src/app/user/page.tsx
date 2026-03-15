@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, Suspense, useMemo } from "react";
@@ -218,6 +217,17 @@ function UserProfileContent() {
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
+            {/* О себе Section - Now at the Top */}
+            <div>
+              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
+              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
+                "{user.bio}"
+              </p>
+            </div>
+
+            <div className="h-px bg-border/50"></div>
+
+            {/* Звания (if any) */}
             {earnedTitles.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4></div>
@@ -230,25 +240,14 @@ function UserProfileContent() {
                 </div>
               </div>
             )}
-
-            <div className="h-px bg-border/50"></div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
-              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
-                "{user.bio}"
-              </p>
-            </div>
             
-            <div className="h-px bg-border/50"></div>
-            
+            {/* Данные Section */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                  <User size={16} className="text-primary" />
                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-                <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} className="col-span-2" />
                 <LifestyleItem label={t('profile.label.zodiac')} value={user.zodiac} icon={user.zodiac} />
                 <LifestyleItem label={t('profile.label.height')} value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} icon={Ruler} />
                 <LifestyleItem label={t('profile.label.education')} value={language === 'RU' ? 'Высшее' : 'Higher'} icon={GraduationCap} />
@@ -258,6 +257,7 @@ function UserProfileContent() {
             
             <div className="h-px bg-border/50"></div>
 
+            {/* Интересы Section */}
             <div>
               <div className="flex items-center gap-2 mb-4"><Star size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4></div>
               <div className="flex flex-wrap gap-2">
@@ -268,6 +268,13 @@ function UserProfileContent() {
                   );
                 })}
               </div>
+            </div>
+
+            <div className="h-px bg-border/50"></div>
+
+            {/* Цель знакомства Section - Now Under Interests */}
+            <div>
+              <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} className="w-full" />
             </div>
           </div>
 
