@@ -1,7 +1,10 @@
+
 "use client";
 
 import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import dynamic from 'next/dynamic';
 import { 
   MapPin, 
@@ -47,16 +50,13 @@ import {
   VenetianMask,
   Search
 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
 import { cn, getUserTitles } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { useFeatureFlags } from "@/context/feature-flags-context";
+import { motion, AnimatePresence } from "framer-motion";
 import { ALL_DEMO_USERS } from "@/lib/demo-data";
 import { ZodiacIcon } from "@/components/shared/zodiac-icon";
 import {
@@ -82,6 +82,7 @@ const HeartConfetti = dynamic(() => import("@/components/animations/heart-confet
 
 const interestIcons: Record<string, any> = {
     "Фотография": Camera, "Путешествия": Globe, "Кофе": Coffee, "Музыка": Music, "Спорт": Dumbbell, "Искусство": Palette, "Кино": Film, "Йога": Flower2, "Бизнес": Briefcase, "Игры": Gamepad2, "IT технологии": Cpu, "Рыбалка": Anchor, "Туризм": Map, "Садоводство": Sprout, "Чтение": BookOpen, "Книги": BookOpen, "Рукоделие": Scissors, "Наука": FlaskConical, "Авто": Car, "Животные": Dog, "Кулинария": ChefHat, "Творчество": Brush, "Природа": Sun, "Кошки": Dog, "IT": Cpu, "Дизайн": Palette, "Горы": Mountain, "Мода": Sparkles, "Вино": Wine,
+    "Photography": Camera, "Travel": Globe, "Sports": Dumbbell, "Art": Palette, "Movies": Film, "Yoga": Flower2, "Business": Briefcase, "Gaming": Gamepad2
 };
 
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
@@ -89,10 +90,10 @@ const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.rea
 const LifestyleItem = React.memo(({ label, value, icon: Icon, className }: { label: string, value: any, icon?: any, className?: string }) => (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{label}</span>
-      <Badge variant="secondary" className="bg-muted/40 text-foreground border-0 gap-2 py-2.5 px-3.5 font-bold text-[11px] rounded-lg shadow-sm justify-start w-full transition-all hover:bg-muted/60">
+      <div className="bg-muted/40 text-foreground border-0 flex items-center gap-2 py-2.5 px-3.5 rounded-lg shadow-sm w-full transition-all hover:bg-muted/60">
         {Icon && (typeof Icon === 'string' ? <ZodiacIcon sign={Icon} /> : <Icon size={14} className="text-primary/70" />)}
-        <span className="truncate">{value}</span>
-      </Badge>
+        <span className="text-[11px] font-bold truncate">{value}</span>
+      </div>
     </div>
   ));
 LifestyleItem.displayName = "LifestyleItem";
@@ -109,9 +110,7 @@ function UserProfileContent() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
-
   const [matchUser, setMatchUser] = useState<any>(null);
-
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
@@ -124,17 +123,6 @@ function UserProfileContent() {
       } catch (e) {}
     }
   }, []);
-
-  const handleReportSubmit = () => {
-    if (!reportReason) {
-      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
-      return;
-    }
-    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user.name}.` });
-    setIsReportDialogOpen(false);
-    setReportReason('');
-    setReportDescription('');
-  };
 
   useEffect(() => {
     if (user && user.isSystem) {
@@ -154,16 +142,6 @@ function UserProfileContent() {
     setPhotos([user.img, ...randomPhotos]);
   }, [user, router]);
 
-  useEffect(() => {
-    const savedIncognito = localStorage.getItem('incognito-mode');
-    if (savedIncognito && JSON.parse(savedIncognito)) {
-        toast({
-            title: t('incognito.toast.title'),
-            description: t('incognito.toast.description'),
-        });
-    }
-  }, [t]);
-
   const earnedTitles = useMemo(() => getUserTitles(user, language), [user, language]);
 
   const handleLike = () => {
@@ -171,6 +149,17 @@ function UserProfileContent() {
     if (Math.random() > 0.7) {
       setMatchUser(user);
     }
+  };
+
+  const handleReportSubmit = () => {
+    if (!reportReason) {
+      toast({ variant: 'destructive', title: t('report.toast.no_reason_title'), description: t('report.toast.no_reason_desc') });
+      return;
+    }
+    toast({ title: t('report.toast.success_title'), description: `${t('report.toast.success_desc')} ${user.name}.` });
+    setIsReportDialogOpen(false);
+    setReportReason('');
+    setReportDescription('');
   };
 
   if (!user || user.isSystem) return null;
@@ -182,7 +171,7 @@ function UserProfileContent() {
             variant="ghost" 
             size="icon" 
             onClick={() => router.back()} 
-            className="rounded-full bg-white/40 backdrop-blur-md text-foreground hover:bg-white/60 border border-white/40 shadow-sm"
+            className="rounded-full bg-white/40 backdrop-blur-md text-foreground hover:bg-white/60 border border-white/40 shadow-sm transition-all"
           >
             <ChevronLeft size={24} />
           </Button>
@@ -194,7 +183,7 @@ function UserProfileContent() {
               variant="ghost" 
               size="icon" 
               onClick={() => setIsReportDialogOpen(true)}
-              className="rounded-full bg-white/40 backdrop-blur-md text-destructive hover:bg-white/60 border border-white/40 shadow-sm"
+              className="rounded-full bg-white/40 backdrop-blur-md text-destructive hover:bg-white/60 border border-white/40 shadow-sm transition-all"
             >
               <Flag size={20} />
             </Button>
@@ -205,13 +194,11 @@ function UserProfileContent() {
         <div className="relative aspect-[4/3] w-full">
           <Image src={user.img} alt={user.name} fill sizes="100vw" className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fb] via-transparent to-black/30"></div>
-          <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
-             <div className="flex items-center gap-2">
-                <h3 className="text-3xl font-black font-headline text-foreground tracking-tight flex items-center gap-2">
-                  {user.name}, {user.age} <CheckCircle2 size={24} className="text-primary" fill="currentColor" />
-                </h3>
-             </div>
-             <p className="text-muted-foreground text-sm font-bold flex items-center gap-1.5 uppercase tracking-widest">
+          <div className="absolute bottom-0 left-0 right-0 p-6 space-y-2">
+             <h3 className="text-3xl font-black font-headline text-foreground tracking-tight flex items-center gap-2">
+               {user.name}, {user.age} <CheckCircle2 size={24} className="text-primary" fill="currentColor" />
+             </h3>
+             <p className="text-muted-foreground text-[11px] font-black flex items-center gap-1.5 uppercase tracking-[0.15em]">
                 <MapPin size={14} className="text-primary" /> {user.city} • {user.distance} {language === 'RU' ? 'км' : 'km'} {t('user.from_you')}
              </p>
           </div>
@@ -219,13 +206,17 @@ function UserProfileContent() {
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
           <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
-            {/* Звания (NOW AT THE TOP) */}
+            
+            {/* 1. Звания (Top of card) */}
             {earnedTitles.length > 0 && (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 mb-2"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.rank')}</h4></div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Trophy size={16} className="text-primary" />
+                  <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.rank')}</h4>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {earnedTitles.map((title) => (
-                    <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm transition-all hover:scale-105", title.color)}>
+                    <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm transition-transform hover:scale-105", title.color)}>
                       <Star size={12} fill="currentColor" className="opacity-70" /> {title.displayName}
                     </Badge>
                   ))}
@@ -233,60 +224,103 @@ function UserProfileContent() {
               </div>
             )}
 
-            {/* О себе Section */}
-            <div>
-              <div className="flex items-center gap-2 mb-3"><Info size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h4></div>
-              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic">
+            {/* 2. О себе (Below titles) */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Info size={16} className="text-primary" />
+                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.about')}</h4>
+              </div>
+              <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic pl-1 border-l-2 border-primary/10">
                 "{user.bio}"
               </p>
             </div>
 
             <div className="h-px bg-border/50"></div>
             
-            {/* Данные Section */}
-            <div>
-              <div className="flex items-center gap-2 mb-4">
+            {/* 3. Lifestyle Grid (Gender, Looking for, Goal, etc.) */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
                  <User size={16} className="text-primary" />
-                 <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
+                 <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-                <LifestyleItem label={t('profile.label.gender')} value={user.gender === 'female' ? (language === 'RU' ? 'Женщина' : 'Female') : (language === 'RU' ? 'Мужчина' : 'Male')} icon={VenetianMask} />
-                <LifestyleItem label={t('profile.label.looking_for')} value={user.lookingFor === 'male' ? (language === 'RU' ? 'Мужчину' : 'Men') : user.lookingFor === 'female' ? (language === 'RU' ? 'Женщину' : 'Women') : (language === 'RU' ? 'Всех' : 'All')} icon={Search} />
-                <LifestyleItem label={t('profile.label.goal')} value={user.goal} icon={Target} />
-                <LifestyleItem label={t('profile.label.zodiac')} value={t(user.zodiac)} icon={user.zodiac} />
-                <LifestyleItem label={t('profile.label.height')} value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} icon={Ruler} />
-                <LifestyleItem label={t('profile.label.education')} value={language === 'RU' ? 'Высшее' : 'Higher'} icon={GraduationCap} />
-                <LifestyleItem label={t('profile.label.job')} value={language === 'RU' ? 'Дизайнер' : 'Designer'} icon={Briefcase} />
+                {/* Column 1: Gender, Goal, Height, Education */}
+                <div className="space-y-4">
+                  <LifestyleItem 
+                    label={t('profile.label.gender')} 
+                    value={user.gender === 'female' ? t('onboarding.step1.female') : t('onboarding.step1.male')} 
+                    icon={VenetianMask} 
+                  />
+                  <LifestyleItem 
+                    label={t('profile.label.goal')} 
+                    value={user.goal} 
+                    icon={Target} 
+                  />
+                  <LifestyleItem 
+                    label={t('profile.label.height')} 
+                    value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} 
+                    icon={Ruler} 
+                  />
+                  <LifestyleItem 
+                    label={t('profile.label.education')} 
+                    value={language === 'RU' ? 'Высшее' : 'Higher'} 
+                    icon={GraduationCap} 
+                  />
+                </div>
+                {/* Column 2: Looking for, Zodiac, Profession, ... */}
+                <div className="space-y-4">
+                  <LifestyleItem 
+                    label={t('profile.label.looking_for')} 
+                    value={user.lookingFor === 'male' ? t('filter.gender.male') : user.lookingFor === 'female' ? t('filter.gender.female') : t('filter.gender.all')} 
+                    icon={Search} 
+                  />
+                  <LifestyleItem 
+                    label={t('profile.label.zodiac')} 
+                    value={t(user.zodiac)} 
+                    icon={user.zodiac} 
+                  />
+                  <LifestyleItem 
+                    label={t('profile.label.job')} 
+                    value={language === 'RU' ? 'Дизайнер' : 'Designer'} 
+                    icon={Briefcase} 
+                  />
+                </div>
               </div>
             </div>
             
             <div className="h-px bg-border/50"></div>
 
-            {/* Интересы Section */}
-            <div>
-              <div className="flex items-center gap-2 mb-4"><Star size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.interests')}</h4></div>
+            {/* 4. Интересы (Bottom of primary card) */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Star size={16} className="text-primary" />
+                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.interests')}</h4>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {user.interests.map((interest) => {
                   const Icon = interestIcons[interest] || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70"><Icon size={14} className="text-primary" /> {t(interest)}</Badge>
+                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70 hover:translate-y-[-1px]">
+                      <Icon size={14} className="text-primary" /> {t(interest)}
+                    </Badge>
                   );
                 })}
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4">
+          {/* 5. Gallery Section */}
+          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4 mb-12">
             <div className="flex items-center gap-2">
                <Camera size={16} className="text-primary" />
-               <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
+               <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.gallery')}</h4>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
                 <div key={`${url}-${idx}`} onClick={() => { setActivePhotoIndex(idx); setIsViewerOpen(true); }} className="relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer group shadow-sm border border-border/10">
-                  <Image src={url} alt={`Photo ${idx}`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <Image src={url} alt={`Gallery photo`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-[1px]">
                     <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full px-4 py-1.5 flex items-center gap-1.5 scale-90 group-hover:scale-100 transition-transform">
                       <Maximize2 size={12} />
                       <span className="text-[9px] font-black uppercase tracking-widest">{t('button.reveal')}</span>
@@ -298,36 +332,38 @@ function UserProfileContent() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 flex justify-center items-center gap-4 bg-white/80 backdrop-blur-md z-40 safe-pb">
+        {/* Action Bar */}
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 flex justify-center items-center gap-4 bg-white/80 backdrop-blur-md z-40 safe-pb border-t border-border/40">
           <Button onClick={() => router.back()} variant="outline" className="w-16 h-16 rounded-full border-2 border-muted hover:bg-muted text-muted-foreground flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
             <X size={28} />
           </Button>
-          <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all border-0">
+          <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all border-0 flex-1">
             {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
-          <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
+          <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg">
             <Link href={`/chats?matchId=${user.id}`}>
-              <MessageCircle size={28} />
+              <MessageCircle size={28} className="text-primary" />
             </Link>
           </Button>
         </div>
       </main>
 
+      {/* Photo Viewer */}
       <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
         <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center [&>button]:hidden">
-          <DialogTitle className="sr-only">Viewer</DialogTitle>
+          <DialogTitle className="sr-only">Gallery Viewer</DialogTitle>
           <Carousel className="w-full h-full" opts={{ startIndex: activePhotoIndex }}>
             <CarouselContent className="h-full ml-0">
               {photos.map((url, idx) => (
                 <CarouselItem key={`viewer-${url}-${idx}`} className="h-[80vh] flex items-center justify-center p-4 pl-4">
-                  <div className="relative w-full h-full rounded-2xl overflow-hidden app-shadow">
-                    <Image src={url} alt={`Gallery view`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden app-shadow border-4 border-white bg-black/20">
+                    <Image src={url} alt={`Photo view`} fill sizes="(max-width: 480px) 100vw, 440px" className="object-cover" />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
-            <CarouselNext className="right-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50" />
+            <CarouselPrevious className="left-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50 rounded-full" />
+            <CarouselNext className="right-4 bg-black/50 border-0 text-white hover:bg-black/70 z-50 rounded-full" />
           </Carousel>
           <div className="absolute top-6 right-6 z-50">
               <Button 
@@ -342,6 +378,7 @@ function UserProfileContent() {
         </DialogContent>
       </Dialog>
       
+      {/* Match Dialog */}
       <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
           <div className="relative">
@@ -350,10 +387,10 @@ function UserProfileContent() {
                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div className="flex items-center justify-center gap-0 relative">
                     <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
-                        <Image src={currentUser?.photoURL || currentUser?.img || PlaceHolderImages[10].imageUrl} alt="Вы" fill sizes="144px" data-ai-hint={PlaceHolderImages[10].imageHint} className="object-cover" />
+                        <Image src={currentUser?.photoURL || currentUser?.img || PlaceHolderImages[10].imageUrl} alt="You" fill sizes="144px" className="object-cover" />
                     </motion.div>
                     <motion.div initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
-                        <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name || "Matched user photo"} fill sizes="144px" data-ai-hint={matchUser?.hint || PlaceHolderImages[0].imageHint} className="object-cover" />
+                        <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name || "Match photo"} fill sizes="144px" className="object-cover" />
                     </motion.div>
                 </div>
             </div>
@@ -377,34 +414,39 @@ function UserProfileContent() {
         </DialogContent>
       </Dialog>
       
+      {/* Report Dialog */}
       <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
-        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow">
+        <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow overflow-hidden">
           <DialogHeader className="p-6 pb-4 text-left">
               <DialogTitle className="flex items-center gap-2 font-black tracking-tight">
                   <Flag size={20} className="text-destructive" />
                   {t('report.title')}
               </DialogTitle>
-              <DialogDescription className="pt-2">
+              <DialogDescription className="pt-2 font-medium text-xs leading-relaxed text-muted-foreground">
                   {t('report.description')}
               </DialogDescription>
           </DialogHeader>
           <div className="px-6 space-y-4">
               <RadioGroup value={reportReason} onValueChange={setReportReason} className="space-y-2">
                   {REPORT_REASONS.map(reasonKey => (
-                      <div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-lg">
+                      <div key={reasonKey} className="flex items-center space-x-3 bg-muted/40 p-3 rounded-xl hover:bg-muted/60 transition-colors">
                           <RadioGroupItem value={t(reasonKey)} id={reasonKey} />
-                          <Label htmlFor={reasonKey} className="font-bold text-sm cursor-pointer">{t(reasonKey)}</Label>
+                          <Label htmlFor={reasonKey} className="font-bold text-sm cursor-pointer flex-1">{t(reasonKey)}</Label>
                       </div>
                   ))}
               </RadioGroup>
-              <Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" />
+              <Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[100px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20 p-4" />
           </div>
-          <DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl">
-              <Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button>
-              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
+          <DialogFooter className="p-6 flex gap-3 justify-end bg-muted/20">
+              <Button variant="ghost" onClick={() => setIsReportDialogOpen(false)} className="rounded-xl font-bold uppercase tracking-widest text-[10px]">{t('report.button.cancel')}</Button>
+              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl px-6 font-bold uppercase tracking-widest text-[10px]" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
+}
+
+export default function UserProfilePage() {
+    return <Suspense fallback={<div className="flex-1 flex items-center justify-center h-full bg-white"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>}><UserProfileContent /></Suspense>;
 }
