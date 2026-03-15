@@ -67,7 +67,7 @@ export default function ProfilePage() {
         const parsed = JSON.parse(savedProfile);
         setProfile({
           ...parsed,
-          displayName: parsed.displayName || parsed.name || "Пользователь"
+          displayName: parsed.displayName || parsed.name || t('profile.someone')
         });
       } catch (e) {
         console.error("Failed to parse profile", e);
@@ -99,7 +99,7 @@ export default function ProfilePage() {
 
     const participationStatus = localStorage.getItem('contest_participation');
     if (participationStatus) setHasParticipated(true);
-  }, []);
+  }, [t]);
 
   const handleDeletePhoto = () => {
     if (photoToDelete === null) return;
@@ -117,7 +117,7 @@ export default function ProfilePage() {
     const newPhotos = photos.filter((_, i) => i !== photoToDelete);
     setPhotos(newPhotos);
     localStorage.setItem('userProfileGallery', JSON.stringify(newPhotos));
-    toast({ title: "Фото удалено" });
+    toast({ title: language === 'RU' ? "Фото удалено" : "Photo deleted" });
     setPhotoToDelete(null);
   };
 
@@ -171,12 +171,12 @@ export default function ProfilePage() {
           </div>
 
           <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-6">
-            {/* Звания Section - NOW AT THE TOP */}
+            {/* Звания Section */}
             {earnedTitles.length > 0 && (
               <div className="space-y-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Trophy size={16} className="text-primary" />
-                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4>
+                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.rank')}</h4>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {earnedTitles.map((title) => (
@@ -203,44 +203,44 @@ export default function ProfilePage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
-                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Данные и Интересы</h4>
+                <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.data_interests')}</h4>
               </div>
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Мой пол</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t('profile.label.gender')}</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <VenetianMask size={12} className="text-primary" />
-                    {profile.gender === 'female' ? 'Женщина' : 'Мужчина'}
+                    {profile.gender === 'female' ? (language === 'RU' ? 'Женщина' : 'Female') : (language === 'RU' ? 'Мужчина' : 'Male')}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Ищу</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t('profile.label.looking_for')}</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <Search size={12} className="text-primary" />
-                    {profile.lookingFor === 'male' ? 'Мужчину' : profile.lookingFor === 'female' ? 'Женщину' : 'Всех'}
+                    {profile.lookingFor === 'male' ? (language === 'RU' ? 'Мужчину' : 'Men') : profile.lookingFor === 'female' ? (language === 'RU' ? 'Женщину' : 'Women') : (language === 'RU' ? 'Всех' : 'All')}
                   </Badge>
                 </div>
-                {/* Dating Goal - Under Gender Row */}
+                {/* Dating Goal */}
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель знакомства</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t('profile.label.goal')}</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
                     <Target size={12} />
                     {profile.datingGoal}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Зодиак</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t('profile.label.zodiac')}</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <ZodiacIcon sign={profile.zodiac} />
-                    {profile.zodiac}
+                    {t(profile.zodiac)}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Рост</span>
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{t('profile.label.height')}</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
                     <Ruler size={12} className="text-primary" />
-                    {profile.height} см
+                    {profile.height} {language === 'RU' ? 'см' : 'cm'}
                   </Badge>
                 </div>
               </div>
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                   const Icon = interestIconsMap[interest] || Heart;
                   return (
                     <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-3 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70 shadow-sm">
-                      <Icon size={12} className="text-primary" /> {interest}
+                      <Icon size={12} className="text-primary" /> {t(interest)}
                     </Badge>
                   );
                 })}
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                 <Camera size={18} className="text-primary" />
                 <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
               </div>
-              <button className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary px-3 bg-primary/5 hover:bg-primary/10 transition-colors">Добавить</button>
+              <button className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary px-3 bg-primary/5 hover:bg-primary/10 transition-colors">{t('profile.add')}</button>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, idx) => (
@@ -322,7 +322,7 @@ export default function ProfilePage() {
                 )}
               >
                 {hasParticipated ? (
-                  <span className="flex items-center gap-2"><Check size={14} /> {language === 'RU' ? 'Заявка подана' : 'Application Sent'}</span>
+                  <span className="flex items-center gap-2"><Check size={14} /> {t('profile.application_sent')}</span>
                 ) : (
                   t('button.participate')
                 )}
@@ -387,8 +387,8 @@ export default function ProfilePage() {
       <Dialog open={isSelectionOpen} onOpenChange={setIsSelectionOpen}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow overflow-hidden">
           <div className="p-6 pb-4">
-            <DialogTitle className="text-xl font-black tracking-tight mb-1">{language === 'RU' ? 'Выбор фото для конкурса' : 'Choose photo for contest'}</DialogTitle>
-            <p className="text-xs text-muted-foreground font-medium">{language === 'RU' ? 'Выберите лучшее фото из вашей галереи.' : 'Select the best photo from your gallery.'}</p>
+            <DialogTitle className="text-xl font-black tracking-tight mb-1">{t('profile.contest_selection_title')}</DialogTitle>
+            <p className="text-xs text-muted-foreground font-medium">{t('profile.contest_selection_desc')}</p>
           </div>
           <div className="px-6 py-2">
             <div className="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1 no-scrollbar">
@@ -419,7 +419,7 @@ export default function ProfilePage() {
               disabled={!selectedPhotoForContest}
               className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/20 border-0 active:scale-95 transition-all"
             >
-              {language === 'RU' ? 'Подать заявку' : 'Submit Entry'}
+              {t('profile.contest_submit')}
             </Button>
             <Button variant="ghost" onClick={() => setIsSelectionOpen(false)} className="w-full h-10 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground">
               {t('button.close')}

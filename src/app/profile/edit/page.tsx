@@ -115,7 +115,7 @@ export default function EditProfilePage() {
   const handleChangeMainPhoto = () => {
     const randomIdx = Math.floor(Math.random() * PlaceHolderImages.length);
     setMainPhoto(PlaceHolderImages[randomIdx].imageUrl);
-    toast({ title: "Главное фото обновлено" });
+    toast({ title: language === 'RU' ? "Главное фото обновлено" : "Main photo updated" });
   };
 
   const handleGenerateBio = async () => {
@@ -123,9 +123,9 @@ export default function EditProfilePage() {
     try {
       const result = await generateProfileBio({ keywords: profile.interests, description: profile.bio });
       setProfile((prev: any) => ({ ...prev, bio: result.bio }));
-      toast({ title: "Био улучшено AI" });
+      toast({ title: language === 'RU' ? "Био улучшено AI" : "Bio improved by AI" });
     } catch (error) {
-      toast({ variant: "destructive", title: "Ошибка AI" });
+      toast({ variant: "destructive", title: "AI Error" });
     } finally {
       setIsGeneratingBio(false);
     }
@@ -155,9 +155,9 @@ export default function EditProfilePage() {
         }));
         
         setCustomInterest("");
-        toast({ title: "Интерес добавлен и выбран" });
+        toast({ title: language === 'RU' ? "Интерес добавлен и выбран" : "Interest added and selected" });
     } catch (e) {
-        toast({ variant: 'destructive', title: 'Ошибка', description: 'Не удалось добавить интерес' });
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to add interest' });
     } finally {
         setIsAddingInterest(false);
     }
@@ -180,7 +180,7 @@ export default function EditProfilePage() {
       }
     }
     
-    toast({ title: "Профиль сохранен" });
+    toast({ title: language === 'RU' ? "Профиль сохранен" : "Profile saved" });
     router.push("/profile");
   };
 
@@ -218,7 +218,7 @@ export default function EditProfilePage() {
             </div>
             <button className="absolute bottom-1 right-1 bg-primary text-white p-2.5 rounded-xl shadow-md border-2 border-white active:scale-95 transition-transform"><Camera size={16} /></button>
           </div>
-          <p className="text-[10px] font-black uppercase text-muted-foreground/60 tracking-widest mt-1">Основное фото профиля</p>
+          <p className="text-[10px] font-black uppercase text-muted-foreground/60 tracking-widest mt-1">{t('profile.main_photo_label')}</p>
         </div>
 
         <div className="bg-white rounded-2xl p-6 app-shadow space-y-6 border border-border/40">
@@ -226,10 +226,10 @@ export default function EditProfilePage() {
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
-                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">О себе</h3>
+                <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">{t('profile.about')}</h3>
               </div>
               <button onClick={handleGenerateBio} disabled={isGeneratingBio} className="text-[9px] font-black text-primary flex items-center gap-1.5 uppercase tracking-tight bg-muted/50 px-3 py-1.5 rounded-full hover:bg-muted transition-colors shadow-sm">
-                <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> AI Улучшить
+                <Sparkles size={11} className={isGeneratingBio ? "animate-spin" : ""} /> {t('profile.ai_improve')}
               </button>
             </div>
             <Textarea value={profile.bio || ''} onChange={e => setProfile({...profile, bio: e.target.value})} className="rounded-xl bg-muted/30 border-0 min-h-[90px] text-xs resize-none font-medium p-4" />
@@ -237,42 +237,42 @@ export default function EditProfilePage() {
 
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary"><User size={14} /></div>
-            <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">Основные данные</h3>
+            <h3 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground">{t('profile.basic_info')}</h3>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Имя</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{language === 'RU' ? 'Имя' : 'Display Name'}</Label>
               <Input value={profile.displayName || ''} onChange={e => setProfile({...profile, displayName: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Ваш пол</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.label.gender')}</Label>
                 <Select value={profile.gender || ''} onValueChange={(val) => setProfile({...profile, gender: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
-                    <SelectItem value="male" className="font-bold text-[11px]">Мужчина</SelectItem>
-                    <SelectItem value="female" className="font-bold text-[11px]">Женщина</SelectItem>
+                    <SelectItem value="male" className="font-bold text-[11px]">{language === 'RU' ? 'Мужчина' : 'Male'}</SelectItem>
+                    <SelectItem value="female" className="font-bold text-[11px]">{language === 'RU' ? 'Женщина' : 'Female'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1">Кого ищу</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1">{t('profile.label.looking_for')}</Label>
                 <Select value={profile.lookingFor || ''} onValueChange={(val) => setProfile({...profile, lookingFor: val})}>
                   <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl border-0 shadow-2xl">
-                    <SelectItem value="male" className="font-bold text-[11px]">Мужчину</SelectItem>
-                    <SelectItem value="female" className="font-bold text-[11px]">Женщину</SelectItem>
-                    <SelectItem value="all" className="font-bold text-[11px]">Всех</SelectItem>
+                    <SelectItem value="male" className="font-bold text-[11px]">{language === 'RU' ? 'Мужчину' : 'Men'}</SelectItem>
+                    <SelectItem value="female" className="font-bold text-[11px]">{language === 'RU' ? 'Женщину' : 'Women'}</SelectItem>
+                    <SelectItem value="all" className="font-bold text-[11px]">{language === 'RU' ? 'Всех' : 'All'}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             
-            {/* Dating Goal - Moved under Gender input grid */}
+            {/* Dating Goal */}
             <div className="space-y-1.5 p-4 bg-primary/5 rounded-xl border border-primary/10">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> {t('profile.label.goal')}</Label>
               <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
                 <SelectTrigger className="rounded-xl bg-white border-0 h-11 font-bold px-4 shadow-sm">
                     <SelectValue placeholder={t('onboarding.step3.goal_placeholder')} />
@@ -285,29 +285,29 @@ export default function EditProfilePage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Возраст</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.age')}</Label>
                 <Input type="number" value={profile.age || ''} onChange={e => setProfile({...profile, age: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Рост</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.label.height')}</Label>
                 <Input type="number" value={profile.height || ''} onChange={e => setProfile({...profile, height: parseInt(e.target.value) || 0})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4 focus-visible:ring-primary/20" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Город</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{language === 'RU' ? 'Город' : 'City'}</Label>
               <div className="relative"><MapPin size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" /><Input value={profile.city || ''} onChange={e => setProfile({...profile, city: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4 focus-visible:ring-primary/20" /></div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Профессия</Label>
-              <div className="relative"><Briefcase size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" /><Input value={profile.work || ''} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4 focus-visible:ring-primary/20" placeholder="Напр. Дизайнер" /></div>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.profession')}</Label>
+              <div className="relative"><Briefcase size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/60" /><Input value={profile.work || ''} onChange={e => setProfile({...profile, work: e.target.value})} className="rounded-xl bg-muted/30 border-0 h-11 font-bold pl-10 pr-4 focus-visible:ring-primary/20" placeholder={language === 'RU' ? 'Напр. Дизайнер' : 'e.g. Designer'} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Знак зодиака</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.zodiac_sign')}</Label>
                 <Select value={profile.zodiac || ''} onValueChange={(val) => setProfile({...profile, zodiac: val})}><SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4"><SelectValue /></SelectTrigger><SelectContent className="rounded-xl border-0 shadow-2xl">{ZODIAC_SIGNS.map(sign => <SelectItem key={sign} value={sign} className="font-bold text-[11px]">{t(sign)}</SelectItem>)}</SelectContent></Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> Образование</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1"><GraduationCap size={12}/> {t('profile.education')}</Label>
                 <Select value={profile.education || ''} onValueChange={(val) => setProfile({...profile, education: val})}>
                     <SelectTrigger className="rounded-xl bg-muted/30 border-0 h-11 font-bold px-4">
                         <SelectValue />
@@ -321,7 +321,7 @@ export default function EditProfilePage() {
           </div>
 
           <div className="space-y-4">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Интересы</Label>
+            <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">{t('profile.interests')}</Label>
             <div className="flex flex-wrap gap-2">
               {dynamicInterests.map(interest => (
                   <Badge 
@@ -342,7 +342,7 @@ export default function EditProfilePage() {
                 <Input 
                     value={customInterest}
                     onChange={(e) => setCustomInterest(e.target.value)}
-                    placeholder="Свой вариант..."
+                    placeholder={t('profile.custom_interest_placeholder')}
                     className="h-9 rounded-lg bg-muted/30 border-0 text-[10px] font-bold"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddCustomInterest()}
                 />
@@ -359,7 +359,7 @@ export default function EditProfilePage() {
           <div className="h-px bg-border/50 my-6"></div>
 
             <div className="space-y-3">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1.5"><Users size={12}/> Мои группы</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1 flex items-center gap-1.5"><Users size={12}/> {t('profile.groups')}</Label>
                 <div className="flex flex-wrap gap-2">
                 {(profile.joinedGroups && profile.joinedGroups.length > 0) ? (
                     profile.joinedGroups.map((groupName: string) => {
@@ -389,7 +389,7 @@ export default function EditProfilePage() {
 
         <div className="mt-8 px-2">
             <Button onClick={handleSave} className="w-full h-14 rounded-2xl gradient-bg text-white font-black uppercase tracking-widest shadow-xl shadow-primary/30 border-0 hover:brightness-110 active:scale-95 transition-all">
-                Сохранить все изменения
+                {t('profile.save_all')}
             </Button>
         </div>
       </main>

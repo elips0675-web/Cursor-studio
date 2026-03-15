@@ -188,7 +188,7 @@ function UserProfileContent() {
           </Button>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white border-0 px-3 py-1 font-black uppercase text-[9px] tracking-widest shadow-lg">
-              {user.match}% {language === 'RU' ? 'Совпадение' : 'Match'}
+              {user.match}% {t('user.match_score')}
             </Badge>
             <Button 
               variant="ghost" 
@@ -212,7 +212,7 @@ function UserProfileContent() {
                 </h3>
              </div>
              <p className="text-muted-foreground text-sm font-bold flex items-center gap-1.5 uppercase tracking-widest">
-                <MapPin size={14} className="text-primary" /> {language === 'RU' ? user.city : 'Москва'} • {user.distance} км {language === 'RU' ? 'от вас' : 'from you'}
+                <MapPin size={14} className="text-primary" /> {user.city} • {user.distance} {language === 'RU' ? 'км' : 'km'} {t('user.from_you')}
              </p>
           </div>
         </div>
@@ -222,7 +222,7 @@ function UserProfileContent() {
             {/* Звания (NOW AT THE TOP) */}
             {earnedTitles.length > 0 && (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 mb-2"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Звание</h4></div>
+                <div className="flex items-center gap-2 mb-2"><Trophy size={16} className="text-primary" /><h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.rank')}</h4></div>
                 <div className="flex flex-wrap gap-2">
                   {earnedTitles.map((title) => (
                     <Badge key={title.id} variant="secondary" className={cn("border-0 gap-2 py-2 px-3.5 font-bold text-[10px] rounded-lg shadow-sm transition-all hover:scale-105", title.color)}>
@@ -250,10 +250,10 @@ function UserProfileContent() {
                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-                <LifestyleItem label={t('profile.label.gender')} value={user.gender === 'female' ? 'Женщина' : 'Мужчина'} icon={VenetianMask} />
-                <LifestyleItem label={t('profile.label.looking_for')} value={user.lookingFor === 'male' ? 'Мужчину' : user.lookingFor === 'female' ? 'Женщину' : 'Всех'} icon={Search} />
-                <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} />
-                <LifestyleItem label={t('profile.label.zodiac')} value={user.zodiac} icon={user.zodiac} />
+                <LifestyleItem label={t('profile.label.gender')} value={user.gender === 'female' ? (language === 'RU' ? 'Женщина' : 'Female') : (language === 'RU' ? 'Мужчина' : 'Male')} icon={VenetianMask} />
+                <LifestyleItem label={t('profile.label.looking_for')} value={user.lookingFor === 'male' ? (language === 'RU' ? 'Мужчину' : 'Men') : user.lookingFor === 'female' ? (language === 'RU' ? 'Женщину' : 'Women') : (language === 'RU' ? 'Всех' : 'All')} icon={Search} />
+                <LifestyleItem label={t('profile.label.goal')} value={user.goal} icon={Target} />
+                <LifestyleItem label={t('profile.label.zodiac')} value={t(user.zodiac)} icon={user.zodiac} />
                 <LifestyleItem label={t('profile.label.height')} value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} icon={Ruler} />
                 <LifestyleItem label={t('profile.label.education')} value={language === 'RU' ? 'Высшее' : 'Higher'} icon={GraduationCap} />
                 <LifestyleItem label={t('profile.label.job')} value={language === 'RU' ? 'Дизайнер' : 'Designer'} icon={Briefcase} />
@@ -269,7 +269,7 @@ function UserProfileContent() {
                 {user.interests.map((interest) => {
                   const Icon = interestIcons[interest] || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70"><Icon size={14} className="text-primary" /> {interest}</Badge>
+                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70"><Icon size={14} className="text-primary" /> {t(interest)}</Badge>
                   );
                 })}
               </div>
@@ -302,7 +302,7 @@ function UserProfileContent() {
           <Button onClick={() => router.back()} variant="outline" className="w-16 h-16 rounded-full border-2 border-muted hover:bg-muted text-muted-foreground flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
             <X size={28} />
           </Button>
-          <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
+          <Button onClick={handleLike} className="h-16 px-10 rounded-full gradient-bg text-white font-black uppercase tracking-[0.2em] text-[11px] shadow-xl shadow-primary/30 flex items-center justify-center gap-2 active:scale-95 transition-all border-0">
             {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
           <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
@@ -361,7 +361,7 @@ function UserProfileContent() {
             <div className="px-8 pt-8 pb-8 text-center">
               <DialogTitle className="text-3xl font-black font-headline mb-3 gradient-text uppercase tracking-tight">{t('match.title')}</DialogTitle>
               <DialogDescription className="text-muted-foreground text-sm mb-8 px-6 leading-relaxed font-medium">
-                {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {language === 'RU' ? 'понравились друг другу.' : 'liked each other.'}
+                {language === 'RU' ? 'Вы с ' : 'You and '} <span className="font-bold text-foreground">{matchUser?.name}</span> {t('match.liked_each_other')}
               </DialogDescription>
 
               <div className="flex flex-col gap-4 w-full mt-8">
@@ -407,12 +407,4 @@ function UserProfileContent() {
       </Dialog>
     </div>
   );
-}
-
-export default function UserProfilePage() {
-    return (
-        <Suspense fallback={null}>
-            <UserProfileContent />
-        </Suspense>
-    );
 }
