@@ -275,29 +275,6 @@ export default function ContestPage() {
                 </AnimatePresence>
               </div>
             </section>
-
-            <section className="mb-10">
-              <div className="flex items-center gap-2 mb-4 px-1">
-                <Award className="text-primary" size={18} />
-                <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('contest.prizes.title')}</h4>
-              </div>
-              <div className="grid grid-cols-1 gap-2.5">
-                {prizes.map((prize) => (
-                  <div key={prize.id} className="flex items-center gap-4 bg-white p-3.5 rounded-2xl border border-border/40 app-shadow">
-                    <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
-                      {prize.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h5 className="text-xs font-black leading-none">{prize.title}</h5>
-                      <p className="text-[10px] text-muted-foreground mt-1 font-medium">{prize.desc}</p>
-                    </div>
-                    <div className="text-primary/20">
-                      <CheckCircle2 size={16} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
           </TabsContent>
         </Tabs>
 
@@ -319,6 +296,30 @@ export default function ContestPage() {
                 </div>
                 <p className="text-[10px] font-black text-center truncate">{winner.name}</p>
                 <p className="text-[8px] text-muted-foreground text-center uppercase font-bold">{winner.month}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Prizes Section - Moved above Rules */}
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4 px-1">
+            <Award className="text-primary" size={18} />
+            <h4 className="text-xs font-black uppercase tracking-widest text-muted-foreground">{t('contest.prizes.title')}</h4>
+          </div>
+          <div className="grid grid-cols-1 gap-2.5">
+            {prizes.map((prize) => (
+              <div key={prize.id} className="flex items-center gap-4 bg-white p-3.5 rounded-2xl border border-border/40 app-shadow">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
+                  {prize.icon}
+                </div>
+                <div className="flex-1">
+                  <h5 className="text-xs font-black leading-none">{prize.title}</h5>
+                  <p className="text-[10px] text-muted-foreground mt-1 font-medium">{prize.desc}</p>
+                </div>
+                <div className="text-primary/20">
+                  <CheckCircle2 size={16} />
+                </div>
               </div>
             ))}
           </div>
