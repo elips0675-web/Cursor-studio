@@ -259,7 +259,7 @@ export default function ProfilePage() {
                 <Camera size={18} className="text-primary" />
                 <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.gallery')}</h4>
               </div>
-              <Button variant="ghost" size="sm" className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest">Добавить</Button>
+              <button className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary px-3 bg-primary/5 hover:bg-primary/10 transition-colors">Добавить</button>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, idx) => (

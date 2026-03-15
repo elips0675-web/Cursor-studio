@@ -110,7 +110,7 @@ export default function ContestPage() {
           </p>
         </header>
 
-        {/* Timer moved under header */}
+        {/* Timer under header */}
         <div className="bg-white rounded-3xl p-5 border border-border/40 app-shadow mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
@@ -225,6 +225,7 @@ export default function ContestPage() {
           </div>
         </section>
 
+        {/* Prizes Above Rules */}
         <section className="mb-10">
           <div className="flex items-center gap-2 mb-4 px-1">
             <Award className="text-primary" size={18} />
