@@ -110,14 +110,14 @@ export default function ContestPage() {
           </p>
         </header>
 
-        {/* Centered Timer Block */}
-        <div className="bg-white rounded-[2.5rem] p-8 border border-border/40 app-shadow mb-8 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 mb-4">
-            <Timer size={28} />
+        {/* Minimized Timer Block */}
+        <div className="bg-white rounded-2xl p-4 border border-border/40 app-shadow mb-8 flex items-center justify-center gap-4 max-w-[260px] mx-auto">
+          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+            <Timer size={20} />
           </div>
-          <div className="space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{t('contest.ends_in')}</p>
-            <p className="text-2xl font-black tracking-tighter">{timeLeft}</p>
+          <div className="text-left">
+            <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground leading-none mb-1">{t('contest.ends_in')}</p>
+            <p className="text-lg font-black tracking-tight leading-none">{timeLeft}</p>
           </div>
         </div>
 

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback, Suspense } from "react";
@@ -51,11 +52,6 @@ const TopOfWeekSection = dynamic(() => import('@/components/sections/top-of-week
   loading: () => <div className="px-5 pt-8 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[4/3] rounded-xl" /><Skeleton className="aspect-[4/3] rounded-xl" /></div></div>
 });
 
-const RecommendationsSection = dynamic(() => import('@/components/sections/recommendations').then(mod => mod.RecommendationsSection), { 
-  ssr: false,
-  loading: () => <div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>
-});
-
 const AutosearchDialog = dynamic(() => import('@/components/dialogs/autosearch-dialog').then(mod => mod.AutosearchDialog), { ssr: false });
 
 export default function Home() {
@@ -96,17 +92,6 @@ export default function Home() {
     return [...ALL_DEMO_USERS]
       .filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
       .sort((a, b) => b.match - a.match)
-      .slice(0, 4);
-  }, [currentUser]);
-
-  const recommendedUsers = useMemo(() => {
-    const myInterests = currentUser?.interests || ["Фотография", "Кофе"];
-    return ALL_DEMO_USERS.filter(u => u.id !== (currentUser?.id || 1) && !u.isSystem)
-      .map(u => ({
-        ...u,
-        commonInterests: u.interests.filter((i: string) => myInterests.includes(i)).length
-      }))
-      .sort((a, b) => b.commonInterests - a.commonInterests)
       .slice(0, 4);
   }, [currentUser]);
 
@@ -226,10 +211,6 @@ export default function Home() {
             })}
           </div>
         </section>
-
-        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
-          <RecommendationsSection recommendedUsers={recommendedUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
-        </Suspense>
       </main>
 
       {showAutosearchDialog && <AutosearchDialog open={showAutosearchDialog} onOpenChange={setShowAutosearchDialog} onAutosearch={runAutosearch} />}
