@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Settings, CheckCircle2, Camera, Coffee, Music, Globe, Dumbbell, Edit2, Palette, Film, Flower2, Briefcase, Gamepad2, Dog, Ruler, Target, User, Info, Trophy, Heart, VenetianMask, Search, Maximize2, Trash2, X, Star
 } from "lucide-react";
@@ -132,11 +132,12 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col min-h-svh bg-[#f8f9fb]">
       <AppHeader />
-      <main className="flex-1 overflow-y-auto pb-24">
-        <div className="h-24 gradient-bg relative">
+      <main className="flex-1 overflow-y-auto pb-24 px-5">
+        <div className="h-24 gradient-bg relative -mx-5 mb-10">
           <Link href="/settings" className="absolute top-4 right-6 text-white/90 p-2 bg-black/10 rounded-full backdrop-blur-md"><Settings size={18} /></Link>
         </div>
-        <div className="px-5 -mt-10">
+        
+        <div className="-mt-20">
           <div className="text-center mb-6">
             <div className="relative inline-block mb-4">
               <div className="relative w-32 h-32 rounded-2xl border-[6px] border-white app-shadow overflow-hidden bg-muted">
@@ -229,7 +230,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="mt-6 bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-8">
+          <div className="mt-6 bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-6">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <Camera size={18} className="text-primary" />
@@ -262,6 +263,30 @@ export default function ProfilePage() {
               ))}
             </div>
           </div>
+
+          {/* Light-themed Contest Banner */}
+          <section className="mb-10">
+            <div className="bg-white rounded-2xl p-6 border-2 border-amber-100 app-shadow relative overflow-hidden group">
+              <div className="absolute -right-4 -bottom-4 opacity-5 text-amber-500 group-hover:rotate-12 transition-transform duration-500">
+                <Trophy size={120} fill="currentColor" />
+              </div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500 border border-amber-100">
+                  <Trophy size={24} fill="currentColor" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-black tracking-tight">{t('contest.participate_banner')}</h4>
+                  <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{t('contest.subtitle')}</p>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground/80 mb-6 leading-relaxed font-medium">
+                {t('contest.rules_desc')}
+              </p>
+              <Button asChild variant="outline" className="w-full h-12 rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50 font-black uppercase text-[10px] tracking-widest shadow-sm">
+                <Link href="/contest">{t('button.participate')}</Link>
+              </Button>
+            </div>
+          </section>
         </div>
       </main>
 

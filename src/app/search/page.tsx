@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Flag, Sparkles } from "lucide-react";
+import { MapPin, User, ChevronLeft, ChevronRight, X, Heart, MessageCircle, Flag, Sparkles, Trophy } from "lucide-react";
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import { AppHeader } from "@/components/layout/app-header";
@@ -39,11 +39,6 @@ const cardVariants = {
 
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
 
-/**
- * Логика Автопоиска:
- * 1. Фильтрация по базе (возраст, пол, город).
- * 2. Ранжирование: Расстояние -> Цель -> Совпадение интересов.
- */
 function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
     if (!filters) return [];
     const { ageRange, selectedCity, distance, genderPref, selectedDatingGoal, selectedInterests } = filters;
@@ -59,25 +54,13 @@ function performAutosearch(filters: any, allUsers: any[], currentUser: any) {
         .map(user => {
           const commonInterests = user.interests.filter((i: string) => selectedInterests.includes(i)).length;
           const hasMatchingGoal = selectedDatingGoal !== "all" && user.goal === selectedDatingGoal;
-          
-          // Для попадания в кандидаты нужно либо совпадение цели, либо общие интересы
           const isCandidate = hasMatchingGoal || (commonInterests > 0);
-
           return { ...user, isCandidate, commonInterests, hasMatchingGoal };
         })
         .filter(user => user.isCandidate)
         .sort((a, b) => {
-            // ПРИОРИТЕТ 1: Расстояние (сначала ближайшие)
-            if (a.distance !== b.distance) {
-                return a.distance - b.distance;
-            }
-            
-            // ПРИОРИТЕТ 2: Совпадение цели (сначала совпадающие)
-            if (a.hasMatchingGoal !== b.hasMatchingGoal) {
-                return a.hasMatchingGoal ? -1 : 1;
-            }
-            
-            // ПРИОРИТЕТ 3: Количество интересов (сначала больше)
+            if (a.distance !== b.distance) return a.distance - b.distance;
+            if (a.hasMatchingGoal !== b.hasMatchingGoal) return a.hasMatchingGoal ? -1 : 1;
             return b.commonInterests - a.commonInterests;
         });
 }
@@ -97,6 +80,7 @@ function SearchContent() {
   const [reportDescription, setReportDescription] = useState('');
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [votedEntries, setVotedEntries] = useState<number[]>([]);
 
   useEffect(() => {
     const saved = localStorage.getItem('userProfile');
@@ -142,7 +126,7 @@ function SearchContent() {
       setDirection(1); 
       setCurrentIndex(prev => prev + 1); 
     } else {
-      setCurrentIndex(prev => prev + 1); // Trigger "no more profiles" state
+      setCurrentIndex(prev => prev + 1);
     }
   }, [currentIndex, userList.length]);
 
@@ -156,13 +140,21 @@ function SearchContent() {
   const handleLike = async () => {
     if (!user) return;
     toast({ title: "Лайк!", description: `${language === 'RU' ? 'Вы лайкнули' : 'You liked'} ${user.name}` });
-    
-    // Simulate a match
     if (Math.random() > 0.7) {
       setMatchUser(user);
     } else {
       handleNext();
     }
+  };
+
+  const handleVote = (e: React.MouseEvent, userId: number) => {
+    e.stopPropagation();
+    if (votedEntries.includes(userId)) return;
+    setVotedEntries([...votedEntries, userId]);
+    toast({
+      title: language === 'RU' ? "Голос принят! 🏆" : "Vote accepted! 🏆",
+      description: language === 'RU' ? "Вы проголосовали за это фото в конкурсе." : "You voted for this photo in the contest.",
+    });
   };
 
   const handleReportSubmit = () => {
@@ -222,6 +214,20 @@ function SearchContent() {
                 priority
                 className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
+              
+              {/* Contest Vote Button */}
+              <button 
+                onClick={(e) => handleVote(e, user.id)}
+                className={cn(
+                  "absolute top-4 left-4 z-30 w-12 h-12 rounded-2xl backdrop-blur-md flex items-center justify-center transition-all active:scale-90 border-2",
+                  votedEntries.includes(user.id) 
+                    ? "bg-amber-500 text-white border-amber-400 shadow-xl" 
+                    : "bg-black/20 text-white border-white/20 hover:bg-black/40"
+                )}
+              >
+                <Trophy size={20} fill={votedEntries.includes(user.id) ? "currentColor" : "none"} />
+              </button>
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6 text-white text-left">
                 <h3 className="text-3xl font-black font-headline mb-1">{user.name}, {user.age}</h3>
