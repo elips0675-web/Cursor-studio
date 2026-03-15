@@ -204,6 +204,14 @@ export default function ProfilePage() {
                     {profile.lookingFor === 'male' ? 'Мужчину' : profile.lookingFor === 'female' ? 'Женщину' : 'Всех'}
                   </Badge>
                 </div>
+                {/* Dating Goal - Under Gender Row */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель знакомства</span>
+                  <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
+                    <Target size={12} />
+                    {profile.datingGoal}
+                  </Badge>
+                </div>
                 <div className="space-y-1">
                   <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Зодиак</span>
                   <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-muted/40 border-0 font-bold text-[11px] gap-2">
@@ -242,15 +250,6 @@ export default function ProfilePage() {
                     </Badge>
                   );
                 })}
-              </div>
-
-              {/* Цель знакомства Section - Now Under Interests */}
-              <div className="pt-2 space-y-1">
-                <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">Цель знакомства</span>
-                <Badge variant="secondary" className="w-full justify-start py-2 px-3 rounded-lg bg-primary/5 border-0 font-bold text-[11px] gap-2 text-primary">
-                  <Target size={12} />
-                  {profile.datingGoal}
-                </Badge>
               </div>
             </div>
           </div>

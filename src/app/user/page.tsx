@@ -43,7 +43,9 @@ import {
   GraduationCap,
   User,
   Info,
-  Trophy
+  Trophy,
+  VenetianMask,
+  Search
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -248,6 +250,9 @@ function UserProfileContent() {
                  <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+                <LifestyleItem label={t('profile.label.gender')} value={user.gender === 'female' ? 'Женщина' : 'Мужчина'} icon={VenetianMask} />
+                <LifestyleItem label={t('profile.label.looking_for')} value={user.lookingFor === 'male' ? 'Мужчину' : user.lookingFor === 'female' ? 'Женщину' : 'Всех'} icon={Search} />
+                <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} />
                 <LifestyleItem label={t('profile.label.zodiac')} value={user.zodiac} icon={user.zodiac} />
                 <LifestyleItem label={t('profile.label.height')} value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} icon={Ruler} />
                 <LifestyleItem label={t('profile.label.education')} value={language === 'RU' ? 'Высшее' : 'Higher'} icon={GraduationCap} />
@@ -268,13 +273,6 @@ function UserProfileContent() {
                   );
                 })}
               </div>
-            </div>
-
-            <div className="h-px bg-border/50"></div>
-
-            {/* Цель знакомства Section - Now Under Interests */}
-            <div>
-              <LifestyleItem label={t('profile.label.goal')} value={language === 'RU' ? user.goal : 'Serious relations'} icon={Target} className="w-full" />
             </div>
           </div>
 

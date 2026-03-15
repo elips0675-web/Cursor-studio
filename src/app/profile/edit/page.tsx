@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
@@ -271,6 +270,7 @@ export default function EditProfilePage() {
               </div>
             </div>
             
+            {/* Dating Goal - Moved under Gender input grid */}
             <div className="space-y-1.5 p-4 bg-primary/5 rounded-xl border border-primary/10">
               <Label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1 flex items-center gap-1.5"><Target size={12} /> Цель знакомства</Label>
               <Select value={profile.datingGoal || ''} onValueChange={(val) => setProfile({...profile, datingGoal: val})}>
