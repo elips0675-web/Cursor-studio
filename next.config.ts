@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  productionBrowserSourceMaps: false, // Уменьшает размер клиентского кода в проде
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Bell, Languages, LogIn, ChevronLeft, Sparkles, Heart, MessageCircle, User, Zap, X } from "lucide-react";

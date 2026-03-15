@@ -227,7 +227,7 @@ export default function Home() {
           </div>
         </section>
 
-        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
+        <Suspense fallback={<div className="px-5 pt-10 space-y-4"><Skeleton className="h-8 w-40" /><div className="grid grid-cols-2 gap-4"><Skeleton className="aspect-[16/10] rounded-xl" /><Skeleton className="aspect-[16/10] rounded-xl" /></div></div>}>
           <RecommendationsSection recommendedUsers={recommendedUsers} onLike={(u) => toast({ title: "Лайк!", description: `Вы лайкнули ${u.name}` })} t={t} />
         </Suspense>
       </main>
