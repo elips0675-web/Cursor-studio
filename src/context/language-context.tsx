@@ -397,6 +397,8 @@ const translations = {
     'pwa.install.cancel': 'Позже',
     'pwa.install.success': 'Приложение успешно установлено!',
     'pwa.install.dismissed': 'Вы можете установить приложение позже из меню браузера.',
+    'pwa.install.ios_title': 'Установка на iOS',
+    'pwa.install.ios_description': 'Чтобы установить SwiftMatch на ваш iPhone, нажмите кнопку «Поделиться» и выберите «На экран "Домой"».',
   },
   EN: {
     // Landing / SEO
@@ -784,6 +786,8 @@ const translations = {
     'pwa.install.cancel': 'Later',
     'pwa.install.success': 'App installed successfully!',
     'pwa.install.dismissed': 'You can install the app later from your browser menu.',
+    'pwa.install.ios_title': 'Install on iOS',
+    'pwa.install.ios_description': 'To install SwiftMatch on your iPhone, tap the "Share" icon and then "Add to Home Screen".',
   }
 };
 
