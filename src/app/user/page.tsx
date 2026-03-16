@@ -88,12 +88,12 @@ const interestIcons: Record<string, any> = {
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
 
 /**
- * Helper component for data blocks. 
- * Styled with rounded-lg to be more rectangular as per user request.
+ * Вспомогательный компонент для блоков данных.
+ * Стиль со скруглением rounded-lg для более прямоугольного вида.
  */
 const DataBox = React.memo(({ label, value, icon: Icon, color = "default" }: { label: string, value: any, icon?: any, color?: "default" | "primary" }) => (
-  <div className="space-y-1">
-    <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{label}</span>
+  <div className="space-y-1.5">
+    <span className="text-[10px] font-black uppercase text-muted-foreground/60 ml-1">{label}</span>
     <Badge 
       variant="secondary" 
       className={cn(
@@ -215,14 +215,15 @@ function UserProfileContent() {
         </div>
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
-          <div className="bg-white rounded-[2rem] p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
+          {/* Основная карточка информации - rounded-2xl (более прямоугольная) */}
+          <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
             
-            {/* 1. Звания (Top of card) */}
+            {/* 1. Звания (Самый верх) */}
             {earnedTitles.length > 0 && (
               <div className="space-y-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Trophy size={16} className="text-primary" />
-                  <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.rank')}</h4>
+                  <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.rank')}</h4>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {earnedTitles.map((title) => (
@@ -234,11 +235,11 @@ function UserProfileContent() {
               </div>
             )}
 
-            {/* 2. О себе (Below titles) */}
+            {/* 2. О себе */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Info size={16} className="text-primary" />
-                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.about')}</h4>
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Info size={14} /></div>
+                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.about')}</h4>
               </div>
               <p className="text-[14px] text-foreground/80 leading-relaxed font-medium italic pl-1 border-l-2 border-primary/10">
                 "{user.bio}"
@@ -247,14 +248,15 @@ function UserProfileContent() {
 
             <div className="h-px bg-border/50"></div>
             
-            {/* 3. Lifestyle Grid (Rectangle style DataBox) */}
+            {/* 3. Lifestyle Сетка (Прямоугольные боксы rounded-lg) */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                  <User size={16} className="text-primary" />
-                 <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.lifestyle')}</h4>
+                 <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.lifestyle')}</h4>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-5">
+                {/* Левая колонка */}
+                <div className="space-y-5">
                   <DataBox 
                     label={t('profile.label.gender')} 
                     value={user.gender === 'female' ? t('onboarding.step1.female') : t('onboarding.step1.male')} 
@@ -271,13 +273,9 @@ function UserProfileContent() {
                     value={`${user.height} ${language === 'RU' ? 'см' : 'cm'}`} 
                     icon={Ruler} 
                   />
-                  <DataBox 
-                    label={t('profile.label.education')} 
-                    value={language === 'RU' ? 'Высшее' : 'Higher'} 
-                    icon={GraduationCap} 
-                  />
                 </div>
-                <div className="space-y-4">
+                {/* Правая колонка */}
+                <div className="space-y-5">
                   <DataBox 
                     label={t('profile.label.looking_for')} 
                     value={user.lookingFor === 'male' ? t('filter.gender.male') : user.lookingFor === 'female' ? t('filter.gender.female') : t('filter.gender.all')} 
@@ -299,17 +297,17 @@ function UserProfileContent() {
             
             <div className="h-px bg-border/50"></div>
 
-            {/* 4. Interests (Bottom of primary card) */}
+            {/* 4. Интересы */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star size={16} className="text-primary" />
-                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.interests')}</h4>
+                <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.interests')}</h4>
               </div>
               <div className="flex flex-wrap gap-2">
                 {user.interests.map((interest) => {
                   const Icon = interestIcons[interest] || Heart;
                   return (
-                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70 hover:translate-y-[-1px]">
+                    <Badge key={interest} variant="secondary" className="bg-muted/50 text-foreground/80 border-0 gap-2 py-2 px-4 font-bold text-[11px] rounded-lg transition-all hover:bg-muted/70 hover:translate-y-[-1px] shadow-sm">
                       <Icon size={14} className="text-primary" /> {t(interest)}
                     </Badge>
                   );
@@ -318,11 +316,11 @@ function UserProfileContent() {
             </div>
           </div>
 
-          {/* 5. Gallery Section */}
-          <div className="bg-white rounded-[2.5rem] p-6 app-shadow border border-border/40 space-y-4 mb-12">
+          {/* 5. Галерея - rounded-2xl (более прямоугольная) */}
+          <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-4 mb-12">
             <div className="flex items-center gap-2">
-               <Camera size={16} className="text-primary" />
-               <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.gallery')}</h4>
+               <Camera size={18} className="text-primary" />
+               <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.gallery')}</h4>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
@@ -392,7 +390,7 @@ function UserProfileContent() {
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
           <div className="relative">
             <HeartConfetti />
-            <div className="relative h-56 flex items-center justify-center p-6 gradient-bg">
+            <div className="relative h-56 flex items-center justify-center p-6 gradient-bg overflow-hidden">
                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div className="flex items-center justify-center gap-0 relative">
                     <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
