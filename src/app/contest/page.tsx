@@ -98,14 +98,14 @@ export default function ContestPage() {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex p-4 rounded-3xl bg-amber-500/10 text-amber-600 mb-4 shadow-sm border border-amber-500/20"
+            className="inline-flex p-3 rounded-2xl bg-amber-500/10 text-amber-600 mb-3 shadow-sm border border-amber-500/20"
           >
-            <Trophy size={32} fill="currentColor" />
+            <Trophy size={24} fill="currentColor" />
           </motion.div>
-          <h2 className="text-3xl font-black font-headline tracking-tighter text-foreground leading-none">
+          <h2 className="text-2xl font-black font-headline tracking-tighter text-foreground leading-none">
             {t('contest.title')}
           </h2>
-          <p className="text-muted-foreground text-xs mt-2 font-medium uppercase tracking-widest opacity-70">
+          <p className="text-[10px] text-muted-foreground mt-1.5 font-medium uppercase tracking-widest opacity-70">
             {t('contest.subtitle')}
           </p>
         </header>
@@ -162,7 +162,7 @@ export default function ContestPage() {
                       <motion.div
                         animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute -top-8 left-1/2 -translate-x-1/2 text-amber-500 drop-shadow-xl"
+                        className="absolute -top-6 left-1/2 -translate-x-1/2 text-amber-500 drop-shadow-xl"
                       >
                         <Crown size={40} fill="currentColor" />
                       </motion.div>
@@ -199,7 +199,7 @@ export default function ContestPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Previous Winners Section - Improved to show 3 by width */}
+        {/* Previous Winners Section */}
         <section className="mb-10">
           <div className="flex items-center gap-2 mb-4 px-1">
             <History className="text-blue-500" size={18} />
