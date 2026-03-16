@@ -87,7 +87,10 @@ const interestIcons: Record<string, any> = {
 
 const REPORT_REASONS = ['report.reason.spam', 'report.reason.abuse', 'report.reason.fake', 'report.reason.scam', 'report.reason.content'];
 
-// Helper component for the "window" style data boxes
+/**
+ * Helper component for data blocks. 
+ * Styled with rounded-lg to be more rectangular as per user request.
+ */
 const DataBox = React.memo(({ label, value, icon: Icon, color = "default" }: { label: string, value: any, icon?: any, color?: "default" | "primary" }) => (
   <div className="space-y-1">
     <span className="text-[10px] font-black uppercase text-muted-foreground ml-1">{label}</span>
@@ -244,14 +247,13 @@ function UserProfileContent() {
 
             <div className="h-px bg-border/50"></div>
             
-            {/* 3. Lifestyle Grid (Badge style windows like in Profile) */}
+            {/* 3. Lifestyle Grid (Rectangle style DataBox) */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                  <User size={16} className="text-primary" />
                  <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground opacity-60">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {/* Column 1: Gender, Dating Goal, Height, Education */}
                 <div className="space-y-4">
                   <DataBox 
                     label={t('profile.label.gender')} 
@@ -275,7 +277,6 @@ function UserProfileContent() {
                     icon={GraduationCap} 
                   />
                 </div>
-                {/* Column 2: Looking for, Zodiac, Profession */}
                 <div className="space-y-4">
                   <DataBox 
                     label={t('profile.label.looking_for')} 
@@ -298,7 +299,7 @@ function UserProfileContent() {
             
             <div className="h-px bg-border/50"></div>
 
-            {/* 4. Интересы (Bottom of primary card) */}
+            {/* 4. Interests (Bottom of primary card) */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Star size={16} className="text-primary" />
