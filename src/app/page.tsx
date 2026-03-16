@@ -63,7 +63,7 @@ export default function Home() {
   const [popularGroups, setPopularGroups] = useState<any[]>([]);
 
   useEffect(() => {
-    // Prevent FOUC and Hydration errors by delaying rendering until mounted
+    // Reduce splash timer for faster perceived entry
     const timer = setTimeout(() => {
       setIsMounted(true);
     }, 800);
@@ -79,7 +79,6 @@ export default function Home() {
       setCurrentUser(ALL_DEMO_USERS[1]);
     }
 
-    // Set stable random data after mount to avoid hydration mismatch
     setPopularGroups(GROUP_CATEGORIES.slice(0, 4).map(cat => ({
       ...cat,
       onlineCount: Math.floor(Math.random() * 50) + 10
@@ -128,8 +127,8 @@ export default function Home() {
             </h1>
             <div className="mt-8 flex gap-1.5">
               <div className="w-2 h-2 rounded-full bg-primary animate-bounce"></div>
-              <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.2s]"></div>
-              <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.4s]"></div>
+              <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.2s] text-transparent">.</div>
+              <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:0.4s] text-transparent">.</div>
             </div>
           </motion.div>
         )}
@@ -185,7 +184,7 @@ export default function Home() {
               </div>
               <h2 className="font-black text-lg font-headline tracking-tight">Популярные группы</h2>
             </div>
-            <Link href="/groups" className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/5 px-3 py-1 rounded-full border border-primary/10">Все</Link>
+            <Link href="/groups" prefetch={true} className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/5 px-3 py-1 rounded-full border border-primary/10">Все</Link>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {popularGroups.map((group) => {
@@ -194,6 +193,7 @@ export default function Home() {
                 <Link 
                   href={`/groups/${group.id}`} 
                   key={group.id} 
+                  prefetch={true}
                   className="bg-white rounded-2xl app-shadow border border-white overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
                 >
                   <div className="h-16 w-full bg-muted flex items-center justify-center">

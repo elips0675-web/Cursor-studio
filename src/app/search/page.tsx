@@ -211,7 +211,7 @@ function SearchContent() {
                 alt={user.name} 
                 fill 
                 sizes="(max-width: 480px) 100vw, 420px" 
-                priority
+                priority // Performance: Priority for LCP
                 className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
               

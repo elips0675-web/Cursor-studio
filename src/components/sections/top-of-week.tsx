@@ -17,7 +17,7 @@ const FeaturedCard = memo(({ user, onLike, priority = false }: { user: any; onLi
             alt={user.name} 
             fill 
             sizes="(max-width: 480px) 45vw, 240px"
-            priority={priority}
+            priority={priority} // Performance: Priority for LCP on top cards
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute top-1.5 right-1.5">

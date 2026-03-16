@@ -5,7 +5,7 @@ import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from 'dynamic';
 import { 
   MapPin, 
   CheckCircle2, 
@@ -202,7 +202,14 @@ function UserProfileContent() {
 
       <main className="flex-1 overflow-y-auto pb-24">
         <div className="relative aspect-[4/3] w-full">
-          <Image src={user.img} alt={user.name} fill sizes="100vw" className="object-cover" priority />
+          <Image 
+            src={user.img} 
+            alt={user.name} 
+            fill 
+            sizes="100vw" 
+            priority // Performance: Priority for LCP
+            className="object-cover" 
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fb] via-transparent to-black/30"></div>
           <div className="absolute bottom-0 left-0 right-0 p-6 space-y-2">
              <h3 className="text-3xl font-black font-headline text-foreground tracking-tight flex items-center gap-2">
@@ -325,7 +332,13 @@ function UserProfileContent() {
             <div className="grid grid-cols-2 gap-4">
               {photos.map((url, idx) => (
                 <div key={`${url}-${idx}`} onClick={() => { setActivePhotoIndex(idx); setIsViewerOpen(true); }} className="relative aspect-square rounded-2xl overflow-hidden bg-muted cursor-pointer group shadow-sm border border-border/10">
-                  <Image src={url} alt={`Gallery photo`} fill sizes="(max-width: 480px) 50vw, 240px" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <Image 
+                    src={url} 
+                    alt={`Gallery photo`} 
+                    fill 
+                    sizes="(max-width: 480px) 50vw, 240px" 
+                    className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
                   
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-[1px]">
                     <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full px-4 py-1.5 flex items-center gap-1.5 scale-90 group-hover:scale-100 transition-transform">
@@ -348,7 +361,7 @@ function UserProfileContent() {
             {t('button.like')} <Heart size={20} fill="currentColor" />
           </Button>
           <Button asChild variant="outline" className="w-16 h-16 rounded-full border-2 border-primary/20 bg-white hover:bg-primary/5 flex items-center justify-center transition-all active:scale-90 shadow-lg">
-            <Link href={`/chats?matchId=${user.id}`}>
+            <Link href={`/chats?matchId=${user.id}`} prefetch={true}>
               <MessageCircle size={28} className="text-primary" />
             </Link>
           </Button>
