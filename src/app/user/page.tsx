@@ -1,11 +1,10 @@
-
 "use client";
 
 import React, { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from 'dynamic';
+import dynamic from 'next/dynamic';
 import { 
   MapPin, 
   CheckCircle2, 
@@ -207,7 +206,7 @@ function UserProfileContent() {
             alt={user.name} 
             fill 
             sizes="100vw" 
-            priority // Performance: Priority for LCP
+            priority
             className="object-cover" 
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fb] via-transparent to-black/30"></div>
@@ -222,7 +221,6 @@ function UserProfileContent() {
         </div>
 
         <div className="px-5 space-y-6 -mt-2 relative z-10">
-          {/* Основная карточка информации - rounded-2xl (более прямоугольная) */}
           <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 mb-6 text-left space-y-6 overflow-hidden">
             
             {/* 1. Звания (Самый верх) */}
@@ -262,7 +260,6 @@ function UserProfileContent() {
                  <h4 className="font-black text-[10px] uppercase tracking-widest text-muted-foreground/60">{t('profile.lifestyle')}</h4>
               </div>
               <div className="grid grid-cols-2 gap-x-3 gap-y-5">
-                {/* Левая колонка */}
                 <div className="space-y-5">
                   <DataBox 
                     label={t('profile.label.gender')} 
@@ -281,7 +278,6 @@ function UserProfileContent() {
                     icon={Ruler} 
                   />
                 </div>
-                {/* Правая колонка */}
                 <div className="space-y-5">
                   <DataBox 
                     label={t('profile.label.looking_for')} 
@@ -352,7 +348,6 @@ function UserProfileContent() {
           </div>
         </div>
 
-        {/* Action Bar */}
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] p-6 flex justify-center items-center gap-4 bg-white/80 backdrop-blur-md z-40 safe-pb border-t border-border/40">
           <Button onClick={() => router.back()} variant="outline" className="w-16 h-16 rounded-full border-2 border-muted hover:bg-muted text-muted-foreground flex items-center justify-center transition-all active:scale-90 shadow-lg bg-white">
             <X size={28} />
@@ -368,7 +363,6 @@ function UserProfileContent() {
         </div>
       </main>
 
-      {/* Photo Viewer */}
       <Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
         <DialogContent className="max-w-[440px] w-[95vw] h-[85vh] p-0 border-0 bg-transparent shadow-none flex flex-col items-center justify-center [&>button]:hidden">
           <DialogTitle className="sr-only">Gallery Viewer</DialogTitle>
@@ -398,7 +392,6 @@ function UserProfileContent() {
         </DialogContent>
       </Dialog>
       
-      {/* Match Dialog */}
       <Dialog open={!!matchUser} onOpenChange={(open) => !open && setMatchUser(null)}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 overflow-hidden bg-white app-shadow">
           <div className="relative">
@@ -406,10 +399,10 @@ function UserProfileContent() {
             <div className="relative h-56 flex items-center justify-center p-6 gradient-bg overflow-hidden">
                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div className="flex items-center justify-center gap-0 relative">
-                    <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
+                    <motion.div initial={{ x: -60, opacity: 0, rotate: -15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: -8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.2 }} className="w-36 h-36 rounded-2xl border-4 border-white shadow-2xl overflow-hidden relative z-10 -mr-8 bg-muted">
                         <Image src={currentUser?.photoURL || currentUser?.img || PlaceHolderImages[10].imageUrl} alt="You" fill sizes="144px" className="object-cover" />
                     </motion.div>
-                    <motion.div initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-3xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
+                    <motion.div initial={{ x: 60, opacity: 0, rotate: 15, scale: 0.8 }} animate={{ x: 0, opacity: 1, rotate: 8, scale: 1 }} transition={{ type: "spring", damping: 12, delay: 0.3 }} className="w-36 h-36 rounded-2xl border-4 border-white shadow-2xl overflow-hidden relative z-0 bg-muted">
                         <Image src={matchUser?.img || PlaceHolderImages[0].imageUrl} alt={matchUser?.name || "Match photo"} fill sizes="144px" className="object-cover" />
                     </motion.div>
                 </div>
@@ -434,7 +427,6 @@ function UserProfileContent() {
         </DialogContent>
       </Dialog>
       
-      {/* Report Dialog */}
       <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
         <DialogContent className="max-w-[400px] rounded-3xl border-0 p-0 bg-white app-shadow overflow-hidden">
           <DialogHeader className="p-6 pb-4 text-left">
