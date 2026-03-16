@@ -1,4 +1,3 @@
-
 "use client";
 
 import { AppHeader } from "@/components/layout/app-header";
@@ -12,6 +11,8 @@ const FAQ_ITEMS = [
   { id: 'q3', question: 'faq.q3.question', answer: 'faq.q3.answer' },
   { id: 'q4', question: 'faq.q4.question', answer: 'faq.q4.answer' },
   { id: 'q5', question: 'faq.q5.question', answer: 'faq.q5.answer' },
+  { id: 'q9', question: 'faq.q9.question', answer: 'faq.q9.answer' },
+  { id: 'q10', question: 'faq.q10.question', answer: 'faq.q10.answer' },
   { id: 'q6', question: 'faq.q6.question', answer: 'faq.q6.answer' },
   { id: 'q7', question: 'faq.q7.question', answer: 'faq.q7.answer' },
   { id: 'q8', question: 'faq.q8.question', answer: 'faq.q8.answer' },

@@ -294,6 +294,10 @@ const translations = {
     'faq.q7.answer': 'Звания — это система достижений SwiftMatch. Одно лучшее звание присваивается автоматически: \n1. Король свиданий — для самых популярных пользователей (мэтч 90%+).\n2. Душа компании — если у вас много интересов (5+).\n3. Обаяшка — если вы заполнили поле "О себе".\n4. Романтик — базовый статус для всех остальных.',
     'faq.q8.question': 'Почему мое сообщение не отправляется?',
     'faq.q8.answer': 'Для обеспечения безопасности и комфортного общения в приложении работает фильтр сообщений. Ваше сообщение может быть заблокировано, если оно содержит: \n- Нецензурную лексику \n- Спам или ссылки на сторонние ресурсы \n- Оскорбления или дискриминацию \n- Призывы к насилию \n- Обсуждение политических тем \n- Упоминание запрещенных товаров или мошеннических схем. \nПожалуйста, убедитесь, что ваше сообщение соответствует правилам сообщества.',
+    'faq.q9.question': 'Как работает Фотоконкурс?',
+    'faq.q9.answer': 'Фотоконкурс проходит ежемесячно. Вы можете выбрать одну фотографию из своего профиля для участия. Победители определяются по количеству голосов других пользователей и получают статус PRO, 10 бустов и уникальный золотой бейдж.',
+    'faq.q10.question': 'Каковы основные правила использования приложения?',
+    'faq.q10.answer': 'Мы стремимся создать безопасную среду. Запрещено использование нецензурной лексики, оскорблений, спама, размещение контента 18+ и политическая агитация. Нарушение правил может привести к временной или постоянной блокировке аккаунта.',
     // About App
     'about.title': 'О проекте SwiftMatch',
     'about.description': 'SwiftMatch — это современный полнофункциональный прототип приложения для знакомств (MVP), построенный на передовых веб-технологиях.',
@@ -683,6 +687,10 @@ const translations = {
     'faq.q7.answer': 'Titles are SwiftMatch\'s achievement system. One best title is assigned automatically: \n1. Dating King — for the most popular users (90%+ match).\n2. Life of the Party — if you have many interests (5+).\n3. Charming — if you filled out your bio.\n4. Romantic — the base status for everyone else.',
     'faq.q8.question': 'Why is my message not being sent?',
     'faq.q8.answer': 'To ensure a safe and comfortable environment, the application has a message filter. Your message may be blocked if it contains: \n- Profanity \n- Spam or links to external resources \n- Insults or discrimination \n- Calls to violence \n- Discussion of political topics \n- Mention of prohibited goods or fraudulent schemes. \nPlease ensure your message complies with the community guidelines.',
+    'faq.q9.question': 'How does the Photo Contest work?',
+    'faq.q9.answer': 'The Photo Contest takes place monthly. You can select one photo from your profile to participate. Winners are determined by the number of votes from other users and receive PRO status, 10 boosts, and a unique golden badge.',
+    'faq.q10.question': 'What are the main rules for using the app?',
+    'faq.q10.answer': 'We aim to create a safe environment. Profanity, insults, spam, 18+ content, and political campaigning are prohibited. Violation of these rules may lead to temporary or permanent account suspension.',
     // About App
     'about.title': 'About SwiftMatch Project',
     'about.description': 'SwiftMatch is a modern, full-featured dating app prototype (MVP) built with cutting-edge web technologies.',
