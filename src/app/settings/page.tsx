@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -22,10 +23,11 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
+import { requestNotificationPermission } from "@/lib/push-notifications";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const auth = useAuth();
   
   const [settings, setSettings] = useState({
@@ -52,6 +54,27 @@ export default function SettingsPage() {
       setSettings(prev => ({ ...prev, dataProcessingConsent: JSON.parse(savedConsent) }));
     }
   }, []);
+
+  const handlePushChange = async (val: boolean) => {
+    if (val) {
+      const granted = await requestNotificationPermission();
+      if (!granted) {
+        toast({
+          variant: "destructive",
+          title: language === 'RU' ? "Доступ запрещен" : "Permission denied",
+          description: language === 'RU' 
+            ? "Разрешите уведомления в настройках браузера." 
+            : "Please enable notifications in your browser settings.",
+        });
+        return;
+      }
+    }
+    setSettings({ ...settings, pushNotifications: val });
+    toast({
+      title: t('settings.push_notifications'),
+      description: val ? "Enabled" : "Disabled",
+    });
+  };
 
   const handleIncognitoChange = (val: boolean) => {
     setSettings(prev => ({ ...prev, incognito: val }));
@@ -101,7 +124,10 @@ export default function SettingsPage() {
                     <p className="text-sm font-bold">{t('settings.push_notifications') || 'Push-уведомления'}</p>
                   </div>
                 </div>
-                <Switch checked={isClient ? settings.pushNotifications : true} onCheckedChange={(val) => setSettings({...settings, pushNotifications: val})} />
+                <Switch 
+                  checked={isClient ? settings.pushNotifications : true} 
+                  onCheckedChange={handlePushChange} 
+                />
               </div>
 
               <div className="flex items-center justify-between py-3 border-b border-border/50">
