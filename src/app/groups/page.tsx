@@ -1,3 +1,4 @@
+
 "use client";
 
 import { 
@@ -67,22 +68,21 @@ export default function GroupsPage() {
         </div>
 
         {/* Groups Grid - Centered items, Rectangular style */}
-        <div className="grid grid-cols-3 gap-3 px-1">
+        <div className="grid grid-cols-2 gap-3">
           {GROUP_CATEGORIES.map((category) => {
             const Icon = iconMap[category.icon] || Users;
             const totalMembers = category.subgroups.reduce((acc, sub) => acc + sub.members, 0);
             return (
-            <Link href={`/groups/${category.id}`} key={category.id} className="bg-white rounded-2xl overflow-hidden app-shadow group block border border-transparent hover:border-primary/20 transition-all">
-              <div className={cn("relative h-20 w-full bg-muted flex items-center justify-center")}>
-                <Icon size={24} className="text-orange-500 transition-transform duration-300 group-hover:scale-110" />
+            <Link href={`/groups/${category.id}`} key={category.id} className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden hover:bg-primary/5 transition-all flex flex-col group">
+              <div className={cn("h-20 w-full flex items-center justify-center border-b border-slate-200")}>
+                <Icon size={32} className="text-orange-500 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <div className="p-2 text-center">
-                <h6 className="font-bold text-[10px] leading-tight truncate group-hover:text-primary uppercase tracking-tight">
-                  {language === 'RU' ? category.name_ru : category.name_en}
-                </h6>
-                <div className="flex items-center justify-center text-muted-foreground text-[8px] mt-1 gap-1 font-bold">
-                  <Users size={8} /> {totalMembers.toLocaleString('ru-RU')}
-                </div>
+              <div className="p-4 text-center">
+                <h4 className="font-black text-xs uppercase tracking-tight leading-tight truncate">{language === 'RU' ? category.name_ru : category.name_en}</h4>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase mt-2 flex items-center justify-center gap-1.5">
+                  <Users size={12} />
+                  {totalMembers.toLocaleString('ru-RU')}
+                </p>
               </div>
             </Link>
           )})}

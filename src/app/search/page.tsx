@@ -215,16 +215,17 @@ function SearchContent() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105" 
               />
               
-              {/* Contest Vote Button - ORANGE AND RIGHT */}
+              {/* Contest Vote Button */}
               <button 
                 onClick={(e) => handleVote(e, user.id)}
                 className={cn(
-                  "absolute top-4 right-4 z-30 w-12 h-12 rounded-2xl backdrop-blur-md flex items-center justify-center transition-all active:scale-90 border-2",
+                  "absolute top-4 right-4 z-30 h-12 rounded-2xl backdrop-blur-md flex items-center justify-center transition-all active:scale-90 border-2 gap-2",
                   votedEntries.includes(user.id) 
-                    ? "bg-orange-500 text-white border-orange-400 shadow-xl" 
-                    : "bg-white/90 text-orange-500 border-orange-100 shadow-lg hover:bg-white"
+                    ? "bg-orange-500 text-white border-orange-400 shadow-xl w-12"
+                    : "bg-black/40 text-white border-white/20 shadow-lg hover:bg-black/50 px-4"
                 )}
               >
+                {!votedEntries.includes(user.id) && <span className="font-bold text-sm">Голос</span>}
                 <Trophy size={20} fill={votedEntries.includes(user.id) ? "currentColor" : "none"} />
               </button>
 
@@ -257,28 +258,28 @@ function SearchContent() {
           <Button 
             variant="outline" 
             size="icon" 
-            className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all" 
+            className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all" 
             onClick={handleNext}
           >
-            <ChevronRight size={28} strokeWidth={3} />
+            <ChevronRight size={32} strokeWidth={3} />
           </Button>
 
           <Button 
             size="icon" 
-            className="w-20 h-20 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0" 
+            className="w-24 h-24 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0" 
             onClick={handleLike}
           >
-            <Heart size={36} fill="currentColor" />
+            <Heart size={48} fill="currentColor" />
           </Button>
 
           <Button 
             asChild 
             variant="outline" 
             size="icon" 
-            className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all"
+            className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all"
           >
             <Link href={`/user?id=${user.id}`} prefetch={true}>
-              <User size={28} strokeWidth={3} />
+              <User size={32} strokeWidth={3} />
             </Link>
           </Button>
           
@@ -286,11 +287,12 @@ function SearchContent() {
             asChild 
             variant="outline" 
             size="icon" 
-            className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-[#2ecc71] hover:text-[#27ae60] active:scale-90 transition-all"
+            className="w-20 h-20 rounded-full bg-white shadow-xl border-0 text-[#2ecc71] hover:text-[#27ae60] active:scale-90 transition-all"
           >
             <Link href={`/chats?matchId=${user.id}`} prefetch={true}>
-              <MessageCircle size={32} strokeWidth={3} />
+              <MessageCircle size={36} strokeWidth={3} />
             </Link>
+
           </Button>
         </div>
       </main>

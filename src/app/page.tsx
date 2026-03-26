@@ -143,16 +143,16 @@ export default function Home() {
           <h1 className="text-3xl font-black font-headline mb-2 leading-tight tracking-tighter text-foreground">
             {t('home.headline')}
           </h1>
-          <p className="text-muted-foreground text-xs font-medium mb-8 max-w-[280px] mx-auto">
+          <p className="text-muted-foreground text-xs font-medium mb-8 mx-auto">
             {t('home.subheadline')}
           </p>
 
-          <div className="grid grid-cols-2 gap-3 max-w-[360px] mx-auto">
-            <Button onClick={() => setShowAutosearchDialog(true)} className="h-12 rounded-xl gradient-bg text-white font-black text-[10px] shadow-xl border-0 uppercase tracking-widest active:scale-95 transition-all">
-              <Zap size={14} fill="currentColor" /> {t('button.autosearch')}
+          <div className="grid grid-cols-2 gap-4 mx-auto">
+            <Button onClick={() => setShowAutosearchDialog(true)} className="h-14 rounded-xl gradient-bg text-white font-black text-xs shadow-xl border-0 uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-1.5">
+              <Zap size={16} fill="currentColor" /> {t('button.autosearch')}
             </Button>
-            <Button asChild className="h-12 rounded-xl bg-white border-2 border-primary text-primary font-black text-[10px] shadow-lg uppercase tracking-widest active:scale-95 transition-all">
-              <Link href="/search?mode=nearby" prefetch={true}><Search size={14} className="stroke-[3px]" /> {t('home.nearby')}</Link>
+            <Button asChild className="h-14 rounded-xl bg-white border-2 border-primary text-primary font-black text-xs shadow-lg uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-1.5">
+              <Link href="/search?mode=nearby" prefetch={true}><Search size={16} className="stroke-[3px]" /> {t('home.nearby')}</Link>
             </Button>
           </div>
         </section>
@@ -194,14 +194,14 @@ export default function Home() {
                   href={`/groups/${group.id}`} 
                   key={group.id} 
                   prefetch={true}
-                  className="bg-white rounded-2xl app-shadow border border-white overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
+                  className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden hover:bg-primary/5 transition-all flex flex-col group"
                 >
-                  <div className="h-16 w-full bg-muted flex items-center justify-center">
-                    <Icon size={24} className="text-orange-500 group-hover:scale-110 transition-transform duration-300" />
+                  <div className="h-20 w-full flex items-center justify-center border-b border-slate-200">
+                    <Icon size={32} className="text-orange-500 group-hover:scale-110 transition-transform duration-300" />
                   </div>
-                  <div className="p-3 text-center">
-                    <h4 className="font-black text-[11px] uppercase tracking-tight leading-tight truncate">{language === 'RU' ? group.name_ru : group.name_en}</h4>
-                    <p className="text-[9px] text-green-600 font-bold uppercase mt-1.5 flex items-center justify-center gap-1.5">
+                  <div className="p-4 text-center">
+                    <h4 className="font-black text-xs uppercase tracking-tight leading-tight truncate">{language === 'RU' ? group.name_ru : group.name_en}</h4>
+                    <p className="text-[10px] text-green-600 font-bold uppercase mt-2 flex items-center justify-center gap-1.5">
                       <span className="w-1.5 h-1.5 bg-current rounded-full"></span>
                       {group.onlineCount} {t('chats.online')}
                     </p>
