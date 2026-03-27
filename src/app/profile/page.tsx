@@ -58,6 +58,11 @@ export default function ProfilePage() {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const storiesInputRef = useRef<HTMLInputElement>(null);
+
+  // Stories states
+  const [stories, setStories] = useState<any[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
 
   // Contest states
   const [isSelectionOpen, setIsSelectionOpen] = useState(false);
@@ -105,6 +110,11 @@ export default function ProfilePage() {
       localStorage.setItem('userProfileGallery', JSON.stringify(defaultPhotos));
     }
 
+    const savedStories = localStorage.getItem('userProfileStories');
+    if (savedStories) {
+      setStories(JSON.parse(savedStories));
+    }
+
     const participationStatus = localStorage.getItem('contest_participation');
     if (participationStatus) setHasParticipated(true);
 
@@ -113,6 +123,11 @@ export default function ProfilePage() {
       photos.forEach(photo => {
         if (photo.startsWith('blob:')) {
           URL.revokeObjectURL(photo);
+        }
+      });
+      stories.forEach(story => {
+        if (story.url.startsWith('blob:')) {
+          URL.revokeObjectURL(story.url);
         }
       });
     };
@@ -138,8 +153,6 @@ export default function ProfilePage() {
       const file = event.target.files[0];
       const newPhotoUrl = URL.createObjectURL(file);
       
-      // Note: This new photo is only stored in browser memory
-      // and will disappear on refresh. 
       const newPhotosArray = [...photos, newPhotoUrl];
       setPhotos(newPhotosArray);
 
@@ -149,6 +162,51 @@ export default function ProfilePage() {
       });
     }
   };
+
+  const handleAddStoryClick = () => {
+    storiesInputRef.current?.click();
+  };
+
+  const handleStoryFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        const file = event.target.files[0];
+        const videoUrl = URL.createObjectURL(file);
+        const storyId = `story_${Date.now()}`;
+
+        const newStory = { id: storyId, url: videoUrl, isUploading: true };
+        setStories(prev => [newStory, ...prev]);
+
+        let progress = 0;
+        setUploadProgress(prev => ({ ...prev, [storyId]: 0 }));
+        
+        const interval = setInterval(() => {
+          progress += Math.random() * 15 + 5; // Simulate 5-15 second upload
+          if (progress > 100) progress = 100;
+          
+          setUploadProgress(prev => ({ ...prev, [storyId]: progress }));
+
+          if (progress >= 100) {
+            clearInterval(interval);
+            
+            const finalStories = stories.map(s => s.id === storyId ? { ...s, url: videoUrl, isUploading: false } : s);
+            localStorage.setItem('userProfileStories', JSON.stringify(finalStories));
+
+            setStories(prev => prev.map(s => s.id === storyId ? { ...s, isUploading: false } : s));
+            
+            setTimeout(() => {
+              setUploadProgress(prev => {
+                const newProgress = { ...prev };
+                delete newProgress[storyId];
+                return newProgress;
+              });
+            }, 1000);
+          }
+        }, 700);
+        
+        event.target.value = '';
+      }
+  };
+
 
   const handleDeletePhoto = () => {
     if (photoToDelete === null) return;
@@ -171,7 +229,6 @@ export default function ProfilePage() {
     const newPhotos = photos.filter((_, i) => i !== photoToDelete);
     setPhotos(newPhotos);
     
-    // Update localStorage only with persistent URLs
     const persistentPhotos = newPhotos.filter(p => !p.startsWith('blob:'));
     localStorage.setItem('userProfileGallery', JSON.stringify(persistentPhotos));
 
@@ -246,6 +303,13 @@ export default function ProfilePage() {
         style={{ display: 'none' }} 
         accept="image/*"
       />
+      <input 
+        type="file"
+        ref={storiesInputRef}
+        onChange={handleStoryFileSelected}
+        style={{ display: 'none' }}
+        accept="video/mp4,video/quicktime,video/x-matroska"
+      />
       <AppHeader />
       <main className="flex-1 overflow-y-auto pb-24">
         <div className="h-24 gradient-bg relative -mx-5 mb-10">
@@ -277,9 +341,10 @@ export default function ProfilePage() {
           </div>
 
           <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-xl mb-6">
+            <TabsList className="grid w-full grid-cols-3 bg-muted p-1 rounded-xl mb-6">
               <TabsTrigger value="profile">Данные</TabsTrigger>
               <TabsTrigger value="gallery">Галерея</TabsTrigger>
+              <TabsTrigger value="stories">Сторис</TabsTrigger>
             </TabsList>
             <TabsContent value="profile">
               <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40 space-y-6">
@@ -436,6 +501,71 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               </section>
+            </TabsContent>
+             <TabsContent value="stories">
+              <div className="bg-white rounded-2xl p-6 app-shadow border border-border/40">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <Video size={18} className="text-primary" />
+                    <h4 className="font-black text-[11px] uppercase tracking-widest text-muted-foreground">Сторис</h4>
+                  </div>
+                  <button onClick={handleAddStoryClick} className="h-8 rounded-lg text-[9px] font-black uppercase tracking-widest text-primary px-3 bg-primary/5 hover:bg-primary/10 transition-colors">Добавить</button>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {stories.map((story) => {
+                    const progress = uploadProgress[story.id];
+                    const isUploading = story.isUploading;
+                    
+                    return (
+                      <div key={story.id} className="relative aspect-[9/16] rounded-xl overflow-hidden bg-muted border border-border/10 group shadow-sm">
+                        <video src={story.url} className="object-cover w-full h-full" playsInline muted loop autoPlay />
+                        
+                        {isUploading && progress < 100 && (
+                          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center backdrop-blur-sm transition-opacity duration-500">
+                              <div className="relative w-16 h-16">
+                                  <svg className="w-full h-full" viewBox="0 0 100 100">
+                                      <circle
+                                          className="text-gray-600/50"
+                                          strokeWidth="5"
+                                          stroke="currentColor"
+                                          fill="transparent"
+                                          r="40"
+                                          cx="50"
+                                          cy="50"
+                                      />
+                                      <circle
+                                          className="text-primary"
+                                          strokeWidth="5"
+                                          strokeDasharray={2 * Math.PI * 40}
+                                          strokeDashoffset={(2 * Math.PI * 40) - (progress / 100) * (2 * Math.PI * 40)}
+                                          strokeLinecap="round"
+                                          stroke="currentColor"
+                                          fill="transparent"
+                                          r="40"
+                                          cx="50"
+                                          cy="50"
+                                          style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%', transition: 'stroke-dashoffset 0.35s' }}
+                                      />
+                                  </svg>
+                                  <span className="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
+                                      {Math.round(progress)}%
+                                  </span>
+                              </div>
+                              <span className="text-white/80 text-[10px] mt-2 font-semibold uppercase tracking-wider">Загрузка...</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  <div 
+                    onClick={handleAddStoryClick}
+                    className="aspect-[9/16] rounded-xl bg-muted/50 border-2 border-dashed border-border/30 flex flex-col items-center justify-center text-center text-muted-foreground hover:bg-muted/100 hover:border-primary/50 hover:text-primary transition-all cursor-pointer p-2"
+                  >
+                    <Video size={24} className="mb-2" />
+                    <span className="font-black text-[10px] uppercase tracking-widest leading-tight">Добавить<br/>сторис</span>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
