@@ -21,8 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { DATING_GOALS, INTEREST_OPTIONS, CAPITALS, CIRCADIAN_RHYTHM_OPTIONS } from "@/lib/constants";
+import { DATING_GOALS, INTEREST_OPTIONS, CAPITALS, CIRCADIAN_RHYTHM_OPTIONS, ATTACHMENT_STYLE_OPTIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface FiltersDialogProps {
@@ -45,7 +44,8 @@ export function FiltersDialog({
   const [selectedDatingGoal, setSelectedDatingGoal] = useState(currentFilters.selectedDatingGoal || "all");
   const [selectedInterests, setSelectedInterests] = useState<string[]>(currentFilters.selectedInterests || []);
   const [selectedCircadian, setSelectedCircadian] = useState(currentFilters.selectedCircadian || "all");
-  
+  const [selectedAttachment, setSelectedAttachment] = useState(currentFilters.selectedAttachment || "all");
+
   const cities = useMemo(() => ["Все", ...CAPITALS], []);
 
   const toggleInterest = (interest: string) => {
@@ -65,19 +65,20 @@ export function FiltersDialog({
       selectedDatingGoal,
       selectedInterests,
       selectedCircadian,
+      selectedAttachment,
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[420px] w-[95vw] rounded-3xl border-0 p-0 bg-white app-shadow flex flex-col">
-        <DialogHeader className="p-6 pb-4">
+      <DialogContent className="max-w-[420px] w-[95vw] h-[90vh] rounded-3xl border-0 p-0 bg-white app-shadow flex flex-col">
+        <DialogHeader className="p-6 pb-4 border-b">
           <DialogTitle className="text-xl font-black tracking-tight">Фильтры поиска</DialogTitle>
           <DialogDescription>Настройте параметры, чтобы найти идеального партнера.</DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="flex-1 px-6 pb-4">
-          <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-6 p-6">
             {/* Dating Goal */}
             <div className="space-y-3">
               <Label className="font-bold">Цель знакомства</Label>
@@ -93,14 +94,7 @@ export function FiltersDialog({
             {/* Age Range */}
             <div className="space-y-3">
               <Label className="font-bold">Возраст: <span className="text-primary font-black">{ageRange[0]} - {ageRange[1]}</span></Label>
-              <Slider
-                min={18}
-                max={60}
-                step={1}
-                value={ageRange}
-                onValueChange={setAgeRange}
-                className="[&>span:first-child]:h-1"
-              />
+              <Slider min={18} max={60} step={1} value={ageRange} onValueChange={setAgeRange} className="[&>span:first-child]:h-1" />
             </div>
             
             {/* Distance */}
@@ -145,6 +139,18 @@ export function FiltersDialog({
                 </Select>
             </div>
 
+            {/* Attachment style */}
+            <div className="space-y-3">
+                <Label className="font-bold">Тип привязанности</Label>
+                <Select value={selectedAttachment} onValueChange={setSelectedAttachment}>
+                    <SelectTrigger className="rounded-xl h-12 font-medium"><SelectValue /></SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                        <SelectItem value="all">Любой</SelectItem>
+                        {ATTACHMENT_STYLE_OPTIONS.map(opt => <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>)}
+                    </SelectContent>
+                </Select>
+            </div>
+
             {/* Interests */}
             <div className="space-y-3">
                 <Label className="font-bold">Интересы</Label>
@@ -167,9 +173,9 @@ export function FiltersDialog({
                 </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
         
-        <DialogFooter className="p-6 flex-row gap-3 justify-end bg-muted/30 rounded-b-3xl mt-auto">
+        <DialogFooter className="p-6 flex-row gap-3 justify-end bg-muted/30 rounded-b-3xl mt-auto border-t">
           <Button variant="ghost" className="rounded-xl" onClick={() => onOpenChange(false)}>Отмена</Button>
           <Button onClick={handleApply} className="rounded-xl gradient-bg text-white shadow-lg shadow-primary/20">Применить</Button>
         </DialogFooter>

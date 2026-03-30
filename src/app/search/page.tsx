@@ -254,7 +254,7 @@ function SearchContent() {
             <Badge variant="outline" className="text-[8px] font-bold bg-white">{currentIndex + 1} / {userList.length}</Badge>
             <Badge variant="secondary" className="text-[8px] font-bold text-primary bg-primary/5">{pageTitle}</Badge>
             {searchParams.get('mode') === 'autosearch' && (
-                <button onClick={() => setIsFiltersOpen(true)} className="p-2 bg-white rounded-md shadow-sm">
+                <button onClick={() => setIsFiltersOpen(true)} className="p-2 bg-white rounded-full shadow-sm">
                     <SlidersHorizontal size={14} className="text-primary" />
                 </button>
             )}
@@ -265,7 +265,7 @@ function SearchContent() {
                 <Sparkles size={48} className="text-muted-foreground opacity-20 mb-4" />
                 <h4 className="text-xl font-black uppercase">{'Анкеты закончились'}</h4>
                 <p className="text-sm text-muted-foreground mt-2">Попробуйте изменить фильтры, чтобы найти больше людей.</p>
-                <Button variant="outline" onClick={() => setIsFiltersOpen(true)} className="mt-8 rounded-xl px-8 uppercase text-[10px] font-black">Изменить фильтры</Button>
+                <Button variant="outline" onClick={() => setIsFiltersOpen(true)} className="mt-8 rounded-full px-8 uppercase text-[10px] font-black">Изменить фильтры</Button>
             </div>
         ) : (
           <>
@@ -292,12 +292,8 @@ function SearchContent() {
                     src={user.img} 
                     alt={user.name} 
                     fill 
-                    // Реальная ширина карточки в макете ~360px.
-                    // Это помогает Next.js запрашивать только нужный размер и уменьшать трафик.
                     sizes="(max-width: 360px) 100vw, 360px"
-                    // Компрессия, но без сильной деградации качества.
                     quality={85}
-                    // Предзагрузка только для первой карточки — меньше лишних загрузок.
                     priority={currentIndex === 0}
                     className="object-cover transition-transform duration-700 group-hover:scale-105" 
                   />
@@ -305,10 +301,10 @@ function SearchContent() {
                   <button 
                     onClick={(e) => handleVote(e, user.id)}
                     className={cn(
-                      "absolute top-4 right-4 z-30 h-12 rounded-2xl backdrop-blur-md flex items-center justify-center transition-all active:scale-90 border-2 gap-2",
+                      "absolute top-4 right-4 z-30 h-12 w-auto px-4 rounded-full backdrop-blur-md flex items-center justify-center transition-all active:scale-90 border-2 gap-2",
                       votedEntries.includes(user.id) 
-                        ? "bg-orange-500 text-white border-orange-400 shadow-xl w-12"
-                        : "bg-black/40 text-white border-white/20 shadow-lg hover:bg-black/50 px-4"
+                        ? "bg-orange-500 text-white border-orange-400 shadow-xl"
+                        : "bg-black/40 text-white border-white/20 shadow-lg hover:bg-black/50"
                     )}
                   >
                     {!votedEntries.includes(user.id) && <span className="font-bold text-sm">Голос</span>}
@@ -343,15 +339,13 @@ function SearchContent() {
             <div className="flex justify-center items-center gap-2 sm:gap-4 w-full max-w-[360px]">
                 <Button
                     variant="outline"
-                    size="icon"
-                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all flex items-center justify-center"
                     onClick={handleNext}
                 >
                     <X size={30} strokeWidth={3} />
                 </Button>
                 <Button
-                    size="icon"
-                    className="relative w-16 h-16 rounded-full bg-blue-500 text-white shadow-2xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all border-0 disabled:bg-slate-300 disabled:shadow-none"
+                    className="relative w-16 h-16 rounded-full bg-blue-500 text-white shadow-2xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all border-0 disabled:bg-slate-300 disabled:shadow-none flex items-center justify-center"
                     onClick={handleSuperLike}
                     disabled={(currentUser?.superLikes || 0) === 0}
                 >
@@ -359,8 +353,7 @@ function SearchContent() {
                     <span className="absolute bottom-2 text-xs font-bold">{currentUser?.superLikes || 0}</span>
                 </Button>
                 <Button
-                    size="icon"
-                    className="w-16 h-16 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0"
+                    className="w-16 h-16 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0 flex items-center justify-center"
                     onClick={handleLike}
                 >
                     <Heart size={34} fill="currentColor" />
@@ -368,8 +361,7 @@ function SearchContent() {
                 <Button
                     asChild
                     variant="outline"
-                    size="icon"
-                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-green-400 hover:text-green-600 active:scale-90 transition-all"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-green-400 hover:text-green-600 active:scale-90 transition-all flex items-center justify-center"
                 >
                     <Link href={`/chats?userId=${user.id}`}>
                         <MessageCircle size={30} />
@@ -378,8 +370,7 @@ function SearchContent() {
                 <Button
                     asChild
                     variant="outline"
-                    size="icon"
-                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all flex items-center justify-center"
                 >
                     <Link href={`/user?id=${user.id}`} prefetch={true}>
                         <User size={28} strokeWidth={2} />
@@ -422,8 +413,8 @@ function SearchContent() {
               <Textarea placeholder={t('report.details_placeholder')} value={reportDescription} onChange={(e) => setReportDescription(e.target.value)} className="min-h-[80px] rounded-xl bg-muted/40 border-0 focus-visible:ring-primary/20" />
           </div>
           <DialogFooter className="p-6 flex-row gap-2 justify-end bg-muted/20 rounded-b-3xl">
-              <Button variant="ghost" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button>
-              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
+              <Button variant="ghost" className="rounded-full" onClick={() => setIsReportDialogOpen(false)}>{t('report.button.cancel')}</Button>
+              <Button className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full" onClick={handleReportSubmit}>{t('report.button.send')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
