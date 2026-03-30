@@ -65,7 +65,10 @@ export default function Home() {
   const [view, setView] = useState<'top-users' | 'popular-groups'>('top-users');
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsMounted(true), 1500);
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+      console.log("isMounted is set to true");
+    }, 1500);
 
     const saved = localStorage.getItem('userProfile');
     if (saved) {
