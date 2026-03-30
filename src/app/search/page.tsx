@@ -341,22 +341,46 @@ function SearchContent() {
             </div>
 
             <div className="flex justify-center items-center gap-2 sm:gap-4 w-full max-w-[360px]">
-                <Button variant="outline" size="icon" className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all" onClick={handleNext}>
-                    <X size={28} strokeWidth={3} />
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-slate-400 hover:text-slate-600 active:scale-90 transition-all"
+                    onClick={handleNext}
+                >
+                    <X size={30} strokeWidth={3} />
                 </Button>
-                <Button size="icon" className="relative w-16 h-16 rounded-full bg-blue-500 text-white shadow-2xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all border-0 disabled:bg-slate-300 disabled:shadow-none" onClick={handleSuperLike} disabled={(currentUser?.superLikes || 0) === 0}>
-                    <Sparkles size={32} fill="currentColor" />
+                <Button
+                    size="icon"
+                    className="relative w-16 h-16 rounded-full bg-blue-500 text-white shadow-2xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all border-0 disabled:bg-slate-300 disabled:shadow-none"
+                    onClick={handleSuperLike}
+                    disabled={(currentUser?.superLikes || 0) === 0}
+                >
+                    <Sparkles size={30} fill="currentColor" />
                     <span className="absolute bottom-2 text-xs font-bold">{currentUser?.superLikes || 0}</span>
                 </Button>
-                <Button size="icon" className="w-20 h-20 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0" onClick={handleLike}>
-                    <Heart size={40} fill="currentColor" />
+                <Button
+                    size="icon"
+                    className="w-16 h-16 rounded-full gradient-bg text-white shadow-2xl shadow-primary/40 hover:scale-110 active:scale-95 transition-all border-0"
+                    onClick={handleLike}
+                >
+                    <Heart size={34} fill="currentColor" />
                 </Button>
-                <Button asChild variant="outline" size="icon" className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-green-400 hover:text-green-600 active:scale-90 transition-all">
+                <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-green-400 hover:text-green-600 active:scale-90 transition-all"
+                >
                     <Link href={`/chats?userId=${user.id}`}>
-                        <MessageCircle size={32} />
+                        <MessageCircle size={30} />
                     </Link>
                 </Button>
-                <Button asChild variant="outline" size="icon" className="w-14 h-14 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all">
+                <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="w-16 h-16 rounded-full bg-white shadow-xl border-0 text-blue-400 hover:text-blue-600 active:scale-90 transition-all"
+                >
                     <Link href={`/user?id=${user.id}`} prefetch={true}>
                         <User size={28} strokeWidth={2} />
                     </Link>
