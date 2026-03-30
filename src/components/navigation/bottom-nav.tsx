@@ -21,7 +21,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white/95 backdrop-blur-md border-t border-border z-50 safe-pb">
-      <div className="w-full flex justify-around items-center px-2 pt-2">
+      <div className="w-full flex justify-around items-center px-2 py-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -32,7 +32,7 @@ export function BottomNav() {
               href={item.href}
               prefetch={true} // Performance: Prefetch critical nav links
               className={cn(
-                "flex flex-col items-center justify-center gap-1 flex-1 transition-all duration-200 pb-1",
+                "flex flex-col items-center justify-center gap-1 flex-1 transition-all duration-200",
                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
               )}
             >
