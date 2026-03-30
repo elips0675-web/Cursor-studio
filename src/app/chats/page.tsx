@@ -27,6 +27,7 @@ import { toast } from "@/hooks/use-toast";
 import { useFeatureFlags } from "@/context/feature-flags-context";
 import { ALL_DEMO_USERS, GROUP_CATEGORIES } from "@/lib/demo-data";
 import { containsForbiddenWords, isGibberish } from "@/lib/word-filter";
+import { FootballFeed } from "@/components/feeds/football-feed";
 
 const VideoCallDialog = dynamic(() => import('@/components/video-call').then(mod => mod.VideoCallDialog), { ssr: false });
 const VoiceCallDialog = dynamic(() => import('@/components/voice-call').then(mod => mod.VoiceCallDialog), { ssr: false });
@@ -285,6 +286,37 @@ function ChatsContent() {
   };
 
   if (selectedChat) {
+    const groupIdNum = groupId ? parseInt(groupId) : NaN;
+    // "Группы -> Спорт -> Футбол": вместо чата показываем ленту футбола.
+    if (selectedChat.isGroup && groupIdNum === 201) {
+      return (
+        <div className="flex flex-col h-svh bg-[#f8f9fb]">
+          <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50 h-16">
+            <Button variant="ghost" size="icon" onClick={handleBack} className="rounded-full hover:bg-muted/50">
+              <ChevronLeft size={24} />
+            </Button>
+            <div className="relative">
+              <div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white shadow-sm bg-muted flex items-center justify-center">
+                <Users size={20} className="text-muted-foreground" />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-black text-sm leading-tight tracking-tight text-foreground truncate">
+                {selectedChat.name}
+              </h3>
+              <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">
+                {selectedChat.members} {t('chats.members')}
+              </p>
+            </div>
+          </header>
+          <main className="flex-1 overflow-y-auto p-0">
+            <FootballFeed />
+          </main>
+          <div />
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col h-svh bg-[#f8f9fb]">
         <header className="flex items-center gap-2 px-3 py-2 border-b border-border sticky top-0 bg-white/90 backdrop-blur-lg z-50 h-16">
