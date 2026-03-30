@@ -162,7 +162,7 @@ export default function GroupsPage() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"find" | "top-week" | "my-groups">("find");
-  const ITEMS_PER_PAGE = 6; // 2 колонки => 3 ряда
+  const ITEMS_PER_PAGE = 12; // 2 колонки => 6 рядов
   const [currentPage, setCurrentPage] = useState(1);
 
   // Demo data for different tabs
